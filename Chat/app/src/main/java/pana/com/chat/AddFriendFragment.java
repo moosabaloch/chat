@@ -24,8 +24,6 @@ import datamodel.DataModelUser;
 
 public class AddFriendFragment extends Fragment {
 
-    static String MYID;
-    static AddFriendFragment obj;
     ListView listView;
     View view;
     ArrayList ids, names, images;
@@ -35,14 +33,6 @@ public class AddFriendFragment extends Fragment {
 
     }
 
-    public static AddFriendFragment newInstance(String id) {
-        MYID = id;
-        if (obj == null)
-            obj = new AddFriendFragment();
-
-        return obj;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +40,14 @@ public class AddFriendFragment extends Fragment {
         names = new ArrayList();
         images = new ArrayList();
         ref = new Firebase("https://pcchatapp.firebaseio.com/users");
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+        listView = (ListView) view.findViewById(R.id.addfriend_listview);
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -57,6 +55,7 @@ public class AddFriendFragment extends Fragment {
                 ids.add(dataSnapshot.getKey().toString());
                 names.add(user.getName());
                 images.add(user.getImage_url());
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(), names));
             }
 
             @Override
@@ -80,13 +79,6 @@ public class AddFriendFragment extends Fragment {
             }
         });
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_add_friend, container, false);
-        listView = (ListView) view.findViewById(R.id.addfriend_listview);
-        listView.setAdapter(new CustomFriendsListAdapter(getActivity(), names));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -97,8 +89,8 @@ public class AddFriendFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 HashMap<String, Object> hashMap = new HashMap<String, Object>();
                                 hashMap.put("id", ids.get(i).toString());
-                                ref.child(MYID).child("friends").push().setValue(hashMap);
-                                ref.child(ids.get(i).toString()).child("friends").push().setValue(new HashMap<String, Object>().put("id", MYID));
+                                ref.child(ref.getAuth().getUid()).child("friends").push().setValue(hashMap);
+                                ref.child(ids.get(i).toString()).child("friends").push().setValue(new HashMap<String, Object>().put("id", ref.getAuth().getUid()));
 
                                 backToFriendFragment();
                             }
