@@ -1,14 +1,27 @@
 package pana.com.chat;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment {
+
+    View view;
+
+    ListView listView;
+
+    ImageView imageView;
+
+    TextView tv;
 
     private OnFragmentInteractionListener mListener;
 
@@ -23,7 +36,13 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        View view=inflater.inflate(R.layout.fragment_friends, container, false);
+        listView=(ListView) view.findViewById(R.id.friends_listview);
+        ArrayList arrayList=new ArrayList();
+        arrayList.add("Moosa Baloch");
+        arrayList.add("ZeeshanHanif");
+        listView.setAdapter(new CustomFriendsListAdapter(getActivity(),arrayList));
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -49,7 +68,6 @@ public class FriendsFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
