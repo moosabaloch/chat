@@ -20,8 +20,6 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import datamodel.DataModelUser;
-
 public class AddFriendFragment extends Fragment {
 
     ListView listView;

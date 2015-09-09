@@ -1,4 +1,4 @@
-package datamodel;
+package pana.com.chat;
 
 /**
  * Created by Abdul Basit on 9/9/2015.
