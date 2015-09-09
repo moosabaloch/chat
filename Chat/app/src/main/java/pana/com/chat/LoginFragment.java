@@ -26,11 +26,11 @@ public class LoginFragment extends Fragment {
         emailToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentEmailAddress);
         passwordToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentPassword);
         createNewAccount();
-        loginaction();
+        loginButtonAction();
         return view;
     }
 
-    private void loginaction() {
+    private void loginButtonAction() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
