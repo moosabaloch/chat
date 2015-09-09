@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.Firebase;
 
 /**
  * Created by Moosa on 9/9/2015.
@@ -32,6 +33,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Firebase.setAndroidContext(this);
         mInstance = this;
     }
 
