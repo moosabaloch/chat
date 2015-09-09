@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pana.com.chat.CreateAccountFragment">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:text="@string/createAccount"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/editTextCreateAccountFragmentFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="@string/fullname"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/editTextCreateAccountFragmentEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextCreateAccountFragmentFullName"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:hint="@string/email.com"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextCreateAccountFragmentPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextCreateAccountFragmentEmailAddress"
+        android:layout_margin="10dp"
+        android:hint="@string/pass"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextCreateAccountFragmentPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextCreateAccountFragmentPassword"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/phoneNumber"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/buttonCreateAccountFragmentCreateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextCreateAccountFragmentPhone"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:text="@string/createAccount" />
+</RelativeLayout>

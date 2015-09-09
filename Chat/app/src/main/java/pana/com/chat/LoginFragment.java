@@ -31,6 +31,11 @@ public class LoginFragment extends Fragment {
     }
 
     private void createNewAccount() {
+        createAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 }
