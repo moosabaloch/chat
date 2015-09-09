@@ -1,12 +1,13 @@
 package pana.com.chat;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class FriendsFragment extends Fragment {
 
     TextView tv;
 
-    private OnFragmentInteractionListener mListener;
+    Button button;
 
     public FriendsFragment() {
 
@@ -36,39 +37,26 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_friends, container, false);
-        listView=(ListView) view.findViewById(R.id.friends_listview);
-        ArrayList arrayList=new ArrayList();
+        View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        listView = (ListView) view.findViewById(R.id.friends_listview);
+        button = (Button) view.findViewById(R.id.friend_btn_addfriend);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager2 = getFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+                AddFriendFragment addFriendsFragment = new AddFriendFragment();
+                fragmentTransaction2.addToBackStack("");
+                fragmentTransaction2.hide(FriendsFragment.this);
+                fragmentTransaction2.add(android.R.id.content, addFriendsFragment);
+                fragmentTransaction2.commit();
+            }
+        });
+        ArrayList arrayList = new ArrayList();
         arrayList.add("Moosa Baloch");
         arrayList.add("ZeeshanHanif");
-        listView.setAdapter(new CustomFriendsListAdapter(getActivity(),arrayList));
+        listView.setAdapter(new CustomFriendsListAdapter(getActivity(), arrayList));
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

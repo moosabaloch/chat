@@ -28,7 +28,7 @@
             android:text="+"
             android:textColor="#ffffff"
             android:textSize="24dp"
-            android:id="@+id/button"
+            android:id="@+id/friend_btn_addfriend"
             android:background="#ff00b2ff" />
 
     </LinearLayout>
