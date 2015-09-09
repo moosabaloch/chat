@@ -39,7 +39,7 @@ public class LoginFragment extends Fragment {
                 FragmentManager fragmentManager2 = getFragmentManager();
                 FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
                 FriendsFragment friendsFragment = new FriendsFragment();
-                fragmentTransaction2.addToBackStack("xyz");
+                fragmentTransaction2.addToBackStack("");
                 fragmentTransaction2.hide(LoginFragment.this);
                 fragmentTransaction2.add(android.R.id.content, friendsFragment);
                 fragmentTransaction2.commit();
@@ -51,7 +51,13 @@ public class LoginFragment extends Fragment {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FragmentManager fragmentManager2 = getFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+                CreateAccountFragment createAccountFragment = new CreateAccountFragment();
+                fragmentTransaction2.addToBackStack("");
+                fragmentTransaction2.hide(LoginFragment.this);
+                fragmentTransaction2.add(android.R.id.content, createAccountFragment);
+                fragmentTransaction2.commit();
             }
         });
     }
