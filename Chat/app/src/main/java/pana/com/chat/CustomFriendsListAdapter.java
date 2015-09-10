@@ -35,7 +35,7 @@ public class CustomFriendsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return ids.size();
+        return allUsers.size();
     }
 
     @Override
