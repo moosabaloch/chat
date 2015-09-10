@@ -38,6 +38,7 @@ public class LoginFragment extends Fragment {
         firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
         createNewAccount();
         loginButtonAction();
+        getAuthentication();
         return view;
     }
 
@@ -59,28 +60,10 @@ public class LoginFragment extends Fragment {
 //
                     firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
                         @Override
-                        public void onAuthenticated(final AuthData authData) {
-                            firebaseUrl.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    DataModelMeSingleton.getInstance().setId(authData.getUid());
-                                    DataModelMeSingleton.getInstance().setImageUrl(dataSnapshot.child("image_url").getValue().toString());
-                                    DataModelMeSingleton.getInstance().setName(dataSnapshot.child("name").getValue().toString());
-                                    DataModelMeSingleton.getInstance().setPhone(dataSnapshot.child("phone").getValue().toString());
-                                    FragmentManager fragmentManager2 = getFragmentManager();
-                                    FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                                    FriendsFragment friendsFragment = new FriendsFragment();
-                                    fragmentTransaction2.addToBackStack("");
-                                    fragmentTransaction2.hide(LoginFragment.this);
-                                    fragmentTransaction2.add(android.R.id.content, friendsFragment);
-                                    fragmentTransaction2.commit();
-                                }
-
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
-
-                                }
-                            });
+                        public void onAuthenticated(AuthData authData) {
+                            if (authData != null) {
+                                loggedInUser(authData);
+                            }
                         }
 
                         @Override
@@ -99,6 +82,34 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    private void loggedInUser(final AuthData authData) {
+        firebaseUrl.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataModelMeSingleton.getInstance().setId(authData.getUid());
+                DataModelMeSingleton.getInstance().setImageUrl(dataSnapshot.child("image_url").getValue().toString());
+                DataModelMeSingleton.getInstance().setName(dataSnapshot.child("name").getValue().toString());
+                DataModelMeSingleton.getInstance().setPhone(dataSnapshot.child("phone").getValue().toString());
+                switchToFriendsFrag();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void switchToFriendsFrag() {
+        FragmentManager fragmentManager2 = getFragmentManager();
+        FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+        FriendsFragment friendsFragment = new FriendsFragment();
+        fragmentTransaction2.addToBackStack("");
+        fragmentTransaction2.hide(LoginFragment.this);
+        fragmentTransaction2.add(android.R.id.content, friendsFragment);
+        fragmentTransaction2.commit();
+    }
+
     private void createNewAccount() {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +121,17 @@ public class LoginFragment extends Fragment {
                 fragmentTransaction2.hide(LoginFragment.this);
                 fragmentTransaction2.add(android.R.id.content, createAccountFragment);
                 fragmentTransaction2.commit();
+            }
+        });
+    }
+
+    public void getAuthentication() {
+        firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (authData != null) {
+                    loggedInUser(authData);
+                }
             }
         });
     }
