@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void loggedInUser(final AuthData authData) {
+        Log.d("LoggedInUser", "Invoked...");
+
         firebaseUrl.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,12 +98,14 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Toast.makeText(getActivity(), "Cant Login", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void switchToFriendsFrag() {
+        Log.d("Switch to Fragment", "Invoked...");
+
         FragmentManager fragmentManager2 = getFragmentManager();
         FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
         FriendsFragment friendsFragment = new FriendsFragment();
@@ -126,11 +131,18 @@ public class LoginFragment extends Fragment {
     }
 
     public void getAuthentication() {
+        Log.d("getAuthentication", "Invoked");
+
         firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
             @Override
             public void onAuthStateChanged(AuthData authData) {
                 if (authData != null) {
+                    Log.d("getAuthentication", "User Logged in...");
+
                     loggedInUser(authData);
+
+                } else {
+                    Log.d("getAuthentication", "User Not Logged in...");
                 }
             }
         });
