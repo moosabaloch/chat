@@ -56,6 +56,18 @@ public class AddFriendFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ids = null;
+        myFriends = null;
+        allUsers = null;
+        pcchatapp = null;
+        listView = null;
+
+
+    }
+
     private void backToFriendFragment() {
         getFragmentManager()
                 .beginTransaction()
@@ -190,4 +202,5 @@ public class AddFriendFragment extends Fragment {
 
         }
     }
+
 }

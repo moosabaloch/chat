@@ -53,7 +53,7 @@ public class FriendsFragment extends Fragment {
                 FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
                 AddFriendFragment addFriendsFragment = new AddFriendFragment();
                 fragmentTransaction2.addToBackStack("");
-                fragmentTransaction2.hide(FriendsFragment.this);
+                fragmentTransaction2.remove(FriendsFragment.this);
                 fragmentTransaction2.add(android.R.id.content, addFriendsFragment);
                 fragmentTransaction2.commit();
             }
