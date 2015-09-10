@@ -74,7 +74,7 @@ public class CreateAccountFragment extends Fragment {
                 public void onSuccess(Map<String, Object> stringObjectMap) {
                     HashMap<String, String> userDetails = new HashMap<>();
                     userDetails.put("email_id", emailIs);
-                    userDetails.put("image_url", "");
+                    userDetails.put("image_url", "N/A");
                     userDetails.put("name", nameIs);
                     userDetails.put("phone", phoneIs);
                     firebaseUrl.child("users").child(stringObjectMap.get("uid").toString()).setValue(userDetails);

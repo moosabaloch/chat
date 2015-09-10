@@ -16,6 +16,16 @@ public class DataModelMeSingleton {
     private String name;
     private String phone;
 
+    @Override
+    public String toString() {
+        return "DataModelMeSingleton{" +
+                "id='" + id + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
+
     public String getId() {
         return id;
     }
