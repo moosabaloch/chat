@@ -52,7 +52,9 @@ public class LoginFragment extends Fragment {
                 if (email.equals("") || passIs.equals("")) {
                     Toast.makeText(getActivity(), "Email Or Password Field is Empty", Toast.LENGTH_LONG).show();
                 } else {
-
+                    loginButton.setEnabled(false);
+                    emailToLogin.setEnabled(false);
+                    passwordToLogin.setEnabled(false);
                     firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
                         @Override
                         public void onAuthenticated(final AuthData authData) {
@@ -81,6 +83,11 @@ public class LoginFragment extends Fragment {
 
                         @Override
                         public void onAuthenticationError(FirebaseError firebaseError) {
+                            loginButton.setEnabled(true);
+                            emailToLogin.setEnabled(true);
+                            passwordToLogin.setEnabled(true);
+
+                            Toast.makeText(getActivity(), "Error Login " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
 
                         }
                     });
