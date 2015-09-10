@@ -58,7 +58,7 @@ public class LoginFragment extends Fragment {
                     emailToLogin.setEnabled(false);
                     passwordToLogin.setEnabled(false);
                     createAccountButton.setEnabled(false);
-//
+
                     firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
                         @Override
                         public void onAuthenticated(AuthData authData) {
