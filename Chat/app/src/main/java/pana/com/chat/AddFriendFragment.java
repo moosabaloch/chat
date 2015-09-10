@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -47,20 +46,9 @@ public class AddFriendFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_friend, container, false);
         //Initializing ListView
         listView = (ListView) view.findViewById(R.id.addfriend_listview);
-        //Authenticating current User and Getting All Users
-        pcchatapp.authWithPassword("abdulbst1994@gmail.com","aybee",new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-                pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addChildEventListener(new pcchatapp_user_friend_ChildEventListener());
-                pcchatapp.child("users").addChildEventListener(new pcchatapp_users_ChildEventListener());
-            }
-
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                Log.d("Errorr",firebaseError.getMessage());
-                //Toast.makeText(getActivity(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        //Getting All Users
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addChildEventListener(new pcchatapp_user_friend_ChildEventListener());
+        pcchatapp.child("users").addChildEventListener(new pcchatapp_users_ChildEventListener());
         //Setting ListView OnClickListener
         listView.setOnItemClickListener(new listview_OnItemClickListener());
 
@@ -78,8 +66,11 @@ public class AddFriendFragment extends Fragment {
 
     private boolean isFriend(String id){
         boolean isFriend=false;
+        Log.d("IsFriend",myFriends.size()+"");
         for (int i=0;i<myFriends.size();i++){
+            Log.d("IsFriend",myFriends.get(i).toString());
             if (myFriends.get(i).toString().equals(id)){
+                Log.d("Isfriend","true");
                 isFriend=true;
                 break;
             }
