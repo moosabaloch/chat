@@ -20,18 +20,12 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment {
-
-    View view;
-
-    ListView listView;
-
-    ImageView imageView;
-
-    TextView tv;
-
-    Button button;
-
-    Firebase pcchatapp;
+    private View view;
+    private ListView listView;
+    private ImageView imageView;
+    private TextView tv;
+    private Button buttonToSwitchToAddFriendsFrag;
+    private Firebase pcchatapp;
 
     public FriendsFragment() {
 
@@ -40,15 +34,15 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
+        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
         listView = (ListView) view.findViewById(R.id.friends_listview);
-        button = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonToSwitchToAddFriendsFrag = (Button) view.findViewById(R.id.friend_btn_addfriend);
+        buttonToSwitchToAddFriendsFrag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager2 = getFragmentManager();

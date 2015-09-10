@@ -94,10 +94,14 @@ public class LoginFragment extends Fragment {
                 DataModelMeSingleton.getInstance().setName(dataSnapshot.child("name").getValue().toString());
                 DataModelMeSingleton.getInstance().setPhone(dataSnapshot.child("phone").getValue().toString());
                 switchToFriendsFrag();
+                loginButton.setEnabled(true);
+                createAccountButton.setEnabled(true);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                loginButton.setEnabled(true);
+                createAccountButton.setEnabled(true);
                 Toast.makeText(getActivity(), "Cant Login", Toast.LENGTH_LONG).show();
             }
         });
@@ -140,6 +144,8 @@ public class LoginFragment extends Fragment {
                     Log.d("getAuthentication", "User Logged in...");
 
                     loggedInUser(authData);
+                    loginButton.setEnabled(false);
+                    createAccountButton.setEnabled(false);
 
                 } else {
                     Log.d("getAuthentication", "User Not Logged in...");

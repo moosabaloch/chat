@@ -11,5 +11,7 @@
     <string name="email.com">email@email.com</string>
     <string name="pass">Password</string>
     <string name="phoneNumber">Phone Number</string>
+    <string name="emailId">Email ID</string>
+    <string name="password">Password</string>
 
 </resources>
