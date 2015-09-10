@@ -55,6 +55,8 @@ public class LoginFragment extends Fragment {
                     loginButton.setEnabled(false);
                     emailToLogin.setEnabled(false);
                     passwordToLogin.setEnabled(false);
+                    createAccountButton.setEnabled(false);
+
                     firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
                         @Override
                         public void onAuthenticated(final AuthData authData) {
@@ -86,6 +88,7 @@ public class LoginFragment extends Fragment {
                             loginButton.setEnabled(true);
                             emailToLogin.setEnabled(true);
                             passwordToLogin.setEnabled(true);
+                            createAccountButton.setEnabled(true);
 
                             Toast.makeText(getActivity(), "Error Login " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
 
