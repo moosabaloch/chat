@@ -14,7 +14,9 @@ public class CustomFriendsListAdapter extends BaseAdapter {
 
     Context context;
 
-    ArrayList images,names;
+    ArrayList ids;
+
+    ArrayList<DataModelUser> allUsers;
 
     View view;
 
@@ -24,16 +26,16 @@ public class CustomFriendsListAdapter extends BaseAdapter {
 
     ImageView profileImg;
 
-    public CustomFriendsListAdapter(Context context,ArrayList names) {
+    public CustomFriendsListAdapter(Context context,ArrayList ids,ArrayList<DataModelUser> allUsers) {
         this.context=context;
-        this.names=names;
-        //this.images=images;
+        this.ids=ids;
+        this.allUsers=allUsers;
         inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return names.size();
+        return ids.size();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class CustomFriendsListAdapter extends BaseAdapter {
         view=inflater.inflate(R.layout.custom_friendslist,null);
         profileImg=(ImageView) view.findViewById(R.id.friends_iv_profileimg);
         name=(TextView) view.findViewById(R.id.friends_tv_name);
-        name.setText(names.get(i).toString());
+        name.setText(allUsers.get(i).getName());
         return view;
     }
 }

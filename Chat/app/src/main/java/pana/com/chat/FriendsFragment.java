@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment {
@@ -26,6 +28,8 @@ public class FriendsFragment extends Fragment {
 
     Button button;
 
+    Firebase pcchatapp;
+
     public FriendsFragment() {
 
     }
@@ -33,6 +37,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
     }
 
     @Override
@@ -53,9 +58,9 @@ public class FriendsFragment extends Fragment {
             }
         });
         ArrayList arrayList = new ArrayList();
-        arrayList.add("Moosa Baloch");
-        arrayList.add("ZeeshanHanif");
-        listView.setAdapter(new CustomFriendsListAdapter(getActivity(), arrayList));
+        //arrayList.add("Moosa Baloch");
+        //arrayList.add("ZeeshanHanif");
+        //listView.setAdapter(new CustomFriendsListAdapter(getActivity(), arrayList));
         return view;
     }
 

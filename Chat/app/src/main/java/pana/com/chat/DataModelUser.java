@@ -5,7 +5,7 @@ package pana.com.chat;
  */
 public class DataModelUser {
     //check123
-    private String email_id,image_url,name,password,phone;
+    private String email_id,image_url,name,phone;
 
     public String getEmail_id() {
         return email_id;
@@ -29,14 +29,6 @@ public class DataModelUser {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhone() {
