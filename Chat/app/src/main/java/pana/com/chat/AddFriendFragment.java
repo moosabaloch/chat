@@ -68,6 +68,7 @@ public class AddFriendFragment extends Fragment {
         boolean isFriend=false;
         Log.d("IsFriend",myFriends.size()+"");
         for (int i=0;i<myFriends.size();i++){
+            Log.d("IsFriend",id);
             Log.d("IsFriend",myFriends.get(i).toString());
             if (myFriends.get(i).toString().equals(id)){
                 Log.d("Isfriend","true");
@@ -161,7 +162,8 @@ public class AddFriendFragment extends Fragment {
     private class pcchatapp_user_friend_ChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            myFriends.add(dataSnapshot.getValue().toString());
+            HashMap<String,Object> hashMap= (HashMap<String, Object>) dataSnapshot.getValue();
+            myFriends.add(hashMap.get("id").toString());
         }
 
         @Override

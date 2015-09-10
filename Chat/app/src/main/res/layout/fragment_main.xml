@@ -26,7 +26,8 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:hint="Email ID" />
 
     <EditText
         android:id="@+id/editTextLoginFragmentPassword"
@@ -36,7 +37,8 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:hint="Password" />
 
     <Button
         android:id="@+id/buttonLoginFragmentCreateAccount"

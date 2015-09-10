@@ -12,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 
@@ -55,6 +58,32 @@ public class FriendsFragment extends Fragment {
                 fragmentTransaction2.hide(FriendsFragment.this);
                 fragmentTransaction2.add(android.R.id.content, addFriendsFragment);
                 fragmentTransaction2.commit();
+            }
+        });
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
         ArrayList arrayList = new ArrayList();
