@@ -4,34 +4,30 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FriendsFragment extends Fragment {
 
-    View view;
-
     ListView listView;
-
-    ImageView imageView;
-
-    TextView tv;
 
     Button button;
 
     Firebase pcchatapp;
+
+    ArrayList friendsID,friendsData;
 
     public FriendsFragment() {
 
@@ -40,6 +36,8 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        friendsID=new ArrayList();
+        friendsData=new ArrayList();
         pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
     }
 
@@ -60,25 +58,27 @@ public class FriendsFragment extends Fragment {
                 fragmentTransaction2.commit();
             }
         });
-        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addChildEventListener(new ChildEventListener() {
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Friend Data",dataSnapshot.getValue().toString());
+                for(DataSnapshot d:dataSnapshot.getChildren()){
+                    HashMap<String,Object> hashMap= (HashMap<String, Object>) d.getValue();
+                    friendsID.add(hashMap.get("id"));
+                    pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                            friendsData.add(dataModelUser);
+                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                        }
 
-            }
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                        }
+                    });
+                }
             }
 
             @Override
@@ -86,10 +86,6 @@ public class FriendsFragment extends Fragment {
 
             }
         });
-        ArrayList arrayList = new ArrayList();
-        //arrayList.add("Moosa Baloch");
-        //arrayList.add("ZeeshanHanif");
-        //listView.setAdapter(new CustomFriendsListAdapter(getActivity(), arrayList));
         return view;
     }
 
