@@ -23,7 +23,7 @@ public class AddFriendFragment extends Fragment {
 
     ListView listView;
     View view;
-    ArrayList ids,myFriends;
+    ArrayList ids, myFriends;
     ArrayList<DataModelUser> allUsers;
     Firebase pcchatapp;
 
@@ -34,16 +34,17 @@ public class AddFriendFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ids = new ArrayList();
-        myFriends = new ArrayList();
-        allUsers=new ArrayList<>();
-        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+        ids = new ArrayList();
+        myFriends = new ArrayList();
+        allUsers = new ArrayList<>();
+        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
         //Initializing ListView
         listView = (ListView) view.findViewById(R.id.addfriend_listview);
         //Getting All Users
@@ -64,19 +65,18 @@ public class AddFriendFragment extends Fragment {
                 .commit();
     }
 
-    private boolean isFriend(String id){
-        boolean isFriend=false;
-        Log.d("IsFriend",myFriends.size()+"");
-        for (int i=0;i<myFriends.size();i++){
-            Log.d("IsFriend",id);
-            Log.d("IsFriend",myFriends.get(i).toString());
-            if (myFriends.get(i).toString().equals(id)){
-                Log.d("Isfriend","true");
-                isFriend=true;
+    private boolean isFriend(String id) {
+        boolean isFriend = false;
+        Log.d("IsFriend", myFriends.size() + "");
+        for (int i = 0; i < myFriends.size(); i++) {
+            Log.d("IsFriend", id);
+            Log.d("IsFriend", myFriends.get(i).toString());
+            if (myFriends.get(i).toString().equals(id)) {
+                Log.d("Isfriend", "true");
+                isFriend = true;
                 break;
-            }
-            else {
-                isFriend=false;
+            } else {
+                isFriend = false;
             }
         }
         return isFriend;
@@ -86,7 +86,7 @@ public class AddFriendFragment extends Fragment {
 
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            if (!dataSnapshot.getKey().toString().equals(pcchatapp.getAuth().getUid())&&!isFriend(dataSnapshot.getKey().toString())){
+            if (!dataSnapshot.getKey().toString().equals(pcchatapp.getAuth().getUid()) && !isFriend(dataSnapshot.getKey().toString())) {
                 //Fetching data into DataModelUser
                 DataModelUser user = dataSnapshot.getValue(DataModelUser.class);
                 //Initializing ids and allUsers arraylist
@@ -116,11 +116,13 @@ public class AddFriendFragment extends Fragment {
         public void onCancelled(FirebaseError firebaseError) {
 
         }
-    };
+    }
+
+    ;
 
     private class listview_OnItemClickListener implements AdapterView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view,final int i, long l) {
+        public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
 
             new AlertDialog.Builder(getActivity())
                     .setTitle("Add as Friend")
@@ -157,12 +159,14 @@ public class AddFriendFragment extends Fragment {
                         }
                     }).show();
         }
-    };
+    }
+
+    ;
 
     private class pcchatapp_user_friend_ChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            HashMap<String,Object> hashMap= (HashMap<String, Object>) dataSnapshot.getValue();
+            HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
             myFriends.add(hashMap.get("id").toString());
         }
 
