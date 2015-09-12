@@ -102,8 +102,10 @@ public class AddFriendFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("ADD FRIEND FRAGMENT","OnDestroy");
-        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL1);
-        pcchatapp.child("users").removeEventListener(VEL2);
+        if(VEL1!=null)
+            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL1);
+        if(VEL2!=null)
+            pcchatapp.child("users").removeEventListener(VEL2);
     }
 
     private void backToFriendFragment() {
