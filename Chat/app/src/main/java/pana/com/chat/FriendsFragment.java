@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
     ValueEventListener VEL;
     private ListView listView;
-    private Button button1,button2;
+    private Button button1, button2;
     private Firebase pcchatapp;
     private ArrayList friendsID, friendsData;
 
@@ -53,11 +54,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Friends Fragment_Friends ID","On Data Changed");
                 VEL = this;
                 friendsData.clear();
                 friendsID.clear();
-                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 try {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
@@ -66,7 +66,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Log.d("Friends Fragment_Friends Data","On Data Changed");
                                 DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
@@ -89,19 +88,33 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DataModelChatUserSingleTon friend = DataModelChatUserSingleTon.getInstance();
+                DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
+                friend.setUuidUserFriend(friendsID.get(position).toString());
+                friend.setEmailUserFriend(dataModelUser.getEmail_id());
+                friend.setImageUrlUserFriend(dataModelUser.getImage_url());
+                friend.setNameUserFriend(dataModelUser.getName());
+                friend.setPhoneUserFriend(dataModelUser.getPhone());
+                Log.d("Data in Friend Sngltn", "-->" + friend.toString());
+
+            }
+        });
         return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("FRIEND FRAGMENT","OnDestroy");
-        pcchatapp.removeEventListener(VEL);
+        Log.d("FRIEND FRAGMENT", "OnDestroy");
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.friend_btn_addfriend:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
