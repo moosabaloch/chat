@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/chatAdaptorImageViewProfilePictureMe"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/ic_menu_myplaces" />
+    <ImageView
+        android:id="@+id/chatAdaptorImageViewProfilePictureFriend"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/btn_star_big_on"
+        android:layout_alignTop="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/chatAdaptorImageViewProfilePictureMe"
+        android:layout_toRightOf="@+id/chatAdaptorImageViewProfilePictureMe"
+        android:background="@android:color/black"
+        android:padding="3dp"
+        android:text="@string/username"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light" />
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForNameFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:padding="3dp"
+        android:text="@string/username"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light"
+        android:layout_alignTop="@+id/chatAdaptorImageViewProfilePictureFriend"
+        android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
+        android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend" />
+
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForMessageMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_alignStart="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_below="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/message"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForMessageFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="20sp"
+        android:layout_below="@+id/chatAdaptorTextViewForNameFriend"
+        android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
+        android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time"
+        android:id="@+id/chatAdaptorTextViewTimeMe"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time"
+        android:id="@+id/chatAdaptorTextViewTimeFriend"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+         />
+
+</RelativeLayout>
