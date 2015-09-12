@@ -54,8 +54,6 @@ public class ChatFragment extends Fragment {
         friendData = DataModelChatUserSingleTon.getInstance();
         ME = DataModelMeSingleton.getInstance();
         messagesArrayList = new ArrayList<>();
-        chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
-        chatListView.setAdapter(chatMessageAdaptor);
         sendMessageButton = (ImageButton) view.findViewById(R.id.chatFragmentButtonSendMessage);
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
         friendName = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendName);
@@ -76,6 +74,7 @@ public class ChatFragment extends Fragment {
                     long time = System.currentTimeMillis();
                     String timeInString = String.valueOf(time);
                     firebaseURL.child("conversation").child(conversationId).push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME));
+                    sendMessageText.setText("");
                 }
             }
         });
@@ -129,6 +128,7 @@ public class ChatFragment extends Fragment {
             firebaseURL.child("conversation").child(conversationId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    messagesArrayList.clear();
                     if (dataSnapshot.hasChildren()) {
                         for (DataSnapshot d : dataSnapshot.getChildren()) {
                             Messages messages = d.getValue(Messages.class);
@@ -149,7 +149,10 @@ public class ChatFragment extends Fragment {
     }
 
     private void refreshAdaptor() {
-        chatMessageAdaptor.notifyDataSetChanged();
+        chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
+        chatListView.setAdapter(chatMessageAdaptor);
+
+//        chatMessageAdaptor.notifyDataSetChanged();
     }
 
     private void setFriendDetails() {

@@ -14,6 +14,10 @@ public class Messages {
     private String message;
     private DataModelMeSingleton user;
 
+    public Messages() {
+
+    }
+
     public Messages(String timeStamp, String message, DataModelMeSingleton user) {
         this.timeStamp = timeStamp;
         this.message = message;
