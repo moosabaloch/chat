@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -85,6 +86,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DataModelChatUserSingleTon friend = DataModelChatUserSingleTon.getInstance();
+                DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
+                friend.setUuidUserFriend(friendsID.get(position).toString());
+                friend.setEmailUserFriend(dataModelUser.getEmail_id());
+
             }
         });
         return view;

@@ -15,6 +15,47 @@ public class DataModelChatUserSingleTon {
     private String imageUrlUserFriend;
     private String nameUserFriend;
     private String phoneUserFriend;
+
+    public String getEmailUserFriend() {
+        return emailUserFriend;
+    }
+
+    public void setEmailUserFriend(String emailUserFriend) {
+        this.emailUserFriend = emailUserFriend;
+    }
+
+    public String getImageUrlUserFriend() {
+        return imageUrlUserFriend;
+    }
+
+    public void setImageUrlUserFriend(String imageUrlUserFriend) {
+        this.imageUrlUserFriend = imageUrlUserFriend;
+    }
+
+    public String getNameUserFriend() {
+        return nameUserFriend;
+    }
+
+    public void setNameUserFriend(String nameUserFriend) {
+        this.nameUserFriend = nameUserFriend;
+    }
+
+    public String getPhoneUserFriend() {
+        return phoneUserFriend;
+    }
+
+    public void setPhoneUserFriend(String phoneUserFriend) {
+        this.phoneUserFriend = phoneUserFriend;
+    }
+
+    public String getUuidUserFriend() {
+        return uuidUserFriend;
+    }
+
+    public void setUuidUserFriend(String uuidUserFriend) {
+        this.uuidUserFriend = uuidUserFriend;
+    }
+
     private String uuidUserFriend;
 
     private DataModelChatUserSingleTon() {
