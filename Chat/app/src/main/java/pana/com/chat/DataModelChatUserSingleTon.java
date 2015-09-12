@@ -15,6 +15,28 @@ public class DataModelChatUserSingleTon {
     private String imageUrlUserFriend;
     private String nameUserFriend;
     private String phoneUserFriend;
+    private String uuidUserFriend;
+
+    private DataModelChatUserSingleTon() {
+    }
+
+    public static DataModelChatUserSingleTon getInstance() {
+        if (ourInstance == null) {
+            return ourInstance = new DataModelChatUserSingleTon();
+        }
+        return ourInstance;
+    }
+
+    @Override
+    public String toString() {
+        return "DataModelChatUserSingleTon{" +
+                "emailUserFriend='" + emailUserFriend + '\'' +
+                ", imageUrlUserFriend='" + imageUrlUserFriend + '\'' +
+                ", nameUserFriend='" + nameUserFriend + '\'' +
+                ", phoneUserFriend='" + phoneUserFriend + '\'' +
+                ", uuidUserFriend='" + uuidUserFriend + '\'' +
+                '}';
+    }
 
     public String getEmailUserFriend() {
         return emailUserFriend;
@@ -54,18 +76,6 @@ public class DataModelChatUserSingleTon {
 
     public void setUuidUserFriend(String uuidUserFriend) {
         this.uuidUserFriend = uuidUserFriend;
-    }
-
-    private String uuidUserFriend;
-
-    private DataModelChatUserSingleTon() {
-    }
-
-    public static DataModelChatUserSingleTon getInstance() {
-        if (ourInstance == null) {
-            return ourInstance = new DataModelChatUserSingleTon();
-        }
-        return ourInstance;
     }
 
 }

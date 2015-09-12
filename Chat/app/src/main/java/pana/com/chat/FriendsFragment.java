@@ -95,6 +95,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
                 friend.setUuidUserFriend(friendsID.get(position).toString());
                 friend.setEmailUserFriend(dataModelUser.getEmail_id());
+                friend.setImageUrlUserFriend(dataModelUser.getImage_url());
+                friend.setNameUserFriend(dataModelUser.getName());
+                friend.setPhoneUserFriend(dataModelUser.getPhone());
+                Log.d("Data in Friend Sngltn", "-->" + friend.toString());
 
             }
         });
