@@ -21,12 +21,10 @@ import java.util.List;
  */
 public class ChatMessageAdaptor extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context context;
     private List<Messages> messagesList;
 
     public ChatMessageAdaptor(Context context, List<Messages> messagesList) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.context = context;
         this.messagesList = messagesList;
     }
 
@@ -48,7 +46,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.chatadaptor, null, false);
+            convertView = inflater.inflate(R.layout.chatadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.messageMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageMe);
             viewHolder.messageFriend = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageFriend);
