@@ -22,7 +22,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
     ValueEventListener VEL;
     private ListView listView;
-    private Button button;
+    private Button button1,button2;
     private Firebase pcchatapp;
     private ArrayList friendsID, friendsData;
 
@@ -42,8 +42,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         listView = (ListView) view.findViewById(R.id.friends_listview);
-        button = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button.setOnClickListener(this);
+        button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
+        button2 = (Button) view.findViewById(R.id.friend_btn_logout);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
 
         friendsID = new ArrayList();
         friendsData = new ArrayList();
@@ -99,9 +101,20 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        getFragmentManager().beginTransaction()
-                .addToBackStack("")
-                .replace(R.id.fragment, new AddFriendFragment())
-                .commit();
+        switch (view.getId()){
+            case R.id.friend_btn_addfriend:
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new AddFriendFragment())
+                        .commit();
+                break;
+            case R.id.friend_btn_logout:
+                pcchatapp.unauth();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, new LoginFragment())
+                        .commit();
+                break;
+        }
+
     }
 }
