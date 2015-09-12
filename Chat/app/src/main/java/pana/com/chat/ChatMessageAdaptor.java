@@ -47,36 +47,61 @@ public class ChatMessageAdaptor extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.chatadaptor, null);
-        TextView messageMe = (TextView) view.findViewById(R.id.chatAdaptorTextViewForMessageMe);
-        TextView messageFriend = (TextView) view.findViewById(R.id.chatAdaptorTextViewForMessageFriend);
-        TextView nameMe = (TextView) view.findViewById(R.id.chatAdaptorTextViewForNameMe);
-        TextView nameFriend = (TextView) view.findViewById(R.id.chatAdaptorTextViewForNameFriend);
-        TextView timeStampMe = (TextView) view.findViewById(R.id.chatAdaptorTextViewTimeMe);
-        TextView timeStampFriend = (TextView) view.findViewById(R.id.chatAdaptorTextViewTimeFriend);
-        ImageView profilePicMe = (ImageView) view.findViewById(R.id.chatAdaptorImageViewProfilePictureMe);
-        ImageView profilePicFriend = (ImageView) view.findViewById(R.id.chatAdaptorImageViewProfilePictureFriend);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.chatadaptor, null, false);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.messageMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageMe);
+            viewHolder.messageFriend = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageFriend);
+            viewHolder.nameMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForNameMe);
+            viewHolder.nameFriend = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForNameFriend);
+            viewHolder.timeStampMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewTimeMe);
+            viewHolder.timeStampFriend = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewTimeFriend);
+            viewHolder.profilePicMe = (ImageView) convertView.findViewById(R.id.chatAdaptorImageViewProfilePictureMe);
+            viewHolder.profilePicFriend = (ImageView) convertView.findViewById(R.id.chatAdaptorImageViewProfilePictureFriend);
+            convertView.setTag(viewHolder);
+        }
+        ViewHolder view = (ViewHolder) convertView.getTag();
         Messages msg = messagesList.get(position);
         if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
-            messageMe.setText(msg.getMessage());
-            nameMe.setText(DataModelMeSingleton.getInstance().getName());
-            timeStampMe.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
-            profilePicFriend.setVisibility(View.INVISIBLE);
-            messageFriend.setVisibility(View.INVISIBLE);
-            nameFriend.setVisibility(View.INVISIBLE);
-            timeStampFriend.setVisibility(View.INVISIBLE);
+            view.profilePicMe.setVisibility(View.VISIBLE);
+            view.messageMe.setVisibility(View.VISIBLE);
+            view.nameMe.setVisibility(View.VISIBLE);
+            view.timeStampMe.setVisibility(View.VISIBLE);
+            view.messageMe.setText(msg.getMessage());
+            view.nameMe.setText(DataModelMeSingleton.getInstance().getName());
+            view.timeStampMe.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            view.profilePicFriend.setVisibility(View.INVISIBLE);
+            view.messageFriend.setVisibility(View.INVISIBLE);
+            view.nameFriend.setVisibility(View.INVISIBLE);
+            view.timeStampFriend.setVisibility(View.INVISIBLE);
 
         } else {
-            messageFriend.setText(msg.getMessage());
-            nameFriend.setText(DataModelChatUserSingleTon.getInstance().getNameUserFriend());
-            timeStampFriend.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
-            profilePicMe.setVisibility(View.INVISIBLE);
-            messageMe.setVisibility(View.INVISIBLE);
-            nameMe.setVisibility(View.INVISIBLE);
-            timeStampMe.setVisibility(View.INVISIBLE);
+            view.profilePicFriend.setVisibility(View.VISIBLE);
+            view.messageFriend.setVisibility(View.VISIBLE);
+            view.nameFriend.setVisibility(View.VISIBLE);
+            view.timeStampFriend.setVisibility(View.VISIBLE);
+            view.messageFriend.setText(msg.getMessage());
+            view.nameFriend.setText(DataModelChatUserSingleTon.getInstance().getNameUserFriend());
+            view.timeStampFriend.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            view.profilePicMe.setVisibility(View.INVISIBLE);
+            view.messageMe.setVisibility(View.INVISIBLE);
+            view.nameMe.setVisibility(View.INVISIBLE);
+            view.timeStampMe.setVisibility(View.INVISIBLE);
 
         }
 
-        return view;
+        return convertView;
+    }
+
+    class ViewHolder {
+        public TextView messageMe;
+        public TextView messageFriend;
+        public TextView nameMe;
+        public TextView nameFriend;
+        public TextView timeStampMe;
+        public TextView timeStampFriend;
+        public ImageView profilePicMe;
+        public ImageView profilePicFriend;
+
     }
 }
