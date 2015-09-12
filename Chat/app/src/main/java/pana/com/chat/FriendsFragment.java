@@ -22,7 +22,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
     ValueEventListener VEL;
     private ListView listView;
-    private Button button1,button2;
+    private Button button1, button2;
     private Firebase pcchatapp;
     private ArrayList friendsID, friendsData;
 
@@ -53,11 +53,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Friends Fragment_Friends ID","On Data Changed");
                 VEL = this;
                 friendsData.clear();
                 friendsID.clear();
-                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 try {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
@@ -66,7 +65,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Log.d("Friends Fragment_Friends Data","On Data Changed");
                                 DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
@@ -95,13 +93,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("FRIEND FRAGMENT","OnDestroy");
-        pcchatapp.removeEventListener(VEL);
+        Log.d("FRIEND FRAGMENT", "OnDestroy");
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.friend_btn_addfriend:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
