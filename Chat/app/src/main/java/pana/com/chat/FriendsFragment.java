@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -19,12 +20,10 @@ import java.util.HashMap;
 
 public class FriendsFragment extends Fragment implements View.OnClickListener {
 
+    ValueEventListener VEL;
     private ListView listView;
-
     private Button button;
-
     private Firebase pcchatapp;
-
     private ArrayList friendsID, friendsData;
 
     public FriendsFragment() {
@@ -52,43 +51,49 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Friend Data", dataSnapshot.getValue().toString());
-                friendsID.clear();
+                Log.d("Friends Fragment_Friends ID","On Data Changed");
+                VEL = this;
                 friendsData.clear();
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
-                    Log.d("Id id ", "---> " + hashMap.get("id"));
-                    friendsID.add(hashMap.get("id"));
-                    pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
-                            friendsData.add(dataModelUser);
-                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
-                        }
+                friendsID.clear();
+                try {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
+                        friendsID.add(hashMap.get("id"));
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                        pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.d("Friends Fragment_Friends Data","On Data Changed");
+                                DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
+                                friendsData.add(dataModelUser);
+                                listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
 
-                        }
-                    });
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "No Friend Added", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
         return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        friendsData = null;
-        friendsID = null;
+        Log.d("FRIEND FRAGMENT","OnDestroy");
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
     }
 
     @Override
