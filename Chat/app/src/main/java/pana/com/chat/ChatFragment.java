@@ -39,6 +39,7 @@ public class ChatFragment extends Fragment {
     private ListView chatListView;
     private ChatMessageAdaptor chatMessageAdaptor;
     private String conversationId = null;
+    private boolean onceSet = true;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -63,17 +64,27 @@ public class ChatFragment extends Fragment {
         setFriendDetails();
         startChat();
         sendMessage();
+        logoutBtn();
         return view;
+    }
+
+    private void logoutBtn() {
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void sendMessage() {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!sendMessageText.getText().equals("")) {
+                if (!sendMessageText.getText().toString().equals("")) {
                     long time = System.currentTimeMillis();
                     String timeInString = String.valueOf(time);
-                    firebaseURL.child("conversation").child(conversationId).push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME));
+                    firebaseURL.child("conversation").child(conversationId).push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME.getId()));
                     sendMessageText.setText("");
                 }
             }
@@ -135,25 +146,37 @@ public class ChatFragment extends Fragment {
                             messagesArrayList.add(messages);
 
                         }
-                        refreshAdaptor();
+                        if (onceSet) {
+                            setAdaptor();
+                            onceSet = false;
+                        } else {
+                            refreshAdaptor();
+                        }
                     }
 
                 }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-
+                    Toast.makeText(getActivity(), "Can't Load Conversation " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
     private void refreshAdaptor() {
+        chatMessageAdaptor.notifyDataSetChanged();
+        chatListView.setSelection(messagesArrayList.size());
+
+    }
+
+    private void setAdaptor() {
         chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
         chatListView.setAdapter(chatMessageAdaptor);
         chatListView.setSelection(messagesArrayList.size() - 1);
-//        chatMessageAdaptor.notifyDataSetChanged();
+
     }
+
 
     private void setFriendDetails() {
         friendEmail.setText(friendData.getEmailUserFriend());

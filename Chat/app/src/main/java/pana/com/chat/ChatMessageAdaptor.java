@@ -57,10 +57,9 @@ public class ChatMessageAdaptor extends BaseAdapter {
         ImageView profilePicMe = (ImageView) view.findViewById(R.id.chatAdaptorImageViewProfilePictureMe);
         ImageView profilePicFriend = (ImageView) view.findViewById(R.id.chatAdaptorImageViewProfilePictureFriend);
         Messages msg = messagesList.get(position);
-        if (msg.getUser().getId().equals(DataModelMeSingleton.getInstance().getId())) {
+        if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
             messageMe.setText(msg.getMessage());
-            nameMe.setText(msg.getUser().getName());
-
+            nameMe.setText(DataModelMeSingleton.getInstance().getName());
             timeStampMe.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             profilePicFriend.setVisibility(View.INVISIBLE);
             messageFriend.setVisibility(View.INVISIBLE);
@@ -69,7 +68,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
 
         } else {
             messageFriend.setText(msg.getMessage());
-            nameFriend.setText(msg.getUser().getName());
+            nameFriend.setText(DataModelChatUserSingleTon.getInstance().getNameUserFriend());
             timeStampFriend.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             profilePicMe.setVisibility(View.INVISIBLE);
             messageMe.setVisibility(View.INVISIBLE);

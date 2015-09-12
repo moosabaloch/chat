@@ -12,13 +12,13 @@ package pana.com.chat;
 public class Messages {
     private String timeStamp;
     private String message;
-    private DataModelMeSingleton user;
+    private String user;
 
     public Messages() {
 
     }
 
-    public Messages(String timeStamp, String message, DataModelMeSingleton user) {
+    public Messages(String timeStamp, String message,String user) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.user = user;
@@ -40,11 +40,11 @@ public class Messages {
         this.message = message;
     }
 
-    public DataModelMeSingleton getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(DataModelMeSingleton user) {
+    public void setUser(String user) {
         this.user = user;
     }
 }
