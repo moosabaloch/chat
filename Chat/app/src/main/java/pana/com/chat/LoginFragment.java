@@ -2,8 +2,6 @@ package pana.com.chat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,27 +107,17 @@ public class LoginFragment extends Fragment {
 
     private void switchToFriendsFrag() {
         Log.d("Switch to Fragment", "Invoked...");
-
-        FragmentManager fragmentManager2 = getFragmentManager();
-        FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-        FriendsFragment friendsFragment = new FriendsFragment();
-        fragmentTransaction2.addToBackStack("");
-        fragmentTransaction2.hide(LoginFragment.this);
-        fragmentTransaction2.add(android.R.id.content, friendsFragment);
-        fragmentTransaction2.commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragment, new FriendsFragment()).commit();
     }
 
     private void createNewAccount() {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager2 = getFragmentManager();
-                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                CreateAccountFragment createAccountFragment = new CreateAccountFragment();
-                fragmentTransaction2.addToBackStack("");
-                fragmentTransaction2.hide(LoginFragment.this);
-                fragmentTransaction2.add(android.R.id.content, createAccountFragment);
-                fragmentTransaction2.commit();
+                getFragmentManager().beginTransaction()
+                                    .addToBackStack("")
+                                    .replace(R.id.fragment, new CreateAccountFragment())
+                                    .commit();
             }
         });
     }

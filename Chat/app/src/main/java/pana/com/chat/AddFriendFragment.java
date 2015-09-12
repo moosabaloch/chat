@@ -21,11 +21,11 @@ import java.util.HashMap;
 
 public class AddFriendFragment extends Fragment {
 
-    ListView listView;
-    View view;
-    ArrayList ids, myFriends;
-    ArrayList<DataModelUser> allUsers;
-    Firebase pcchatapp;
+    private ListView listView;
+    private View view;
+    private ArrayList ids, myFriends;
+    private ArrayList<DataModelUser> allUsers;
+    private Firebase pcchatapp;
 
     public AddFriendFragment() {
 
@@ -34,17 +34,19 @@ public class AddFriendFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+
         ids = new ArrayList();
         myFriends = new ArrayList();
         allUsers = new ArrayList<>();
+
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
+
         //Initializing ListView
         listView = (ListView) view.findViewById(R.id.addfriend_listview);
         //Getting All Users
@@ -59,22 +61,16 @@ public class AddFriendFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ids = null;
+        Log.d("ADD FRIEND FRAGMENT","OnDestroy");
+        /*ids = null;
         myFriends = null;
         allUsers = null;
         pcchatapp = null;
-        listView = null;
-
-
+        listView = null*/
     }
 
     private void backToFriendFragment() {
-        getFragmentManager()
-                .beginTransaction()
-                .addToBackStack("")
-                .hide(AddFriendFragment.this)
-                .add(android.R.id.content, new FriendsFragment())
-                .commit();
+        getFragmentManager().popBackStack();
     }
 
     private boolean isFriend(String id) {
@@ -130,8 +126,6 @@ public class AddFriendFragment extends Fragment {
         }
     }
 
-    ;
-
     private class listview_OnItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -172,8 +166,6 @@ public class AddFriendFragment extends Fragment {
                     }).show();
         }
     }
-
-    ;
 
     private class pcchatapp_user_friend_ChildEventListener implements ChildEventListener {
         @Override

@@ -3,8 +3,6 @@ package pana.com.chat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,21 +70,19 @@ public class CreateAccountFragment extends Fragment {
             firebaseUrl.createUser(emailIs, passIs, new Firebase.ValueResultHandler<Map<String, Object>>() {
                 @Override
                 public void onSuccess(Map<String, Object> stringObjectMap) {
+
                     HashMap<String, String> userDetails = new HashMap<>();
                     userDetails.put("email_id", emailIs);
                     userDetails.put("image_url", "N/A");
                     userDetails.put("name", nameIs);
                     userDetails.put("phone", phoneIs);
-                    firebaseUrl.child("users").child(stringObjectMap.get("uid").toString()).setValue(userDetails);
-                    Toast.makeText(getActivity(), "AccountCreated Successfully", Toast.LENGTH_LONG).show();
-                    FragmentManager fragmentManager2 = getFragmentManager();
-                    FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                    LoginFragment loginFragment = new LoginFragment();
-                    fragmentTransaction2.addToBackStack("");
-                    fragmentTransaction2.hide(CreateAccountFragment.this);
-                    fragmentTransaction2.add(android.R.id.content, loginFragment);
-                    fragmentTransaction2.commit();
-
+                    firebaseUrl.child("users").child(stringObjectMap.get("uid").toString()).setValue(userDetails,new Firebase.CompletionListener() {
+                        @Override
+                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            Toast.makeText(getActivity(), "Account Created Successfully", Toast.LENGTH_LONG).show();
+                            backToLoginFragment();
+                        }
+                    });
                 }
 
                 @Override
@@ -102,9 +98,9 @@ public class CreateAccountFragment extends Fragment {
                 }
             });
         }
-
-
     }
 
-
+    private void backToLoginFragment(){
+        getFragmentManager().popBackStack();
+    }
 }

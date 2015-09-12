@@ -2,8 +2,6 @@ package pana.com.chat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +17,15 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements View.OnClickListener {
 
-    ListView listView;
+    private ListView listView;
 
-    Button button;
+    private Button button;
 
-    Firebase pcchatapp;
+    private Firebase pcchatapp;
 
-    ArrayList friendsID,friendsData;
+    private ArrayList friendsID, friendsData;
 
     public FriendsFragment() {
 
@@ -36,41 +34,37 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        friendsID=new ArrayList();
-        friendsData=new ArrayList();
-        pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
+
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
+
         listView = (ListView) view.findViewById(R.id.friends_listview);
         button = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fragmentManager2 = getFragmentManager();
-                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                AddFriendFragment addFriendsFragment = new AddFriendFragment();
-                fragmentTransaction2.addToBackStack("");
-                fragmentTransaction2.remove(FriendsFragment.this);
-                fragmentTransaction2.add(android.R.id.content, addFriendsFragment);
-                fragmentTransaction2.commit();
-            }
-        });
+        button.setOnClickListener(this);
+
+        friendsID = new ArrayList();
+        friendsData = new ArrayList();
+
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Friend Data",dataSnapshot.getValue().toString());
-                for(DataSnapshot d:dataSnapshot.getChildren()){
-                    HashMap<String,Object> hashMap= (HashMap<String, Object>) d.getValue();
+                Log.d("Friend Data", dataSnapshot.getValue().toString());
+                friendsID.clear();
+                friendsData.clear();
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
+                    Log.d("Id id ", "---> " + hashMap.get("id"));
                     friendsID.add(hashMap.get("id"));
                     pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                            DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                             friendsData.add(dataModelUser);
-                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                         }
 
                         @Override
@@ -86,7 +80,22 @@ public class FriendsFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        friendsData = null;
+        friendsID = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.fragment, new AddFriendFragment())
+                .commit();
+    }
 }
