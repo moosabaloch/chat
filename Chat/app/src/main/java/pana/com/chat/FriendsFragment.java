@@ -96,7 +96,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("FRIEND FRAGMENT","OnDestroy");
-        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
+        pcchatapp.removeEventListener(VEL);
     }
 
     @Override
