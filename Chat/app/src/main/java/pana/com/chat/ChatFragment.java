@@ -151,7 +151,7 @@ public class ChatFragment extends Fragment {
     private void refreshAdaptor() {
         chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
         chatListView.setAdapter(chatMessageAdaptor);
-
+        chatListView.setSelection(messagesArrayList.size() - 1);
 //        chatMessageAdaptor.notifyDataSetChanged();
     }
 

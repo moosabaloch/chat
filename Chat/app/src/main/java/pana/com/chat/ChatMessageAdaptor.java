@@ -24,7 +24,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
     private Context context;
     private List<Messages> messagesList;
 
-    public ChatMessageAdaptor( Context context, List<Messages> messagesList) {
+    public ChatMessageAdaptor(Context context, List<Messages> messagesList) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.messagesList = messagesList;
@@ -60,7 +60,8 @@ public class ChatMessageAdaptor extends BaseAdapter {
         if (msg.getUser().getId().equals(DataModelMeSingleton.getInstance().getId())) {
             messageMe.setText(msg.getMessage());
             nameMe.setText(msg.getUser().getName());
-            timeStampMe.setText(msg.getTimeStamp());
+
+            timeStampMe.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             profilePicFriend.setVisibility(View.INVISIBLE);
             messageFriend.setVisibility(View.INVISIBLE);
             nameFriend.setVisibility(View.INVISIBLE);
@@ -69,7 +70,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
         } else {
             messageFriend.setText(msg.getMessage());
             nameFriend.setText(msg.getUser().getName());
-            timeStampFriend.setText(msg.getTimeStamp());
+            timeStampFriend.setText(""+Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             profilePicMe.setVisibility(View.INVISIBLE);
             messageMe.setVisibility(View.INVISIBLE);
             nameMe.setVisibility(View.INVISIBLE);
