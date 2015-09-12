@@ -4,8 +4,7 @@ package pana.com.chat;
  * Created by Abdul Basit on 9/9/2015.
  */
 public class DataModelUser {
-    //check123
-    private String email_id,image_url,name,phone;
+    private String email_id, image_url, name, phone;
 
     public String getEmail_id() {
         return email_id;
