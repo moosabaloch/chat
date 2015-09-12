@@ -55,6 +55,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 VEL = this;
                 friendsData.clear();
                 friendsID.clear();
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
                 try {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();

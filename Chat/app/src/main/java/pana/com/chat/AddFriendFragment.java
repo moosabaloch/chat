@@ -23,7 +23,6 @@ import java.util.HashMap;
 public class AddFriendFragment extends Fragment {
 
     private ListView listView;
-    private View view;
     private ArrayList ids, myFriends;
     private ArrayList<DataModelUser> allUsers;
     private Firebase pcchatapp;
@@ -42,7 +41,7 @@ public class AddFriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
 
-        view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_friend, container, false);
 
         ids = new ArrayList();
         myFriends = new ArrayList();
