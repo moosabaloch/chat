@@ -141,7 +141,7 @@ public class AddFriendFragment extends Fragment {
                             HashMap<String, Object> hashMap = new HashMap<String, Object>();
                             hashMap.put("ConversationID", "null");
 
-                            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).child(myFriends.get(i).toString()).setValue(hashMap, new Firebase.CompletionListener() {
+                            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).child(ids.get(i).toString()).setValue(hashMap, new Firebase.CompletionListener() {
                                 @Override
                                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                     Log.d("message", "Completed");
