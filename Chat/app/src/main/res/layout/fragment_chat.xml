@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pana.com.chat.ChatFragment">
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff00b2ff"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/chatFragmentTextViewFriendName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="3dp"
+            android:text="@string/friendname"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/secondary_text_light" />
+
+        <Button
+            android:id="@+id/chatFragmentButtonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#ff00b2ff"
+            android:text="@string/logout"
+            android:textColor="@android:color/secondary_text_light" />
+
+        <TextView
+            android:id="@+id/chatFragmentTextViewFriendEmailView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/chatFragmentTextViewFriendName"
+            android:layout_alignStart="@+id/chatFragmentTextViewFriendName"
+            android:layout_below="@+id/chatFragmentTextViewFriendName"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="3dp"
+            android:text="@string/email.com"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/secondary_text_light" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/chatFragmentListViewChatMessages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayout"
+        android:divider="@android:color/holo_red_dark"
+        android:layout_centerHorizontal="true"
+        android:dividerHeight="1dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/holo_orange_light">
+
+        <EditText
+            android:id="@+id/chatFragmentEditTextWriteMessageHere"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:hint="@string/writemsghere" />
+
+        <ImageButton
+            android:id="@+id/chatFragmentButtonSendMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_send" />
+    </LinearLayout>
+</RelativeLayout>

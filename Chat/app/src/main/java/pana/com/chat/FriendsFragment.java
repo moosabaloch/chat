@@ -100,6 +100,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 friend.setNameUserFriend(dataModelUser.getName());
                 friend.setPhoneUserFriend(dataModelUser.getPhone());
                 Log.d("Data in Friend Sngltn", "-->" + friend.toString());
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new ChatFragment())
+                        .commit();
 
             }
         });

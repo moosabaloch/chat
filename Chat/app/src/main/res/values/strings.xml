@@ -13,5 +13,10 @@
     <string name="phoneNumber">Phone Number</string>
     <string name="emailId">Email ID</string>
     <string name="password">Password</string>
+    <string name="friendname">Friend Name</string>
+    <string name="logout">LogOut</string>
+    <string name="writemsghere">Write your Message Here...</string>
+    <string name="message">Message</string>
+    <string name="username">User Name</string>
 
 </resources>
