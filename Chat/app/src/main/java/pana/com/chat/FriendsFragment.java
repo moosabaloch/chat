@@ -25,7 +25,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private ListView listView;
     private Button button1, button2;
     private Firebase pcchatapp;
-    private ArrayList friendsID, friendsData;
+    private ArrayList friendsID,friendsConversationID, friendsData;
 
     public FriendsFragment() {
 
@@ -50,6 +50,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         friendsID = new ArrayList();
         friendsData = new ArrayList();
+        friendsConversationID=new ArrayList();
 
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,16 +61,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 try {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
-                        HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
-                        friendsID.add(hashMap.get("id"));
 
-                        pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
+                        friendsID.add(d.getKey().toString());
+                        friendsConversationID.add(((HashMap<String,Object>) d.getValue()).get("ConversationID"));
+
+                        pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
-
                             }
 
                             @Override
@@ -122,10 +123,11 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         .commit();
                 break;
             case R.id.friend_btn_logout:
-                pcchatapp.unauth();
+
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, new LoginFragment())
                         .commit();
+                pcchatapp.unauth();
                 break;
         }
 
