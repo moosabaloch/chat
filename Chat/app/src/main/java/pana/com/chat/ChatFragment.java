@@ -203,43 +203,6 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private void startChat() {
-
-        if (friendData.getConversationID().toString().equals("null")){
-            chatIsNew=true;
-        }
-        else{
-            chatIsNew=false;
-        }
-
-        //startChatAndSetMessages();
-
-        /*firebaseURL.child(chatUserDataNode).child(ME.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    //traversing chatNode for logged in User if chat available start chat
-                    ChatFriendMEId node = d.getValue(ChatFriendMEId.class);
-                    if (node.getUser1().equals(friendData.getUuidUserFriend()) || node.getUser2().equals(friendData.getUuidUserFriend())) {
-                        conversationId = node.getConversationId();
-                        chatIsNew = false;
-                        Log.d("Start Chat", "Node id Found " + conversationId);
-
-                    }
-                }
-                startChatAndSetMessages();
-
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(getActivity(), "Can't Load Chat " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-    }
-
     private void logoutBtn() {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
