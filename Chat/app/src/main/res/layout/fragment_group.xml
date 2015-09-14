@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/textView3"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/groupFragmentButtonLogout"
+            android:layout_toLeftOf="@+id/groupFragmentButtonLogout"
             android:background="#ff00b2ff"
             android:padding="10dp"
             android:src="@android:drawable/ic_menu_add"
