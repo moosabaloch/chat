@@ -42,7 +42,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        listView = (ListView) view.findViewById(R.id.friends_listview);
+        listView = (ListView) view.findViewById(R.id.friend_listView);
         button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
         button2 = (Button) view.findViewById(R.id.friend_btn_logout);
         button1.setOnClickListener(this);
@@ -91,7 +91,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DataModelChatUserSingleTon friend = DataModelChatUserSingleTon.getInstance();
+                DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
                 DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
                 friend.setUuidUserFriend(friendsID.get(position).toString());
                 friend.setEmailUserFriend(dataModelUser.getEmail_id());
