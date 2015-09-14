@@ -18,5 +18,7 @@
     <string name="writemsghere">Write your Message Here...</string>
     <string name="message">Message</string>
     <string name="username">User Name</string>
+    <string name="groupname">Group Name</string>
+    <string name="groupdescription">Group Description</string>
 
 </resources>
