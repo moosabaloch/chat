@@ -50,7 +50,7 @@ public class GroupsViewAdaptor extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.chatadaptor, parent, false);
+            convertView = inflater.inflate(R.layout.groupsviewadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.groupName = (TextView) convertView.findViewById(R.id.groupAdaptorTextViewGroupName);
             viewHolder.groupImage = (ImageView) convertView.findViewById(R.id.groupAdaptorImageViewGroupImage);
