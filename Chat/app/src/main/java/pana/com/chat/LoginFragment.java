@@ -91,7 +91,7 @@ public class LoginFragment extends Fragment {
                 DataModelMeSingleton.getInstance().setImageUrl(dataSnapshot.child("image_url").getValue().toString());
                 DataModelMeSingleton.getInstance().setName(dataSnapshot.child("name").getValue().toString());
                 DataModelMeSingleton.getInstance().setPhone(dataSnapshot.child("phone").getValue().toString());
-                switchToFriendsFrag();
+                switchToHomeFrag();
                 loginButton.setEnabled(true);
                 createAccountButton.setEnabled(true);
             }
@@ -105,9 +105,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void switchToFriendsFrag() {
-        Log.d("Switch to Fragment", "Invoked...");
-        getFragmentManager().beginTransaction().replace(R.id.fragment, new FriendsFragment()).commit();
+    private void switchToHomeFrag() {
+        Log.d("Switch to Home Fragment", "Invoked...");
+        getFragmentManager().beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
     }
 
     private void createNewAccount() {
