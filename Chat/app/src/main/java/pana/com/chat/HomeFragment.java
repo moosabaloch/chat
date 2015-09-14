@@ -37,21 +37,27 @@ public class HomeFragment extends Fragment {
         ((Button) view.findViewById(R.id.homebtngroups)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment,new GroupFragment()).commit();
+                getFragmentManager().beginTransaction()
+                                    .addToBackStack("")
+                                    .replace(R.id.fragment, new GroupFragment())
+                                    .commit();
             }
         });
 
         ((Button) view.findViewById(R.id.homebtnfriend)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment,new FriendsFragment())
+                        .commit();
             }
         });
 
         ((Button) view.findViewById(R.id.homebtnrequest)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO Request Module
             }
         });
 
