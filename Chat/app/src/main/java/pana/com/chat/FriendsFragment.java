@@ -1,7 +1,5 @@
 package pana.com.chat;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,7 +25,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private ListView listView;
     private Button button1, button2;
     private Firebase pcchatapp;
-    private ArrayList friendsID,friendsConversationID, friendsData;
+    private ArrayList friendsID, friendsData;
 
     public FriendsFragment() {
 
@@ -52,7 +50,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         friendsID = new ArrayList();
         friendsData = new ArrayList();
-        friendsConversationID=new ArrayList();
 
         pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -63,16 +60,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 try {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
+                        friendsID.add(hashMap.get("id"));
 
-                        friendsID.add(d.getKey().toString());
-                        friendsConversationID.add(((HashMap<String, Object>) d.getValue()).get("ConversationID"));
-
-                        pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
+                        pcchatapp.child("users").child(hashMap.get("id").toString()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
+
                             }
 
                             @Override
@@ -91,59 +88,21 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
-
+                DataModelChatUserSingleTon friend = DataModelChatUserSingleTon.getInstance();
                 DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
-
                 friend.setUuidUserFriend(friendsID.get(position).toString());
-
                 friend.setEmailUserFriend(dataModelUser.getEmail_id());
                 friend.setImageUrlUserFriend(dataModelUser.getImage_url());
                 friend.setNameUserFriend(dataModelUser.getName());
                 friend.setPhoneUserFriend(dataModelUser.getPhone());
-                friend.setConversationID(friendsConversationID.get(position).toString());
-
                 Log.d("Data in Friend Sngltn", "-->" + friend.toString());
-
-
-                LayoutInflater inflater1=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View dialogView=inflater1.inflate(R.layout.alertadaptor,null);
-
-                final AlertDialog builder=new AlertDialog.Builder(getActivity()).create();
-                builder.setView(dialogView);
-                builder.show();
-
-                ((Button) dialogView.findViewById(R.id.dialog_profilebtn)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("Profile Button", "Clicked");
-                    }
-                });
-
-                ((Button) dialogView.findViewById(R.id.dialog_convobtn)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("Conversation Button","Clicked");
-                        getFragmentManager().beginTransaction()
-                                .addToBackStack("")
-                                .replace(R.id.fragment, new ChatFragment())
-                                .commit();
-                        builder.dismiss();
-
-                    }
-                });
-
-                ((Button) dialogView.findViewById(R.id.dialog_deletebtn)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("Delete Button","Clicked");
-                    }
-                });
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new ChatFragment())
+                        .commit();
 
             }
         });
@@ -154,8 +113,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("FRIEND FRAGMENT", "OnDestroy");
-        if(VEL!=null)
-            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
+        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
     }
 
     @Override
@@ -168,11 +126,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         .commit();
                 break;
             case R.id.friend_btn_logout:
-
+                pcchatapp.unauth();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, new LoginFragment())
                         .commit();
-                pcchatapp.unauth();
                 break;
         }
 
