@@ -97,6 +97,7 @@ public class GroupFragment extends Fragment {
                         Toast.makeText(getActivity(), groupDescription + " " + groupName, Toast.LENGTH_LONG).show();
                     }
                 });
+                builder.show();
             }
         });
     }
