@@ -79,7 +79,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
             view.nameFriend.setVisibility(View.VISIBLE);
             view.timeStampFriend.setVisibility(View.VISIBLE);
             view.messageFriend.setText(msg.getMessage());
-            view.nameFriend.setText(DataModelChatUserSingleTon.getInstance().getNameUserFriend());
+            view.nameFriend.setText(DataModelFriendSingleTon.getInstance().getNameUserFriend());
             view.timeStampFriend.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             view.profilePicMe.setVisibility(View.INVISIBLE);
             view.messageMe.setVisibility(View.INVISIBLE);

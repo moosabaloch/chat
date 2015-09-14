@@ -9,21 +9,33 @@ package pana.com.chat;
  * Please increment the following counter as the warning to the next Guy.
  * TOTAL_HOURS_WASTED_HERE=1
  */
-public class DataModelChatUserSingleTon {
-    private static DataModelChatUserSingleTon ourInstance;
+public class DataModelFriendSingleTon {
+
+    private static DataModelFriendSingleTon ourInstance;
+
     private String emailUserFriend;
     private String imageUrlUserFriend;
     private String nameUserFriend;
     private String phoneUserFriend;
     private String uuidUserFriend;
+    private String conversationID;
 
-    private DataModelChatUserSingleTon() {
+    private DataModelFriendSingleTon() {
     }
 
-    public static DataModelChatUserSingleTon getInstance() {
+    public String getConversationID() {
+        return conversationID;
+    }
+
+    public void setConversationID(String conversationID) {
+        this.conversationID = conversationID;
+    }
+
+    public static DataModelFriendSingleTon getInstance() {
         if (ourInstance == null) {
-            return ourInstance = new DataModelChatUserSingleTon();
+            return ourInstance = new DataModelFriendSingleTon();
         }
+
         return ourInstance;
     }
 
