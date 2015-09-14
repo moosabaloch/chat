@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pana.com.chat.GroupFragment">
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff00b2ff">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp"
+            android:text="Groups"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/groupFragmentButtonAddNewGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/groupFragmentButtonLogout"
+            android:background="#ff00b2ff"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_menu_add"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/groupFragmentButtonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#ff00b2ff"
+            android:text="@string/logout"
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/groupFragmentListViewGroupsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:divider="@android:color/holo_blue_bright"
+        android:dividerHeight="2dp"
+        android:padding="10dp" />
+
+</RelativeLayout>

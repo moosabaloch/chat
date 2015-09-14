@@ -42,9 +42,9 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        listView = (ListView) view.findViewById(R.id.friends_listview);
-        button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button2 = (Button) view.findViewById(R.id.friend_btn_logout);
+        listView = (ListView) view.findViewById(R.id.groupFragmentListViewGroupsView);
+        button1 = (Button) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
+        button2 = (Button) view.findViewById(R.id.groupFragmentButtonLogout);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
 
@@ -119,13 +119,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.friend_btn_addfriend:
+            case R.id.groupFragmentButtonAddNewGroup:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
                         .replace(R.id.fragment, new AddFriendFragment())
                         .commit();
                 break;
-            case R.id.friend_btn_logout:
+            case R.id.groupFragmentButtonLogout:
                 pcchatapp.unauth();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, new LoginFragment())
