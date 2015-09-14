@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment {
         friendsData=new ArrayList<DataModelUser>();
 
         ME=DataModelMeSingleton.getInstance();
+        DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
 
         ((TextView) view.findViewById(R.id.home_tv_name)).setText(ME.getName());
         ((TextView) view.findViewById(R.id.home_tv_email)).setText(pcchatapp.getAuth().getProviderData().get("email").toString());
@@ -81,6 +83,23 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
+                friend.setUuidUserFriend(friendsID.get(i).toString());
+                friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
+                friend.setImageUrlUserFriend(friendsData.get(i).getImage_url());
+                friend.setNameUserFriend(friendsData.get(i).getName());
+                friend.setPhoneUserFriend(friendsData.get(i).getPhone());
+                friend.setConversationID(conversationID.get(i).toString());
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new ChatFragment())
+                        .commit();
             }
         });
 

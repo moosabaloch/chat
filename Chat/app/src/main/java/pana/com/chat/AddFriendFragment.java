@@ -55,8 +55,7 @@ public class AddFriendFragment extends Fragment {
                 Log.d("ADD FRIEND FRAGMENT_USER FRIENDS","On data changed");
                 myFriends.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
-                    myFriends.add(hashMap.get("id"));
+                    myFriends.add(d.getKey());
                 }
             }
 
