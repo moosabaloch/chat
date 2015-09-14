@@ -1,8 +1,15 @@
 package pana.com.chat;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 /**
  * Created by Moosa on 9/14/2015.
@@ -14,6 +21,11 @@ import android.widget.BaseAdapter;
  * TOTAL_HOURS_WASTED_HERE=1
  */
 public class GroupsViewAdaptor extends BaseAdapter {
+    private LayoutInflater inflater;
+    private Context context;
+    private ArrayList<Groups> groups;
+
+
     @Override
     public int getCount() {
         return 0;
@@ -31,6 +43,20 @@ public class GroupsViewAdaptor extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.chatadaptor, parent, false);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.messageMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageMe);
+            convertView.setTag(viewHolder);
+        }
+        ViewHolder view = (ViewHolder) convertView.getTag();
+     Groups grp=groups.get(position);
+
+        return convertView;
+    }
+
+    class ViewHolder {
+        public TextView messageMe;
+
     }
 }

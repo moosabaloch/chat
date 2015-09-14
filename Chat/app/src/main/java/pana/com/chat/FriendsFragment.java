@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class FriendsFragment extends Fragment implements View.OnClickListener {
 
-    ValueEventListener VEL;
+    private ValueEventListener VEL;
     private ListView listView;
     private Button button1, button2;
     private Firebase pcchatapp;
