@@ -42,9 +42,9 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        listView = (ListView) view.findViewById(R.id.groupFragmentListViewGroupsView);
-        button1 = (Button) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
-        button2 = (Button) view.findViewById(R.id.groupFragmentButtonLogout);
+        listView = (ListView) view.findViewById(R.id.friend_listView);
+        button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
+        button2 = (Button) view.findViewById(R.id.friend_btn_logout);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
 
@@ -91,7 +91,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DataModelChatUserSingleTon friend = DataModelChatUserSingleTon.getInstance();
+                DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
                 DataModelUser dataModelUser = ((DataModelUser) friendsData.get(position));
                 friend.setUuidUserFriend(friendsID.get(position).toString());
                 friend.setEmailUserFriend(dataModelUser.getEmail_id());
@@ -113,23 +113,24 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("FRIEND FRAGMENT", "OnDestroy");
-        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
+        if(VEL!=null)
+            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.groupFragmentButtonAddNewGroup:
+            case R.id.friend_btn_addfriend:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
                         .replace(R.id.fragment, new AddFriendFragment())
                         .commit();
                 break;
-            case R.id.groupFragmentButtonLogout:
-                pcchatapp.unauth();
+            case R.id.friend_btn_logout:
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, new LoginFragment())
                         .commit();
+                pcchatapp.unauth();
                 break;
         }
 

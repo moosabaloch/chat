@@ -10,7 +10,9 @@ package pana.com.chat;
  * TOTAL_HOURS_WASTED_HERE=1
  */
 public class DataModelMeSingleton {
+
     private static DataModelMeSingleton ourInstance;
+
     private String id;
     private String imageUrl;
     private String name;
