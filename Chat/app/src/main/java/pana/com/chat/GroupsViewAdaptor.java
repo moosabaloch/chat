@@ -5,11 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 /**
  * Created by Moosa on 9/14/2015.
@@ -22,18 +23,23 @@ import java.util.ConcurrentModificationException;
  */
 public class GroupsViewAdaptor extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context context;
     private ArrayList<Groups> groups;
+    private Context context;
 
-
-    @Override
-    public int getCount() {
-        return 0;
+    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups) {
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.groups = groups;
+        this.context = context;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public int getCount() {
+        return groups.size();
+    }
+
+    @Override
+    public Groups getItem(int position) {
+        return groups.get(position);
     }
 
     @Override
@@ -46,17 +52,32 @@ public class GroupsViewAdaptor extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.chatadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.messageMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageMe);
+            viewHolder.groupName = (TextView) convertView.findViewById(R.id.groupAdaptorTextViewGroupName);
+            viewHolder.groupImage = (ImageView) convertView.findViewById(R.id.groupAdaptorImageViewGroupImage);
+            viewHolder.joinThisGroupButton = (ImageButton) convertView.findViewById(R.id.groupAdaptorImageButtonJoinGroupButton);
+            viewHolder.groupDescription = (TextView) convertView.findViewById(R.id.groupAdaptorTextViewGroupDescription);
+
             convertView.setTag(viewHolder);
         }
+
         ViewHolder view = (ViewHolder) convertView.getTag();
-     Groups grp=groups.get(position);
+        Groups grp = groups.get(position);
+        view.groupName.setText(grp.getGroupName());
+        view.groupDescription.setText(grp.getGroupDescription());
+        view.joinThisGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "JoinTo Group Clicked", Toast.LENGTH_LONG).show();
+            }
+        });
 
         return convertView;
     }
 
     class ViewHolder {
-        public TextView messageMe;
-
+        public TextView groupName;
+        public ImageView groupImage;
+        public TextView groupDescription;
+        public ImageButton joinThisGroupButton;
     }
 }

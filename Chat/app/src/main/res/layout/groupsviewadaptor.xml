@@ -12,7 +12,7 @@
         android:src="@android:drawable/ic_dialog_dialer" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/groupAdaptorTextViewGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,21 +24,21 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/groupAdaptorTextViewGroupDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GroupDescription"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/textView4"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4" />
+        android:layout_below="@+id/groupAdaptorTextViewGroupName"
+        android:layout_alignLeft="@+id/groupAdaptorTextViewGroupName"
+        android:layout_alignStart="@+id/groupAdaptorTextViewGroupName" />
 
     <ImageButton
-        android:id="@+id/button"
+        android:id="@+id/groupAdaptorImageButtonJoinGroupButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@android:drawable/ic_input_add"
-        android:layout_alignTop="@+id/textView4"
+        android:layout_alignTop="@+id/groupAdaptorTextViewGroupName"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
