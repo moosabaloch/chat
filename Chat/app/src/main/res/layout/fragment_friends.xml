@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#ff00b2ff"
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutSearchFragGroup"
         android:gravity="right"
         android:weightSum="1">
 
@@ -47,8 +47,8 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:id="@+id/friend_listView"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"
-        android:layout_below="@+id/linearLayout" />
+        android:layout_alignLeft="@+id/linearLayoutSearchFragGroup"
+        android:layout_alignStart="@+id/linearLayoutSearchFragGroup"
+        android:layout_below="@+id/linearLayoutSearchFragGroup" />
 
 </RelativeLayout>

@@ -1,9 +1,57 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="pana.com.chat.SearchGroupFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pana.com.chat.SearchGroupFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:id="@+id/linearLayoutSearchFragGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff00b2ff">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/textViewSearchFragGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp"
+            android:text="@string/searchgroups"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/groupFragmentButtonAddNewGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/textViewSearchFragGroup"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/groupSearchFragmentButtonLogout"
+            android:background="#ff00b2ff"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_menu_add"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/groupSearchFragmentButtonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#ff00b2ff"
+            android:text="@string/logout"
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/groupSearchFragmentListViewGroupsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutSearchFragGroup"
+        android:divider="@android:color/holo_blue_bright"
+        android:dividerHeight="2dp"
+        android:padding="10dp" />
+
+</RelativeLayout>

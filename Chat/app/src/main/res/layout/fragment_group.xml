@@ -5,18 +5,18 @@
     tools:context="pana.com.chat.GroupFragment">
 
     <RelativeLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutSearchFragGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ff00b2ff">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textViewSearchFragGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:padding="10dp"
-            android:text="Groups"
+            android:text="@string/mygroups"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#FFFFFF" />
 
@@ -24,16 +24,16 @@
             android:id="@+id/groupFragmentButtonAddNewGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignBottom="@+id/textViewSearchFragGroup"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/groupFragmentButtonLogout"
+            android:layout_toLeftOf="@+id/groupSearchFragmentButtonLogout"
             android:background="#ff00b2ff"
             android:padding="10dp"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@android:drawable/ic_menu_search"
             android:textColor="#ffffff" />
 
         <Button
-            android:id="@+id/groupFragmentButtonLogout"
+            android:id="@+id/groupSearchFragmentButtonLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -44,14 +44,5 @@
             android:textColor="#ffffff" />
 
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/groupFragmentListViewGroupsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:divider="@android:color/holo_blue_bright"
-        android:dividerHeight="2dp"
-        android:padding="10dp" />
 
 </RelativeLayout>

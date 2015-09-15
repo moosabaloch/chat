@@ -52,7 +52,6 @@ public class AddFriendFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 VEL1=this;
-                Log.d("ADD FRIEND FRAGMENT_USER FRIENDS","On data changed");
                 myFriends.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     myFriends.add(d.getKey());
@@ -69,7 +68,6 @@ public class AddFriendFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 VEL2=this;
-                Log.d("ADD FRIEND FRAGMENT_ALL USERS","On data changed");
                 allUsers.clear();
                 ids.clear();
                 for(DataSnapshot d:dataSnapshot.getChildren()){

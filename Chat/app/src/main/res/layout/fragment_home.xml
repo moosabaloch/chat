@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#ff00b2ff"
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutSearchFragGroup"
         android:gravity="right">
 
         <Button
