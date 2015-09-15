@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -26,12 +25,14 @@ public class GroupsViewAdaptor extends BaseAdapter {
     private ArrayList<Groups> groups;
     private Object ref;
     private ArrayList<String> groupKeys;
+    private int TYPE;
 
-    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref,ArrayList<String> groupKeys) {
+    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref, ArrayList<String> groupKeys, int TYPE) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.groups = groups;
+        this.TYPE = TYPE;
         this.ref = ref;
-        this.groupKeys=groupKeys;
+        this.groupKeys = groupKeys;
     }
 
     @Override
@@ -65,11 +66,15 @@ public class GroupsViewAdaptor extends BaseAdapter {
         ViewHolder view = (ViewHolder) convertView.getTag();
         Groups grp = groups.get(position);
         view.groupName.setText(grp.getGroupName());
+
         view.groupDescription.setText(grp.getGroupDescription());
+        if (TYPE == Utils.TYPEMYGROUPS) {
+            view.joinThisGroupButton.setVisibility(View.INVISIBLE);
+        }
         view.joinThisGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((GroupAdaptorAddEvent) ref).addMeToThisGroup(groupKeys.get(position),position);
+                ((GroupAdaptorAddEvent) ref).addMeToThisGroup(groupKeys.get(position), position);
             }
         });
 
@@ -77,7 +82,7 @@ public class GroupsViewAdaptor extends BaseAdapter {
     }
 
     interface GroupAdaptorAddEvent {
-        void addMeToThisGroup(String key,int position);
+        void addMeToThisGroup(String key, int position);
     }
 
     class ViewHolder {

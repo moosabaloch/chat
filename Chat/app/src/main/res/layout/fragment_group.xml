@@ -45,4 +45,13 @@
 
     </RelativeLayout>
 
+    <ListView
+        android:id="@+id/myGroupFragmentListViewGroupsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutSearchFragGroup"
+        android:divider="@android:color/holo_blue_bright"
+        android:dividerHeight="2dp"
+        android:padding="10dp" />
+
 </RelativeLayout>

@@ -84,7 +84,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
                 groupsArrayList.clear();
                 arrayListForGroupKeys.clear();
                 for (DataSnapshot dataSnapshotForSingleGroup : dataSnapshotForAllGroups.getChildren()) {
-                    if (!addedToGroup(dataSnapshotForSingleGroup.getKey())) {
+                    if (!Utils.addedToGroup(dataSnapshotForSingleGroup.getKey())) {
                         Groups groups = dataSnapshotForSingleGroup.getValue(Groups.class);
                         arrayListForGroupKeys.add(dataSnapshotForSingleGroup.getKey());
                         groupsArrayList.add(groups);
@@ -100,17 +100,9 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
         });
     }
 
-    private boolean addedToGroup(String key) {
-        for (int i = 0; i < myGroups.size(); i++) {
-            if (myGroups.get(i).equals(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void loadGroupAdaptor() {
-        groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys));
+        groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys, Utils.TYPEGROUPSEARCH));
     }
 
     private void addGroup() {
@@ -158,6 +150,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
         //Add this group in my account....
         firebaseURL.child("mygroups").child(myID).push().setValue(key);
         Toast.makeText(getActivity(), "Joined Group", Toast.LENGTH_LONG).show();
+        Utils.addedToGroup(arrayListForGroupKeys.get(position));
         groupsArrayList.remove(position);
         arrayListForGroupKeys.remove(position);
         groupsViewAdaptor.notifyDataSetChanged();
