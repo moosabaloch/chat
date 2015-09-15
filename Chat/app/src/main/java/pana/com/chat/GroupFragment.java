@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -100,6 +101,18 @@ public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAd
 
         myGroupsListView.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), myJoinedGroups, this, Utils.myGroups, Utils.TYPEMYGROUPS));
         Log.d("Finish", "Groups Added " + myJoinedGroups.size());
+        myGroupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
+                groupChatDetail.setGroupIDKEY(Utils.myGroups.get(position));
+                groupChatDetail.setGroupDescription(myJoinedGroups.get(position).getGroupDescription());
+                groupChatDetail.setGroupName(myJoinedGroups.get(position).getGroupName());
+                groupChatDetail.setImageUrl(myJoinedGroups.get(position).getGroupImage());
+                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment, new GroupChatFragment()).commit();
+
+            }
+        });
 
     }
 
