@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -24,12 +24,14 @@ import java.util.ArrayList;
 public class GroupsViewAdaptor extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Groups> groups;
-    private Context context;
+    private Object ref;
+    private ArrayList<String> groupKeys;
 
-    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups) {
+    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref,ArrayList<String> groupKeys) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.groups = groups;
-        this.context = context;
+        this.ref = ref;
+        this.groupKeys=groupKeys;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class GroupsViewAdaptor extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.groupsviewadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
@@ -67,11 +69,15 @@ public class GroupsViewAdaptor extends BaseAdapter {
         view.joinThisGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "JoinTo Group Clicked", Toast.LENGTH_LONG).show();
+                ((GroupAdaptorAddEvent) ref).addMeToThisGroup(groupKeys.get(position),position);
             }
         });
 
         return convertView;
+    }
+
+    interface GroupAdaptorAddEvent {
+        void addMeToThisGroup(String key,int position);
     }
 
     class ViewHolder {

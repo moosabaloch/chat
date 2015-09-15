@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +25,15 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchGroupFragment extends Fragment {
+public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.GroupAdaptorAddEvent {
 
     private Firebase firebaseURL;
     private ImageButton addNewGroupButton;
     private ListView groupsList;
     private ArrayList<Groups> groupsArrayList;
-
+    private ArrayList<String> myGroups;
+    private ArrayList<String> arrayListForGroupKeys;
+    private GroupsViewAdaptor groupsViewAdaptor;
 
     public SearchGroupFragment() {
         // Required empty public constructor
@@ -48,6 +49,9 @@ public class SearchGroupFragment extends Fragment {
         groupsList = (ListView) view.findViewById(R.id.groupSearchFragmentListViewGroupsView);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com");
         groupsArrayList = new ArrayList<>();
+        myGroups = new ArrayList<>();
+        arrayListForGroupKeys = new ArrayList<>();
+
         addGroup();
         checkMyGroups();
         return view;
@@ -56,20 +60,19 @@ public class SearchGroupFragment extends Fragment {
     private void checkMyGroups() {
         firebaseURL.child("mygroups").child(DataModelMeSingleton.getInstance().getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getValue();
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Log.d("Check My Groups", "Values " + d.getValue().toString());
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            myGroups.add(d.getValue().toString());
+                        }
+                        groupsListLoad();
+                    }
 
-                }
-            }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+                    }
+                });
     }
 
 
@@ -78,7 +81,16 @@ public class SearchGroupFragment extends Fragment {
         firebaseURL.child("groups").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshotForAllGroups) {
-
+                groupsArrayList.clear();
+                arrayListForGroupKeys.clear();
+                for (DataSnapshot dataSnapshotForSingleGroup : dataSnapshotForAllGroups.getChildren()) {
+                    if (!addedToGroup(dataSnapshotForSingleGroup.getKey())) {
+                        Groups groups = dataSnapshotForSingleGroup.getValue(Groups.class);
+                        arrayListForGroupKeys.add(dataSnapshotForSingleGroup.getKey());
+                        groupsArrayList.add(groups);
+                    }
+                }
+                loadGroupAdaptor();
             }
 
             @Override
@@ -88,8 +100,17 @@ public class SearchGroupFragment extends Fragment {
         });
     }
 
+    private boolean addedToGroup(String key) {
+        for (int i = 0; i < myGroups.size(); i++) {
+            if (myGroups.get(i).equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void loadGroupAdaptor() {
-        groupsList.setAdapter(new GroupsViewAdaptor(getActivity(), groupsArrayList));
+        groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys));
     }
 
     private void addGroup() {
@@ -118,6 +139,8 @@ public class SearchGroupFragment extends Fragment {
                         firebaseURL.child("mygroups").child(myID).push().setValue(groupKey);
                         //Create Group in the node group...
                         groupID.setValue(new Groups(groupName, "N/A", groupDescription, admin));
+                        //Add group id to conversation node
+                        firebaseURL.child("conversation").setValue(groupKey);
                         Toast.makeText(getActivity(), groupName + " created successfully as group.", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -127,4 +150,16 @@ public class SearchGroupFragment extends Fragment {
     }
 
 
+    @Override
+    public void addMeToThisGroup(String key, int position) {
+        String myID = DataModelMeSingleton.getInstance().getId();
+        //Add me to the Users in the Group....
+        firebaseURL.child("groupusers").child(key).push().setValue(myID);
+        //Add this group in my account....
+        firebaseURL.child("mygroups").child(myID).push().setValue(key);
+        Toast.makeText(getActivity(), "Joined Group", Toast.LENGTH_LONG).show();
+        groupsArrayList.remove(position);
+        arrayListForGroupKeys.remove(position);
+        groupsViewAdaptor.notifyDataSetChanged();
+    }
 }
