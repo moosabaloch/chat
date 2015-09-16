@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -130,6 +131,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.homebtnprofile:
                 LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view2=inflater.inflate(R.layout.profiledialog,null);
+                TextView name=(TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email=(TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone=(TextView) view2.findViewById(R.id.profiledialog_phone);
+                name.setText(ME.getName());
+                email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
+                phone.setText(ME.getPhone());
                 AlertDialog alertDialog=new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
