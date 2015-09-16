@@ -69,34 +69,33 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Log.d("Accept Button....",i+"");
-                HashMap<String,Object> hashMap=new HashMap<String, Object>();
+                final HashMap<String,Object> hashMap=new HashMap<String, Object>();
                 hashMap.put("ConversationID","null");
                 pcchatapp.child("user_friend").child(ME.getId()).child(friendsID.get(i).toString()).setValue(hashMap,new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         check1=true;
+                        if (check1) {
+                            pcchatapp.child("user_friend").child(friendsID.get(i).toString()).child(ME.getId()).setValue(hashMap,new Firebase.CompletionListener() {
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                    check2=true;
+                                    if(check1&&check2){
+                                        pcchatapp.child("friend_requests").child(ME.getId()).child(friendsID.get(i).toString()).removeValue(new Firebase.CompletionListener() {
+                                            @Override
+                                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                                Toast.makeText(context,"Friend Added",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        Toast.makeText(context,"Error Accepting Request",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
-                if (check1) {
-                    pcchatapp.child("user_friend").child(friendsID.get(i).toString()).child(ME.getId()).setValue(hashMap,new Firebase.CompletionListener() {
-                        @Override
-                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            check2=true;
-                        }
-                    });
-                }
-                if(check1&&check2){
-                    pcchatapp.child("friend_requests").child(ME.getId()).child(friendsID.get(i).toString()).removeValue(new Firebase.CompletionListener() {
-                        @Override
-                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            Toast.makeText(context,"Friend Added",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                else{
-                    Toast.makeText(context,"Error Accepting Request",Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
 

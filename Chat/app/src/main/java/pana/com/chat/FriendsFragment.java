@@ -155,20 +155,20 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 check1=true;
+                                if(check1){
+                                    pcchatapp.child("user_friend").child(friend.getUuidUserFriend()).child(ME.getId()).removeValue(new Firebase.CompletionListener() {
+                                        @Override
+                                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                            check2=true;
+                                            if (check1&&check2){
+                                                Toast.makeText(getActivity(),"Friend Removed",Toast.LENGTH_SHORT).show();
+                                                alertDialog.dismiss();
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         });
-                        if(check1){
-                            pcchatapp.child("user_friend").child(friend.getUuidUserFriend()).child(ME.getId()).removeValue(new Firebase.CompletionListener() {
-                                @Override
-                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                    check2=true;
-                                }
-                            });
-                        }
-                        if (check1&&check2){
-                            Toast.makeText(getActivity(),"Friend Removed",Toast.LENGTH_SHORT).show();
-                            alertDialog.dismiss();
-                        }
                     }
                 });
             }

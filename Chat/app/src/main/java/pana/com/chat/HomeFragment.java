@@ -64,27 +64,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 friendsID.clear();
                 conversationID.clear();
                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
-                for (DataSnapshot d:dataSnapshot.getChildren()){
-                    HashMap<String,Object> hashMap=new HashMap<String, Object>();
-                    hashMap= (HashMap<String, Object>) d.getValue();
-                    Log.d("Home Fragment.....",d.getKey().toString());
-                    Log.d("Home Fragment.....",hashMap.get("ConversationID").toString());
-                    if (!hashMap.get("ConversationID").toString().equals("null")){
-                        friendsID.add(d.getKey().toString());
-                        conversationID.add(hashMap.get("ConversationID").toString());
-                        pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
-                                friendsData.add(dataModelUser);
-                                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
-                            }
+                if (dataSnapshot.hasChildren()){
+                    for (DataSnapshot d:dataSnapshot.getChildren()){
+                        HashMap<String,Object> hashMap=new HashMap<String, Object>();
+                        hashMap= (HashMap<String, Object>) d.getValue();
+                        Log.d("Home Fragment.....",d.getKey().toString());
+                        Log.d("Home Fragment.....",hashMap.get("ConversationID").toString());
+                        if (!hashMap.get("ConversationID").toString().equals("null")){
+                            friendsID.add(d.getKey().toString());
+                            conversationID.add(hashMap.get("ConversationID").toString());
+                            pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                                    friendsData.add(dataModelUser);
+                                    listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                                }
 
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 }
             }
