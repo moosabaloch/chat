@@ -24,7 +24,7 @@ public class FriendsRequestFragment extends Fragment {
     Firebase pcchatapp;
     DataModelMeSingleton ME;
     ValueEventListener VEL1,VEL2;
-    
+
     public FriendsRequestFragment() {
 
     }

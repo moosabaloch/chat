@@ -47,9 +47,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         listView = (ListView) view.findViewById(R.id.friend_listView);
         button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button2 = (Button) view.findViewById(R.id.friend_btn_logout);
         button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
 
         friendsID = new ArrayList();
         friendsData = new ArrayList();
@@ -163,12 +161,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         .addToBackStack("")
                         .replace(R.id.fragment, new AddFriendFragment())
                         .commit();
-                break;
-            case R.id.friend_btn_logout:
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, new LoginFragment())
-                        .commit();
-                pcchatapp.unauth();
                 break;
         }
 
