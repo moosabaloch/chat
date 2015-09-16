@@ -1,5 +1,7 @@
 package pana.com.chat;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -46,12 +48,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         ME=DataModelMeSingleton.getInstance();
 
-        ((TextView) view.findViewById(R.id.home_tv_name)).setText(ME.getName());
-        ((TextView) view.findViewById(R.id.home_tv_email)).setText(pcchatapp.getAuth().getProviderData().get("email").toString());
-        ((TextView) view.findViewById(R.id.home_tv_phone)).setText(ME.getPhone());
         ((Button) view.findViewById(R.id.homebtngroups)).setOnClickListener(this);
         ((Button) view.findViewById(R.id.homebtnfriend)).setOnClickListener(this);
         ((Button) view.findViewById(R.id.homebtnrequest)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.homebtnlogout)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.homebtnprofile)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.homebtnprofile)).setText(ME.getName());
 
         listView= (ListView) view.findViewById(R.id.home_lv_chats);
 
@@ -97,10 +99,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-
-
-
-
         return view;
     }
 
@@ -126,8 +124,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.homebtnrequest:
                 getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment,new FriendsRequestFragment())
+                    .addToBackStack("")
+                    .replace(R.id.fragment,new FriendsRequestFragment())
+                    .commit();
+                break;
+            case R.id.homebtnprofile:
+                LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view2=inflater.inflate(R.layout.profiledialog,null);
+                TextView name=(TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email=(TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone=(TextView) view2.findViewById(R.id.profiledialog_phone);
+                name.setText(ME.getName());
+                email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
+                phone.setText(ME.getPhone());
+                AlertDialog alertDialog=new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setView(view2);
+                alertDialog.show();
+                break;
+            case R.id.homebtnlogout:
+                pcchatapp.unauth();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment,new LoginFragment())
                         .commit();
                 break;
         }
