@@ -1,17 +1,15 @@
 package pana.com.chat;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -19,18 +17,17 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupFragment extends Fragment {
-
+public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAdaptorAddEvent {
+    private ImageButton addNewSearchGroupFragmentButton;
+    private ListView myGroupsListView;
     private Firebase firebaseURL;
-    private ImageButton addNewGroupButton;
-    private ListView groupsList;
-    private ArrayList<Groups> groupsArrayList;
+    private GroupsViewAdaptor groupsViewAdaptor;
+    private ArrayList<Groups> myJoinedGroups;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -42,65 +39,86 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
-        addNewGroupButton = (ImageButton) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
-        groupsList = (ListView) view.findViewById(R.id.groupFragmentListViewGroupsView);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com");
-        groupsArrayList = new ArrayList<>();
-        addGroup();
-        groupsListLoad();
+        addNewSearchGroupFragmentButton = (ImageButton) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
+        addNewSearchGroupFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment, new SearchGroupFragment()).commit();
+            }
+        });
+        myJoinedGroups = new ArrayList<>();
+        myGroupsListView = (ListView) view.findViewById(R.id.myGroupFragmentListViewGroupsView);
+        checkMyGroups();
+
         return view;
     }
 
-    private void groupsListLoad() {
-
-        firebaseURL.child("groups").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Groups group = snapshot.getValue(Groups.class);
-                        groupsArrayList.add(group);
-                    }
-                    loadGroupAdaptor();
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    private void loadGroupAdaptor() {
-        groupsList.setAdapter(new GroupsViewAdaptor(getActivity(), groupsArrayList));
-    }
-
-    private void addGroup() {
-        addNewGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog builder = new AlertDialog.Builder(getActivity()).create();
-                builder.setTitle("Add Group");
-                View dialogView = View.inflate(getActivity(), R.layout.dialoglayoutview, null);
-                final EditText name = (EditText) dialogView.findViewById(R.id.dialogEditTextGroupName);
-                final EditText description = (EditText) dialogView.findViewById(R.id.dialogEditTextGroupDescription);
-                builder.setView(dialogView);
-                builder.setButton(DialogInterface.BUTTON_POSITIVE, "Add", new DialogInterface.OnClickListener() {
+    private void checkMyGroups() {
+        Log.d("CHECK MY GROUPS", "Invoked");
+        firebaseURL.child("mygroups").child(DataModelMeSingleton.getInstance().getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        HashMap<String, String> admin = new HashMap<>();
-                        admin.put("id", DataModelMeSingleton.getInstance().getId());
-                        String groupName = name.getText().toString();
-                        String groupDescription = description.getText().toString();
-                        firebaseURL.child("groups").push().setValue(new Groups(groupName, "N/A", groupDescription, admin));
-                        Toast.makeText(getActivity(), groupDescription + " " + groupName, Toast.LENGTH_LONG).show();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("CHECK MY GROUPS", "Inside onDataChanged Clear List");
+
+                        Utils.myGroups.clear();
+                        myJoinedGroups.clear();
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            Log.d("CHECK MY GROUPS", "Inside For Loop myGroups " + d.getValue());
+
+                            Utils.myGroups.add(d.getValue().toString());
+                            firebaseURL.child("groups").child(d.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Log.d("CHECK MY GROUPS", "Inside inner OnDataChanged");
+
+                                    Groups myGroups = dataSnapshot.getValue(Groups.class);
+                                    myJoinedGroups.add(myGroups);
+                                    Log.d("CHECK MY GROUPS", "Group Added " + myGroups.getGroupName());
+
+                                    refreshAdaptor();
+
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
                     }
                 });
-                builder.show();
+    }
+
+    private void refreshAdaptor() {
+        Log.d("Refresh Adaptor", "Invoked");
+
+        myGroupsListView.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), myJoinedGroups, this, Utils.myGroups, Utils.TYPEMYGROUPS));
+        Log.d("Finish", "Groups Added " + myJoinedGroups.size());
+        myGroupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
+                groupChatDetail.setGroupIDKEY(Utils.myGroups.get(position));
+                groupChatDetail.setGroupDescription(myJoinedGroups.get(position).getGroupDescription());
+                groupChatDetail.setGroupName(myJoinedGroups.get(position).getGroupName());
+                groupChatDetail.setImageUrl(myJoinedGroups.get(position).getGroupImage());
+                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment, new GroupChatFragment()).commit();
+
             }
         });
+
     }
 
 
+    @Override
+    public void addMeToThisGroup(String key, int position) {
+
+    }
 }

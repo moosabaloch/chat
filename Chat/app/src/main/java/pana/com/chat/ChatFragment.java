@@ -109,7 +109,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void setFriendDetails() {
-        Log.d("Getting Friend Detail..........",friendData.getEmailUserFriend()+"\n"+friendData.getNameUserFriend());
         friendEmail.setText(friendData.getEmailUserFriend());
         friendName.setText(friendData.getNameUserFriend());
     }
@@ -149,11 +148,9 @@ public class ChatFragment extends Fragment {
 
     private boolean isNewChat(){
         if (friendData.getConversationID().toString().equals("null")){
-            Log.d("Is Chat is New..........","True");
             return true;
         }
         else{
-            Log.d("Is Chat is New..........","False");
             return false;
         }
     }

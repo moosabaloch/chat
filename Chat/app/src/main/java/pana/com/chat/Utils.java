@@ -1,8 +1,6 @@
 package pana.com.chat;
 
-import android.content.Context;
-
-import java.util.Date;
+import java.util.ArrayList;
 
 /**
  * Created by Moosa on 9/12/2015.
@@ -13,7 +11,21 @@ import java.util.Date;
  * Please increment the following counter as the warning to the next Guy.
  * TOTAL_HOURS_WASTED_HERE=1
  */
-public class Utils {/*
+public class Utils {
+    public static int TYPEGROUPSEARCH = 123;
+    public static int TYPEMYGROUPS = 321;
+    public static ArrayList<String> myGroups=new ArrayList<>();
+
+    public static boolean addedToGroup(String key) {
+        for (int i = 0; i < myGroups.size(); i++) {
+            if (myGroups.get(i).equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+/*
     public static String getTimeAgo(Date date, Context ctx) {
 
         if(date == null) {

@@ -20,5 +20,7 @@
     <string name="username">User Name</string>
     <string name="groupname">Group Name</string>
     <string name="groupdescription">Group Description</string>
+    <string name="searchgroups">Search Groups</string>
+    <string name="mygroups">My Groups</string>
 
 </resources>

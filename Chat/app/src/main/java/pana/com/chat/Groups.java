@@ -17,6 +17,9 @@ public class Groups {
     private String groupDescription;
     private HashMap<String, String> groupAdmin;
 
+    public Groups() {
+    }
+
     public Groups(String groupName, String groupImage, String groupDescription, HashMap<String, String> groupAdmin) {
         this.groupName = groupName;
         this.groupImage = groupImage;

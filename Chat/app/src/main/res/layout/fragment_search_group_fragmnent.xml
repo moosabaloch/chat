@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pana.com.chat.GroupFragment">
+    tools:context="pana.com.chat.SearchGroupFragment">
 
     <RelativeLayout
         android:id="@+id/linearLayoutSearchFragGroup"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:padding="10dp"
-            android:text="@string/mygroups"
+            android:text="@string/searchgroups"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#FFFFFF" />
 
@@ -29,7 +29,7 @@
             android:layout_toLeftOf="@+id/groupSearchFragmentButtonLogout"
             android:background="#ff00b2ff"
             android:padding="10dp"
-            android:src="@android:drawable/ic_menu_search"
+            android:src="@android:drawable/ic_menu_add"
             android:textColor="#ffffff" />
 
         <Button
@@ -46,7 +46,7 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/myGroupFragmentListViewGroupsView"
+        android:id="@+id/groupSearchFragmentListViewGroupsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayoutSearchFragGroup"
