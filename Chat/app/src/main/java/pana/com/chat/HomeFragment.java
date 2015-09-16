@@ -60,6 +60,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         pcchatapp.child("user_friend").child(ME.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                friendsData.clear();
+                friendsID.clear();
+                conversationID.clear();
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
                 for (DataSnapshot d:dataSnapshot.getChildren()){
                     HashMap<String,Object> hashMap=new HashMap<String, Object>();
                     hashMap= (HashMap<String, Object>) d.getValue();
