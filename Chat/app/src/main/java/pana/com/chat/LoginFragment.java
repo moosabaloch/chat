@@ -49,71 +49,78 @@ public class LoginFragment extends Fragment {
             @Override
             public void onAuthStateChanged(AuthData authData) {
                 ASL=this;
-                if (authData != null) {
-                    Log.d("Login Fragment......", "User Already Logged in with ID:"+authData.getUid());
-                    alreadyLoggedIn=true;
-                    getUserData(authData);
-                } else {
-                    Log.d("Login Fragment......", "User Not Logged in...");
-                    alreadyLoggedIn=false;
-                    loginButton.setEnabled(true);
-                    createAccountButton.setEnabled(true);
-                }
+                authentication(authData);
             }
         });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (!alreadyLoggedIn)
-                    firebaseUrl.removeAuthStateListener(ASL);
-
-                Log.d("Login Fragment......", "Login Button Clicked");
-
-                String email = emailToLogin.getText().toString();
-                String passIs = passwordToLogin.getText().toString();
-
-                if (email.equals("") || passIs.equals("")) {
-                    Toast.makeText(getActivity(), "Email Or Password Field is Empty", Toast.LENGTH_LONG).show();
-                } else {
-                    loginButton.setEnabled(false);
-                    emailToLogin.setEnabled(false);
-                    passwordToLogin.setEnabled(false);
-                    createAccountButton.setEnabled(false);
-
-                    firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
-                        @Override
-                        public void onAuthenticated(AuthData authData) {
-                            if (authData != null) {
-                                getUserData(authData);
-                            }
-                        }
-
-                        @Override
-                        public void onAuthenticationError(FirebaseError firebaseError) {
-                            loginButton.setEnabled(true);
-                            emailToLogin.setEnabled(true);
-                            passwordToLogin.setEnabled(true);
-                            createAccountButton.setEnabled(true);
-                            Toast.makeText(getActivity(),firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                login();
             }
         });
 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment, new CreateAccountFragment())
-                        .commit();
+                createAccount();
             }
         });
 
         return view;
+    }
+
+    private void authentication(AuthData authData){
+        if (authData != null) {
+            Log.d("Login Fragment......", "User Logged in with ID:"+authData.getUid());
+            alreadyLoggedIn=true;
+            getUserData(authData);
+        } else {
+            Log.d("Login Fragment......", "User Not Logged in...");
+            alreadyLoggedIn=false;
+            loginButton.setEnabled(true);
+            createAccountButton.setEnabled(true);
+        }
+    }
+
+    private void login(){
+
+        Log.d("Login Fragment......", "Login Button Clicked");
+
+        String email = emailToLogin.getText().toString();
+        String passIs = passwordToLogin.getText().toString();
+
+        if (email.equals("") || passIs.equals("")) {
+            Toast.makeText(getActivity(), "Email Or Password Field is Empty", Toast.LENGTH_LONG).show();
+        } else {
+            loginButton.setEnabled(false);
+            emailToLogin.setEnabled(false);
+            passwordToLogin.setEnabled(false);
+            createAccountButton.setEnabled(false);
+
+            firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    loginButton.setEnabled(true);
+                    emailToLogin.setEnabled(true);
+                    passwordToLogin.setEnabled(true);
+                    createAccountButton.setEnabled(true);
+                    Toast.makeText(getActivity(),firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    private void createAccount(){
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.fragment, new CreateAccountFragment())
+                .commit();
     }
 
     private void getUserData(final AuthData authData) {
