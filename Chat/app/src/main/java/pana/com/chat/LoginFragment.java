@@ -101,7 +101,7 @@ public class LoginFragment extends Fragment {
             firebaseUrl.authWithPassword(email, passIs, new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
-                    
+
                 }
 
                 @Override
