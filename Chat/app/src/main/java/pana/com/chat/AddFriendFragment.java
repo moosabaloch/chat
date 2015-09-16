@@ -16,7 +16,9 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class AddFriendFragment extends Fragment {
@@ -26,6 +28,8 @@ public class AddFriendFragment extends Fragment {
     private ArrayList<DataModelUser> allUsers;
     private Firebase pcchatapp;
     private ValueEventListener VEL1,VEL2;
+    DataModelMeSingleton ME;
+    SimpleDateFormat sdf;
 
     public AddFriendFragment() {
 
@@ -38,9 +42,13 @@ public class AddFriendFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
 
-        View view = inflater.inflate(R.layout.fragment_add_friend, container, false);
+        ME=DataModelMeSingleton.getInstance();
+
+        sdf=new SimpleDateFormat("dd-MM-yyyy");
 
         ids = new ArrayList();
         myFriends = new ArrayList();
@@ -138,6 +146,16 @@ public class AddFriendFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
 
                             HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                            hashMap.put("RequestDate", (sdf.format(Calendar.getInstance().getTime())).toString());
+
+                            pcchatapp.child("friend_requests").child(ids.get(i).toString()).child(ME.getId()).setValue(hashMap,new Firebase.CompletionListener() {
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                    Log.d("message", "Request Sent");
+                                }
+                            });
+
+                            /*HashMap<String, Object> hashMap = new HashMap<String, Object>();
                             hashMap.put("ConversationID", "null");
 
                             pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).child(ids.get(i).toString()).setValue(hashMap, new Firebase.CompletionListener() {
@@ -152,9 +170,9 @@ public class AddFriendFragment extends Fragment {
                                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                     Log.d("message", "Completed");
                                 }
-                            });
+                            });*/
 
-                            backToFriendFragment();
+                            //backToFriendFragment();
 
                         }
                     })

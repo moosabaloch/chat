@@ -85,8 +85,8 @@
                 android:text="Large Text"
                 android:id="@+id/home_tv_phone"
                 android:layout_below="@+id/home_tv_email"
-                android:layout_alignLeft="@+id/home_tv_email"
-                android:layout_alignStart="@+id/home_tv_email" />
+                android:layout_toLeftOf="@+id/home_iv_profileimage"
+                android:layout_toStartOf="@+id/home_iv_profileimage" />
 
         </RelativeLayout>
 

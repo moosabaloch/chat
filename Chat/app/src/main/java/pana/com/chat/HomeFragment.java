@@ -19,7 +19,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     DataModelMeSingleton ME;
     Firebase pcchatapp;
     ArrayList friendsID,conversationID;
@@ -45,11 +45,14 @@ public class HomeFragment extends Fragment {
         friendsData=new ArrayList<DataModelUser>();
 
         ME=DataModelMeSingleton.getInstance();
-        DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
 
         ((TextView) view.findViewById(R.id.home_tv_name)).setText(ME.getName());
         ((TextView) view.findViewById(R.id.home_tv_email)).setText(pcchatapp.getAuth().getProviderData().get("email").toString());
         ((TextView) view.findViewById(R.id.home_tv_phone)).setText(ME.getPhone());
+        ((Button) view.findViewById(R.id.homebtngroups)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.homebtnfriend)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.homebtnrequest)).setOnClickListener(this);
+
         listView= (ListView) view.findViewById(R.id.home_lv_chats);
 
         pcchatapp.child("user_friend").child(ME.getId()).addValueEventListener(new ValueEventListener() {
@@ -89,46 +92,12 @@ public class HomeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
-                friend.setUuidUserFriend(friendsID.get(i).toString());
-                friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
-                friend.setImageUrlUserFriend(friendsData.get(i).getImage_url());
-                friend.setNameUserFriend(friendsData.get(i).getName());
-                friend.setPhoneUserFriend(friendsData.get(i).getPhone());
-                friend.setConversationID(conversationID.get(i).toString());
-                getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment, new ChatFragment())
-                        .commit();
+                setFriendSingleton(i);
+                goToChatFragment();
             }
         });
 
-        ((Button) view.findViewById(R.id.homebtngroups)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment, new GroupFragment())
-                        .commit();
-            }
-        });
 
-        ((Button) view.findViewById(R.id.homebtnfriend)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment,new FriendsFragment())
-                        .commit();
-            }
-        });
-
-        ((Button) view.findViewById(R.id.homebtnrequest)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO Request Module
-            }
-        });
 
 
 
@@ -138,5 +107,46 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.homebtngroups:
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new GroupFragment())
+                        .commit();
+                break;
+            case R.id.homebtnfriend:
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment,new FriendsFragment())
+                        .commit();
+                break;
+            case R.id.homebtnrequest:
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment,new FriendsRequestFragment())
+                        .commit();
+                break;
+        }
+    }
+
+    private void setFriendSingleton(int i){
+        DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
+        friend.setUuidUserFriend(friendsID.get(i).toString());
+        friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
+        friend.setImageUrlUserFriend(friendsData.get(i).getImage_url());
+        friend.setNameUserFriend(friendsData.get(i).getName());
+        friend.setPhoneUserFriend(friendsData.get(i).getPhone());
+        friend.setConversationID(conversationID.get(i).toString());
+    }
+
+    private void goToChatFragment() {
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.fragment, new ChatFragment())
+                .commit();
     }
 }
