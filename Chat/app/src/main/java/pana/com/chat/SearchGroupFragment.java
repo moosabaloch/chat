@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
                         groupsArrayList.add(groups);
                     }
                 }
+
                 loadGroupAdaptor();
             }
 
@@ -102,7 +104,14 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
 
 
     private void loadGroupAdaptor() {
-        groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys, Utils.TYPEGROUPSEARCH));
+        try {
+            groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys, Utils.TYPEGROUPSEARCH));
+
+        } catch (Exception ex) {
+            Log.d("Exception ", "" + ex.getMessage());
+            ex.printStackTrace();
+        }
+
     }
 
     private void addGroup() {
@@ -132,7 +141,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
                         //Create Group in the node group...
                         groupID.setValue(new Groups(groupName, "N/A", groupDescription, admin));
                         //Add group id to conversation node
-                        firebaseURL.child("conversation").setValue(groupKey);
+                        firebaseURL.child("conversation").child(groupKey).push().setValue(new Messages(String.valueOf(System.currentTimeMillis()), "Group Created By " + DataModelMeSingleton.getInstance().getName(), DataModelMeSingleton.getInstance().getId()));
                         Toast.makeText(getActivity(), groupName + " created successfully as group.", Toast.LENGTH_LONG).show();
                     }
                 });

@@ -1,5 +1,7 @@
 package pana.com.chat;
 
+import java.util.HashMap;
+
 /**
  * Created by Moosa on 9/16/2015.
  * Dear Maintainer
@@ -9,5 +11,13 @@ package pana.com.chat;
  * Please increment the following counter as the warning to the next Guy.
  * TOTAL_HOURS_WASTED_HERE=1
  */
-public class GroupUsersDetailsHashMap {
+public class GroupUsersDetailsHashMap extends HashMap<String, DataModelUser> {
+    private static GroupUsersDetailsHashMap groupUsersDetailsHashMap;
+
+    public static GroupUsersDetailsHashMap getInstance() {
+        if (groupUsersDetailsHashMap == null) {
+            groupUsersDetailsHashMap = new GroupUsersDetailsHashMap();
+        }
+        return groupUsersDetailsHashMap;
+    }
 }

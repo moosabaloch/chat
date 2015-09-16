@@ -14,11 +14,21 @@ import java.util.ArrayList;
 public class Utils {
     public static int TYPEGROUPSEARCH = 123;
     public static int TYPEMYGROUPS = 321;
-    public static ArrayList<String> myGroups=new ArrayList<>();
+    public static ArrayList<String> myGroups = new ArrayList<>();
+    public static ArrayList<String> myFrindsId = new ArrayList<>();
 
     public static boolean addedToGroup(String key) {
         for (int i = 0; i < myGroups.size(); i++) {
             if (myGroups.get(i).equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean friendIdAddedToMap(String key) {
+        for (int i = 0; i < myFrindsId.size(); i++) {
+            if (myFrindsId.get(i).equals(key)) {
                 return true;
             }
         }

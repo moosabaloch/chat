@@ -21,18 +21,18 @@ import java.util.ArrayList;
  * TOTAL_HOURS_WASTED_HERE=1
  */
 public class GroupsViewAdaptor extends BaseAdapter {
-    private LayoutInflater inflater;
+    private Context context;
     private ArrayList<Groups> groups;
     private Object ref;
     private ArrayList<String> groupKeys;
     private int TYPE;
 
     public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref, ArrayList<String> groupKeys, int TYPE) {
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.groups = groups;
         this.TYPE = TYPE;
         this.ref = ref;
         this.groupKeys = groupKeys;
+        this.context = context;
     }
 
     @Override
@@ -53,6 +53,7 @@ public class GroupsViewAdaptor extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.groupsviewadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.groupName = (TextView) convertView.findViewById(R.id.groupAdaptorTextViewGroupName);

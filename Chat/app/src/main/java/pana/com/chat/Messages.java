@@ -24,6 +24,15 @@ public class Messages {
         this.user = user;
     }
 
+    @Override
+    public String toString() {
+        return "Messages{" +
+                "timeStamp='" + timeStamp + '\'' +
+                ", message='" + message + '\'' +
+                ", user='" + user + '\'' +
+                '}';
+    }
+
     public String getTimeStamp() {
         return timeStamp;
     }
