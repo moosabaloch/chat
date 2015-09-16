@@ -14,11 +14,13 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FriendsRequestFragment extends Fragment {
 
     ListView listView;
-    ArrayList friendsID,friendsData,requestDate;
+    ArrayList friendsID,requestDate;
+    ArrayList<DataModelUser> friendsData;
     Firebase pcchatapp;
     DataModelMeSingleton ME;
     ValueEventListener VEL1,VEL2;
@@ -40,7 +42,7 @@ public class FriendsRequestFragment extends Fragment {
         ME=DataModelMeSingleton.getInstance();
 
         listView=(ListView) view.findViewById(R.id.friendrequestlistView);
-        friendsData=new ArrayList();
+        friendsData=new ArrayList<DataModelUser>();
         friendsID=new ArrayList();
         requestDate=new ArrayList();
 
@@ -55,7 +57,7 @@ public class FriendsRequestFragment extends Fragment {
                 listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
                 for(DataSnapshot d:dataSnapshot.getChildren()){
                     friendsID.add(d.getKey().toString());
-                    requestDate.add(d.getValue().toString());
+                    requestDate.add(((HashMap<String,Object>)d.getValue()).get("RequestDate"));
                     pcchatapp.child("users").child(d.getValue().toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
