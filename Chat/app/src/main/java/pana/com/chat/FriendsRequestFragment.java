@@ -24,6 +24,7 @@ public class FriendsRequestFragment extends Fragment {
     Firebase pcchatapp;
     DataModelMeSingleton ME;
     ValueEventListener VEL1,VEL2;
+    
     public FriendsRequestFragment() {
 
     }
@@ -35,6 +36,7 @@ public class FriendsRequestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view=inflater.inflate(R.layout.fragment_friends_request, container, false);
 
         pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
@@ -80,6 +82,7 @@ public class FriendsRequestFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 }
