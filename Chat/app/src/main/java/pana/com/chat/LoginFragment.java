@@ -23,29 +23,54 @@ public class LoginFragment extends Fragment {
     private Button loginButton, createAccountButton;
     private EditText emailToLogin, passwordToLogin;
     private Firebase firebaseUrl;
+    Boolean alreadyLoggedIn=false;
+    Firebase.AuthStateListener ASL;
 
     public LoginFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
         loginButton = (Button) view.findViewById(R.id.buttonLoginFragmentLogin);
         createAccountButton = (Button) view.findViewById(R.id.buttonLoginFragmentCreateAccount);
+
         emailToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentEmailAddress);
         passwordToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentPassword);
-        firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
-        createNewAccount();
-        loginButtonAction();
-        getAuthentication();
-        return view;
-    }
 
-    private void loginButtonAction() {
+        firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
+
+        loginButton.setEnabled(false);
+        createAccountButton.setEnabled(false);
+
+        firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                ASL=this;
+                if (authData != null) {
+                    Log.d("Login Fragment......", "User Already Logged in with ID:"+authData.getUid());
+                    alreadyLoggedIn=true;
+                    getUserData(authData);
+                } else {
+                    Log.d("Login Fragment......", "User Not Logged in...");
+                    alreadyLoggedIn=false;
+                    loginButton.setEnabled(true);
+                    createAccountButton.setEnabled(true);
+                }
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (!alreadyLoggedIn)
+                    firebaseUrl.removeAuthStateListener(ASL);
+
+                Log.d("Login Fragment......", "Login Button Clicked");
+
                 String email = emailToLogin.getText().toString();
                 String passIs = passwordToLogin.getText().toString();
 
@@ -61,7 +86,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onAuthenticated(AuthData authData) {
                             if (authData != null) {
-                                loggedInUser(authData);
+                                getUserData(authData);
                             }
                         }
 
@@ -71,74 +96,70 @@ public class LoginFragment extends Fragment {
                             emailToLogin.setEnabled(true);
                             passwordToLogin.setEnabled(true);
                             createAccountButton.setEnabled(true);
-
-                            Toast.makeText(getActivity(), "Error Login " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(getActivity(),firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
             }
         });
+
+        createAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new CreateAccountFragment())
+                        .commit();
+            }
+        });
+
+        return view;
     }
 
-    private void loggedInUser(final AuthData authData) {
-        Log.d("LoggedInUser", "Invoked...");
+    private void getUserData(final AuthData authData) {
 
-        firebaseUrl.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.d("Login Fragment......", "Getting user Data of ID:"+authData.getUid());
+
+        firebaseUrl.child("users").child(authData.getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d("Login Fragment......", "Getting user Data.... OnDataChanged");
+
+                DataModelUser dataModelUser=new DataModelUser();
+                dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+
+                Log.d("User Data",dataModelUser.toString());
+
                 DataModelMeSingleton.getInstance().setId(authData.getUid());
-                DataModelMeSingleton.getInstance().setImageUrl(dataSnapshot.child("image_url").getValue().toString());
-                DataModelMeSingleton.getInstance().setName(dataSnapshot.child("name").getValue().toString());
-                DataModelMeSingleton.getInstance().setPhone(dataSnapshot.child("phone").getValue().toString());
+                DataModelMeSingleton.getInstance().setImageUrl(dataModelUser.getImage_url());
+                DataModelMeSingleton.getInstance().setName(dataModelUser.getName());
+                DataModelMeSingleton.getInstance().setPhone(dataModelUser.getPhone());
+
                 switchToHomeFrag();
-                loginButton.setEnabled(true);
-                createAccountButton.setEnabled(true);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(getActivity(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
+                firebaseUrl.unauth();
                 loginButton.setEnabled(true);
                 createAccountButton.setEnabled(true);
-                Toast.makeText(getActivity(), "Cant Login", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void switchToHomeFrag() {
-        Log.d("Switch to Home Fragment", "Invoked...");
+        Log.d("Login Fragment......", "Switching to Home Fragment");
         getFragmentManager().beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
     }
 
-    private void createNewAccount() {
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                                    .addToBackStack("")
-                                    .replace(R.id.fragment, new CreateAccountFragment())
-                                    .commit();
-            }
-        });
-    }
-
-    public void getAuthentication() {
-        Log.d("getAuthentication", "Invoked");
-
-        firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(AuthData authData) {
-                if (authData != null) {
-                    Log.d("getAuthentication", "User Logged in...");
-
-                    loggedInUser(authData);
-                    loginButton.setEnabled(false);
-                    createAccountButton.setEnabled(false);
-
-                } else {
-                    Log.d("getAuthentication", "User Not Logged in...");
-                }
-            }
-        });
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (ASL!=null){
+            Log.d("Login Fragment......", "Removing Authentication State Listener");
+            firebaseUrl.removeAuthStateListener(ASL);
+        }
     }
 }
