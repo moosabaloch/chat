@@ -1,7 +1,8 @@
 package pana.com.chat;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,12 +42,17 @@ public class FriendsRequestFragment extends Fragment {
         listView=(ListView) view.findViewById(R.id.friendrequestlistView);
         friendsData=new ArrayList();
         friendsID=new ArrayList();
-        friendsID=new ArrayList();
+        requestDate=new ArrayList();
 
         pcchatapp.child("friend_requests").child(ME.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Friend Request","On Data Changed Called");
                 VEL1=this;
+                friendsData.clear();
+                friendsID.clear();
+                requestDate.clear();
+                listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
                 for(DataSnapshot d:dataSnapshot.getChildren()){
                     friendsID.add(d.getKey().toString());
                     requestDate.add(d.getValue().toString());

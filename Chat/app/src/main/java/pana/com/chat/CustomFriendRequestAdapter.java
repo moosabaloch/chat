@@ -52,12 +52,16 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         View view1=inflater.inflate(R.layout.friendsrequestlistview,null);
+
         pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
+
         ME=DataModelMeSingleton.getInstance();
+
         TextView textView1=(TextView) view1.findViewById(R.id.textView4);
         TextView textView2=(TextView) view1.findViewById(R.id.textView5);
         textView1.setText(friendsData.get(i).getName());
         textView2.setText(requestDate.get(i).toString());
+
         ((Button) view1.findViewById(R.id.friendreq_btn_accept)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,14 +70,17 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
                 hashMap.put("ConversationID","null");
                 pcchatapp.child("user_friend").child(ME.getId()).child(friendsID.get(i).toString()).setValue(hashMap);
                 pcchatapp.child("user_friend").child(friendsID.get(i).toString()).child(ME.getId()).setValue(hashMap);
+                pcchatapp.child("friend_requests").child(ME.getId()).child(friendsID.get(i).toString()).removeValue();
             }
         });
+
         ((Button) view1.findViewById(R.id.friendreq_btn_cancel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("Cancel Button....",i+"");
             }
         });
+
         return view1;
     }
 }
