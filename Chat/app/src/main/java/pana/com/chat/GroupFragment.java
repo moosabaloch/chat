@@ -59,34 +59,31 @@ public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAd
         firebaseURL.child("mygroups").child(DataModelMeSingleton.getInstance().getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChildren()) {
+                    public void onDataChange(DataSnapshot allGroupsID) {
+                        if (allGroupsID.hasChildren()) {
                             Log.d("CHECK MY GROUPS", "Inside onDataChanged Clear List");
-
                             Utils.myGroups.clear();
                             myJoinedGroups.clear();
-                            for (DataSnapshot d : dataSnapshot.getChildren()) {
-                                Log.d("CHECK MY GROUPS", "Inside For Loop myGroups " + d.getValue());
+                            for (DataSnapshot groupUniqueID : allGroupsID.getChildren()) {
+                                Log.d("CHECK MY GROUPS", "Inside For Loop myGroups " + groupUniqueID.getValue());
 
-                                Utils.myGroups.add(d.getValue().toString());
-                                firebaseURL.child("groups").child(d.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                Utils.myGroups.add(groupUniqueID.getValue().toString());
+                                firebaseURL.child("groups").child(groupUniqueID.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.hasChildren()) {
+                                    public void onDataChange(DataSnapshot singleGroupSnapshot) {
+                                        if (singleGroupSnapshot.hasChildren()) {
                                             Log.d("CHECK MY GROUPS", "Inside inner OnDataChanged");
 
-                                            Groups myGroups = dataSnapshot.getValue(Groups.class);
+                                            Groups myGroups = singleGroupSnapshot.getValue(Groups.class);
                                             myJoinedGroups.add(myGroups);
                                             Log.d("CHECK MY GROUPS", "Group Added " + myGroups.getGroupName());
-
                                             refreshAdaptor();
-
                                         }
                                     }
 
                                     @Override
                                     public void onCancelled(FirebaseError firebaseError) {
-
+                                        Utils.ToastLong(getActivity(), "Error Loading Group : " + firebaseError.getMessage());
                                     }
                                 });
                             }
@@ -95,6 +92,7 @@ public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAd
 
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
+                        Utils.ToastLong(getActivity(), "Error Loading Group : " + firebaseError.getMessage());
 
                     }
                 });

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -31,6 +32,7 @@ public class GroupChatFragment extends Fragment {
     private ListView chatListView;
     private TextView friendName, friendEmail;
     private Button logoutButton;
+    private GroupChatAdaptor groupChatAdaptor;
     private ArrayList<Messages> messagesArrayList;
     private DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
 
@@ -55,6 +57,8 @@ public class GroupChatFragment extends Fragment {
         sendMessageButtonClickEvent();
         setDetails();
         loadGroupMembersData();
+        //loadChatAdaptor();
+
         return view;
     }
 
@@ -67,71 +71,111 @@ public class GroupChatFragment extends Fragment {
                                 .getGroupIDKEY()).push()
                         .setValue(new Messages(String.valueOf(System.currentTimeMillis()), sendMessageText.getText().toString(), DataModelMeSingleton.getInstance().getId()));
                 sendMessageText.setText("");
+                refreshListView();
             }
         });
     }
 
+    private void refreshListView() {
+        groupChatAdaptor.notifyDataSetChanged();
+        chatListView.setSelection(messagesArrayList.size());
+    }
+
     private void loadGroupMembersData() {
-        firebaseURL.child("groupusers").addValueEventListener(new ValueEventListener() {
+        firebaseURL.child("groupusers").child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Utils.myFrindsId.clear();
                 GroupUsersDetailsHashMap.getInstance().clear();
-                for (final DataSnapshot d : dataSnapshot.getChildren()) {
-                    for (DataSnapshot data : d.getChildren()) {
-                        final String UserID = data.getValue().toString();
-                        if (!Utils.friendIdAddedToMap(UserID)) {
-                            Utils.myFrindsId.add(UserID);
-                            Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
-                            firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshotForUser) {
-                                    GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
-                                    Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    final String UserID = data.getValue().toString();
+                    if (!Utils.friendIdAddedToMap(UserID)) {
+                        Utils.myFrindsId.add(UserID);
+                        Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
+                        firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshotForUser) {
+                                GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
+                                Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
 
-                                }
+                            }
 
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+                                Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
 
-                                }
-                            });
-                        }
+                            }
+                        });
                     }
-                    loadAllMessages();
-
                 }
+                // loadAllMessages();
+                loadChatAdaptor();
+
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
 
             }
         });
     }
+/*
 
     private void loadAllMessages() {
-        firebaseURL.child("conversation").child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addValueEventListener(new ValueEventListener() {
+        firebaseURL.child("conversation")
+                .child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        messagesArrayList.clear();
+                        for (DataSnapshot messages : dataSnapshot.getChildren()) {
+                            Messages msg = messages.getValue(Messages.class);
+                            messagesArrayList.add(msg);
+                            Log.d("Msg is ", msg.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+    }
+*/
+
+    private void loadChatAdaptor() {
+        chatListView.setAdapter(groupChatAdaptor = new GroupChatAdaptor(getActivity(), messagesArrayList));
+        firebaseURL.child("conversation")
+                .child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                messagesArrayList.clear();
-                for (DataSnapshot messages : dataSnapshot.getChildren()) {
-                    Messages msg = messages.getValue(Messages.class);
-                    messagesArrayList.add(msg);
-                    Log.d("Msg is ", msg.toString());
-                }
-                loadChatAdaptor();
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Message is", "" + dataSnapshot.getValue());
+                messagesArrayList.add(dataSnapshot.getValue(Messages.class));
+                refreshListView();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Utils.ToastLong(getActivity(), "Error Loading Chat : " + firebaseError.getMessage());
 
             }
         });
-    }
-
-    private void loadChatAdaptor() {
-        chatListView.setAdapter(new GroupChatAdaptor(getActivity(), messagesArrayList));
 
     }
 
