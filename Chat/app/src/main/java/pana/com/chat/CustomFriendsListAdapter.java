@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,19 +17,10 @@ public class CustomFriendsListAdapter extends BaseAdapter {
 
     ArrayList<DataModelUser> allUsers;
 
-    View view;
-
-    LayoutInflater inflater;
-
-    TextView name;
-
-    ImageView profileImg;
-
     public CustomFriendsListAdapter(Context context,ArrayList ids,ArrayList<DataModelUser> allUsers) {
         this.context=context;
         this.ids=ids;
         this.allUsers=allUsers;
-        inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -51,10 +41,10 @@ public class CustomFriendsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view=inflater.inflate(R.layout.custom_friendslist,null);
-        profileImg=(ImageView) view.findViewById(R.id.friends_iv_profileimg);
-        name=(TextView) view.findViewById(R.id.friends_tv_name);
+        LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v=inflater.inflate(R.layout.custom_friendslist,null);
+        TextView name=(TextView) v.findViewById(R.id.friends_tv_name);
         name.setText(allUsers.get(i).getName());
-        return view;
+        return v;
     }
 }

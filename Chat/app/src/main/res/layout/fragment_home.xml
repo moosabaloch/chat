@@ -21,8 +21,6 @@
 
     </LinearLayout>
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,10 +67,21 @@
             android:background="#ff00b2ff"/>
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:background="#ffc9cbcb"
+        android:id="@+id/hometxtconvo"
+        android:layout_gravity="center_horizontal" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/home_lv_chats" />
+        android:id="@+id/home_lv_chats"
+        android:padding="10dp"
+        android:divider="#ff06c2ff" />
 
 
 </LinearLayout>
