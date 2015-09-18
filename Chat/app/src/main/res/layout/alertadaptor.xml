@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#00ffffff">
+    android:padding="5dp"
+    android:background="#ffc2c2c2">
 
     <Button
         android:layout_width="match_parent"
@@ -10,17 +11,26 @@
         android:textColor="#FFFFFF"
         android:text="View Profile"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         android:id="@+id/dialog_profilebtn"
-        android:background="#ff00b2ff" />
+        android:background="#ff00b2ff"
+        android:layout_alignLeft="@+id/dialog_convobtn"
+        android:layout_alignStart="@+id/dialog_convobtn"
+        android:layout_alignRight="@+id/dialog_convobtn"
+        android:layout_alignEnd="@+id/dialog_convobtn" />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="10dp"
         android:text="Conversation"
+        android:layout_marginBottom="10dp"
+        android:paddingRight="20dp"
         android:id="@+id/dialog_convobtn"
-        android:background="#ff00b2ff" />
+        android:background="#ff00b2ff"
+        android:layout_below="@+id/dialog_profilebtn"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -28,5 +38,11 @@
         android:text="Delete"
         android:textColor="#FFFFFF"
         android:id="@+id/dialog_deletebtn"
-        android:background="#ff00b2ff" />
-</LinearLayout>
+        android:background="#ff00b2ff"
+        android:layout_below="@+id/dialog_convobtn"
+        android:layout_alignLeft="@+id/dialog_convobtn"
+        android:layout_alignStart="@+id/dialog_convobtn"
+        android:layout_alignRight="@+id/dialog_convobtn"
+        android:layout_alignEnd="@+id/dialog_convobtn" />
+
+</RelativeLayout>

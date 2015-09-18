@@ -7,11 +7,11 @@
     android:background="#ffdedede">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:id="@+id/profiledialog_imageview"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/friend"
         android:layout_gravity="center_horizontal" />
 
     <TextView

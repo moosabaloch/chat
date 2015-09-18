@@ -5,9 +5,32 @@
     tools:context="pana.com.chat.FriendsRequestFragment"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#ff00b2ff"
+        android:id="@+id/linearLayoutSearchFragGroup"
+        android:gravity="right"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Friend Requests"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="10dp"
         android:id="@+id/friendrequestlistView" />
+
 </LinearLayout>

@@ -6,9 +6,9 @@
 
     <ImageView
         android:id="@+id/groupAdaptorImageViewGroupImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
         android:src="@android:drawable/ic_dialog_dialer" />
 
     <TextView
@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="5dp"
         android:layout_toEndOf="@+id/groupAdaptorImageViewGroupImage"
         android:layout_toRightOf="@+id/groupAdaptorImageViewGroupImage"
         android:text="Group Name"
@@ -35,9 +34,10 @@
 
     <ImageButton
         android:id="@+id/groupAdaptorImageButtonJoinGroupButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@android:drawable/ic_input_add"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/add"
+        android:layout_marginRight="10dp"
         android:layout_alignTop="@+id/groupAdaptorTextViewGroupName"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

@@ -64,7 +64,6 @@ public class ChatFragment extends Fragment {
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
         friendName = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendName);
         friendEmail = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendEmailView);
-        logoutButton = (Button) view.findViewById(R.id.chatFragmentButtonLogout);
 
         chatListView = (ListView) view.findViewById(R.id.chatFragmentListViewChatMessages);
 
@@ -80,8 +79,6 @@ public class ChatFragment extends Fragment {
                 sendMyMessage();
             }
         });
-
-        logoutBtn();
 
         return view;
 
@@ -198,15 +195,6 @@ public class ChatFragment extends Fragment {
                 sendMessageText.setText("");
             }
         }
-    }
-
-    private void logoutBtn() {
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     private void refreshAdaptor() {
