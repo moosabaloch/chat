@@ -1,5 +1,8 @@
 package pana.com.chat;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 /**
@@ -16,6 +19,14 @@ public class Utils {
     public static int TYPEMYGROUPS = 321;
     public static ArrayList<String> myGroups = new ArrayList<>();
     public static ArrayList<String> myFrindsId = new ArrayList<>();
+
+    public static void ToastLong(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public static void ToastShort(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
 
     public static boolean addedToGroup(String key) {
         for (int i = 0; i < myGroups.size(); i++) {
