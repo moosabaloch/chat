@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btn_profile.setText(ME.getName());
 
         listView = (ListView) view.findViewById(R.id.home_lv_chats);
-
+//
         pcchatapp.child("user_friend").child(ME.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
