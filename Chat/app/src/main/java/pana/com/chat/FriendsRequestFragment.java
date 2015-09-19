@@ -19,11 +19,11 @@ import java.util.HashMap;
 public class FriendsRequestFragment extends Fragment {
 
     ListView listView;
-    ArrayList friendsID,requestDate;
+    ArrayList friendsID, requestDate;
     ArrayList<DataModelUser> friendsData;
     Firebase pcchatapp;
     DataModelMeSingleton ME;
-    ValueEventListener VEL1,VEL2;
+    ValueEventListener VEL1, VEL2;
 
     public FriendsRequestFragment() {
 
@@ -37,43 +37,48 @@ public class FriendsRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.fragment_friends_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_friends_request, container, false);
 
-        pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
+        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
 
-        ME=DataModelMeSingleton.getInstance();
+        ME = DataModelMeSingleton.getInstance();
 
-        listView=(ListView) view.findViewById(R.id.friendrequestlistView);
-        friendsData=new ArrayList<DataModelUser>();
-        friendsID=new ArrayList();
-        requestDate=new ArrayList();
+        listView = (ListView) view.findViewById(R.id.friendrequestlistView);
+        friendsData = new ArrayList<DataModelUser>();
+        friendsID = new ArrayList();
+        requestDate = new ArrayList();
 
         pcchatapp.child("friend_requests").child(ME.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Friend Request","On Data Changed Called");
-                VEL1=this;
+                Log.d("Friend Request", "On Data Changed Called");
+                VEL1 = this;
                 friendsData.clear();
                 friendsID.clear();
                 requestDate.clear();
-                listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
-                for(DataSnapshot d:dataSnapshot.getChildren()){
-                    friendsID.add(d.getKey().toString());
-                    requestDate.add(((HashMap<String,Object>)d.getValue()).get("RequestDate"));
-                    pcchatapp.child("users").child(d.getValue().toString()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            VEL2=this;
-                            DataModelUser dataModelUser=new DataModelUser();
-                            friendsData.add(dataModelUser);
-                            listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
-                        }
+                listView.setAdapter(new CustomFriendRequestAdapter(friendsID, friendsData, requestDate, getActivity()));
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        friendsID.add(d.getKey().toString());
+                        requestDate.add(((HashMap<String, Object>) d.getValue()).get("RequestDate"));
+                        pcchatapp.child("users").child(d.getValue().toString()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                VEL2 = this;
+                                Log.d("USER DATA IN FRND REQ ",dataSnapshot.toString());
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                                DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
+                                Log.d("USER DATA IN FRND REQ ", dataModelUser.toString());
+                                friendsData.add(dataModelUser);
+                                listView.setAdapter(new CustomFriendRequestAdapter(friendsID, friendsData, requestDate, getActivity()));
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
                 }
             }
 

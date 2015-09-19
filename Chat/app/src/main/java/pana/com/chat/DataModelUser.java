@@ -37,4 +37,14 @@ public class DataModelUser {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+        return "DataModelUser{" +
+                "email_id='" + email_id + '\'' +
+                ", image_url='" + image_url + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }
