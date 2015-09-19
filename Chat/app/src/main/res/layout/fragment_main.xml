@@ -1,62 +1,88 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="#ff00b2ff"
     tools:context=".MainActivityFragment">
 
-    <TextView
-        android:id="@+id/textView"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:text="@string/login"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="match_parent"
+        android:padding="50dp"
+        android:gravity="center">
 
-    <EditText
-        android:id="@+id/editTextLoginFragmentEmailAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:ems="10"
-        android:hint="@string/emailId"
-        android:inputType="textEmailAddress" />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/imageView3"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/login"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:id="@+id/editTextLoginFragmentPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextLoginFragmentEmailAddress"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/editTextLoginFragmentEmailAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:hint="@string/emailId"
+            android:inputType="textEmailAddress"
+            android:layout_below="@+id/imageView3"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <Button
-        android:id="@+id/buttonLoginFragmentCreateAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/editTextLoginFragmentPassword"
-        android:layout_margin="10dp"
-        android:text="@string/createAccount" />
+        <EditText
+            android:id="@+id/editTextLoginFragmentPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword"
+            android:layout_below="@+id/editTextLoginFragmentEmailAddress"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <Button
-        android:id="@+id/buttonLoginFragmentLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/editTextLoginFragmentPassword"
-        android:layout_margin="10dp"
-        android:text="@string/login" />
-</RelativeLayout>
+        <Button
+            android:id="@+id/buttonLoginFragmentCreateAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="@string/createAccount"
+
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/buttonLoginFragmentLogin"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffdf5d" />
+
+        <Button
+            android:id="@+id/buttonLoginFragmentLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/editTextLoginFragmentPassword"
+            android:layout_alignRight="@+id/buttonLoginFragmentCreateAccount"
+            android:layout_alignEnd="@+id/buttonLoginFragmentCreateAccount"
+            android:background="#ffffdf5d" />
+
+        </RelativeLayout>
+
+
+
+
+
+
+
+</LinearLayout>

@@ -22,26 +22,15 @@
 
         <ImageButton
             android:id="@+id/groupFragmentButtonAddNewGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/textViewSearchFragGroup"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/groupSearchFragmentButtonLogout"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="#ff00b2ff"
-            android:padding="10dp"
             android:src="@android:drawable/ic_menu_add"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/groupSearchFragmentButtonLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:textColor="#ffffff"
+            android:layout_alignTop="@+id/textViewSearchFragGroup"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="#ff00b2ff"
-            android:text="@string/logout"
-            android:textColor="#ffffff" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/textViewSearchFragGroup" />
 
     </RelativeLayout>
 
@@ -50,8 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayoutSearchFragGroup"
-        android:divider="@android:color/holo_blue_bright"
-        android:dividerHeight="2dp"
         android:padding="10dp" />
 
 </RelativeLayout>

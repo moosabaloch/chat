@@ -51,7 +51,6 @@ public class GroupChatFragment extends Fragment {
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
         friendName = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendName);
         friendEmail = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendEmailView);
-        logoutButton = (Button) view.findViewById(R.id.chatFragmentButtonLogout);
         chatListView = (ListView) view.findViewById(R.id.chatFragmentListViewChatMessages);
         messagesArrayList = new ArrayList<>();
         sendMessageButtonClickEvent();

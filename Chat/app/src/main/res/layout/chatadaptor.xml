@@ -5,18 +5,18 @@
 
     <ImageView
         android:id="@+id/chatAdaptorImageViewProfilePictureMe"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@android:drawable/ic_menu_myplaces" />
 
     <ImageView
         android:id="@+id/chatAdaptorImageViewProfilePictureFriend"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/chatAdaptorTextViewForNameMe"
-        android:src="@android:drawable/btn_star_big_on" />
+        android:src="@android:drawable/ic_menu_myplaces" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewForNameMe"
@@ -26,12 +26,11 @@
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/chatAdaptorImageViewProfilePictureMe"
         android:layout_toRightOf="@+id/chatAdaptorImageViewProfilePictureMe"
-        android:background="@android:color/black"
         android:padding="3dp"
         android:text="@string/username"
-        android:textColor="@android:color/background_light"
-
-        android:textSize="16sp" />
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewForNameFriend"
@@ -41,10 +40,10 @@
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
         android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend"
-        android:background="@android:color/black"
+        android:textStyle="bold"
         android:padding="3dp"
         android:text="@string/username"
-        android:textColor="@android:color/background_light"
+        android:textColor="#000000"
         android:textSize="16sp" />
 
     <TextView
@@ -56,8 +55,7 @@
         android:layout_below="@+id/chatAdaptorTextViewForNameMe"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:text="@string/message"
-        android:textColor="@android:color/black" />
+        android:text="@string/message" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewForMessageFriend"
@@ -68,8 +66,7 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
         android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend"
-        android:text="@string/message"
-        android:textColor="@android:color/black" />
+        android:text="@string/message"/>
 
     <TextView
         android:id="@+id/chatAdaptorTextViewTimeMe"

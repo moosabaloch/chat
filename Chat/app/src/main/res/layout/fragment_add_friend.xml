@@ -2,18 +2,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     tools:context="pana.com.chat.AddFriendFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#ff00b2ff"
+        android:id="@+id/linearLayoutSearchFragGroup"
+        android:gravity="right"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Add Friends"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addfriend_listview"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:padding="10dp"
         android:divider="#68000000"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:layout_below="@+id/linearLayoutSearchFragGroup" />
 
 </RelativeLayout>
