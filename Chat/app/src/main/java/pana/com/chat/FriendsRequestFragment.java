@@ -61,7 +61,7 @@ public class FriendsRequestFragment extends Fragment {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         friendsID.add(d.getKey().toString());
                         requestDate.add(((HashMap<String, Object>) d.getValue()).get("RequestDate"));
-                        pcchatapp.child("users").child(d.getValue().toString()).addValueEventListener(new ValueEventListener() {
+                        pcchatapp.child("users").child(d.getKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 VEL2 = this;
