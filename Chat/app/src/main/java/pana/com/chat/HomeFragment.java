@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 conversationID.clear();
                 count = 0;
                 tv.setText(count + " Conversations");
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
