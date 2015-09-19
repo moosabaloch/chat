@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 friendsData.clear();
                 friendsID.clear();
                 conversationID.clear();
+                
                 count=0;
                 tv.setText(count+" Conversations");
                 if (dataSnapshot.hasChildren()){

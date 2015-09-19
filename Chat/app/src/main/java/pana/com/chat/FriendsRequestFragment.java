@@ -65,7 +65,7 @@ public class FriendsRequestFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 VEL2=this;
-                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class    );
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
                             }
