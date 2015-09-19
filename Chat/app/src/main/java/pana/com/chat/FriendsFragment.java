@@ -162,7 +162,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                             check2=true;
                                             if (check1&&check2){
-                                                Toast.makeText(getActivity(),"Friend Removed",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(), "Friend Removed", Toast.LENGTH_SHORT).show();
                                                 alertDialog.dismiss();
                                             }
                                         }
