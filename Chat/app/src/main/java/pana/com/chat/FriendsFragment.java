@@ -67,7 +67,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 friendsData.clear();
                 friendsID.clear();
                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
-                try {
+                if (dataSnapshot.hasChildren()){
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         friendsID.add(d.getKey().toString());
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
@@ -87,14 +87,15 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                     }
-                } catch (Exception e) {
-                    Log.d("Errorr in Friend Fragment.....", e.toString());
+                }
+                else{
+                    Log.d("Friend Fragment ","No friend");
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Friends Fragment",firebaseError.getMessage());
             }
         });
 
