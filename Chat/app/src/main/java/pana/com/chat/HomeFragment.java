@@ -24,12 +24,12 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment implements View.OnClickListener {
     DataModelMeSingleton ME;
     Firebase pcchatapp;
-    ArrayList friendsID,conversationID;
+    ArrayList friendsID, conversationID;
     ArrayList<DataModelUser> friendsData;
     ListView listView;
-    Button btn_profile,btn_groups,btn_friends,btn_requests,btn_logout;
+    Button btn_profile, btn_groups, btn_friends, btn_requests, btn_logout;
     TextView tv;
-    String TAG="HOME FRAGMENT.....";
+    String TAG = "HOME FRAGMENT.....";
     int count;
 
     public HomeFragment() {
@@ -43,23 +43,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        pcchatapp=new Firebase("https://pcchatapp.firebaseio.com/");
+        pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
 
-        friendsID=new ArrayList();
-        conversationID=new ArrayList();
-        friendsData=new ArrayList<DataModelUser>();
+        friendsID = new ArrayList();
+        conversationID = new ArrayList();
+        friendsData = new ArrayList<DataModelUser>();
 
-        ME=DataModelMeSingleton.getInstance();
+        ME = DataModelMeSingleton.getInstance();
 
-        tv=(TextView) view.findViewById(R.id.hometxtconvo);
+        tv = (TextView) view.findViewById(R.id.hometxtconvo);
 
-        btn_profile= (Button) view.findViewById(R.id.homebtnprofile);
-        btn_groups= (Button) view.findViewById(R.id.homebtngroups);
-        btn_friends= (Button) view.findViewById(R.id.homebtnfriend);
-        btn_requests= (Button) view.findViewById(R.id.homebtnrequest);
-        btn_logout= (Button) view.findViewById(R.id.homebtnlogout);
+        btn_profile = (Button) view.findViewById(R.id.homebtnprofile);
+        btn_groups = (Button) view.findViewById(R.id.homebtngroups);
+        btn_friends = (Button) view.findViewById(R.id.homebtnfriend);
+        btn_requests = (Button) view.findViewById(R.id.homebtnrequest);
+        btn_logout = (Button) view.findViewById(R.id.homebtnlogout);
 
         btn_groups.setOnClickListener(this);
         btn_friends.setOnClickListener(this);
@@ -68,35 +68,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btn_profile.setOnClickListener(this);
         btn_profile.setText(ME.getName());
 
-        listView= (ListView) view.findViewById(R.id.home_lv_chats);
-
-        pcchatapp.child("user_friend").child(ME.getId()).addValueEventListener(new ValueEventListener() {
+        listView = (ListView) view.findViewById(R.id.home_lv_chats);
+//
+        pcchatapp.child("user_friend").child(ME.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG,"ON DATA CHANGE");
-                Log.d(TAG,"MY ID:"+ME.getId());
+                Log.d(TAG, "ON DATA CHANGE");
+                Log.d(TAG, "MY ID:" + ME.getId());
 
                 friendsData.clear();
                 friendsID.clear();
                 conversationID.clear();
-                count=0;
-                tv.setText(count+" Conversations");
-                if (dataSnapshot.hasChildren()){
-                    for (DataSnapshot d:dataSnapshot.getChildren()){
-                        HashMap<String,Object> hashMap=(HashMap<String, Object>) d.getValue();
-                        if (!hashMap.get("ConversationID").toString().equals("null")){
-                            count=count+1;
-                            tv.setText(count+" Conversations");
-                            Log.d(TAG,"FRIEND ID:"+d.getKey().toString());
-                            Log.d(TAG,"CONVERSATION ID:"+hashMap.get("ConversationID").toString());
+                count = 0;
+                tv.setText(count + " Conversations");
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
+                        if (!hashMap.get("ConversationID").toString().equals("null")) {
+                            count = count + 1;
+                            tv.setText(count + " Conversations");
+                            Log.d(TAG, "FRIEND ID:" + d.getKey().toString());
+                            Log.d(TAG, "CONVERSATION ID:" + hashMap.get("ConversationID").toString());
                             friendsID.add(d.getKey().toString());
                             conversationID.add(hashMap.get("ConversationID").toString());
                             pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                                    DataModelUser dataModelUser = dataSnapshot.getValue(DataModelUser.class);
                                     friendsData.add(dataModelUser);
-                                    listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                                    listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                                 }
 
                                 @Override
@@ -106,9 +106,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             });
                         }
                     }
-                }
-                else{
-                    listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                } else {
+                    listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 }
             }
 
@@ -136,7 +135,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.homebtngroups:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
@@ -146,38 +145,38 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.homebtnfriend:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
-                        .replace(R.id.fragment,new FriendsFragment())
+                        .replace(R.id.fragment, new FriendsFragment())
                         .commit();
                 break;
             case R.id.homebtnrequest:
                 getFragmentManager().beginTransaction()
-                    .addToBackStack("")
-                    .replace(R.id.fragment,new FriendsRequestFragment())
-                    .commit();
+                        .addToBackStack("")
+                        .replace(R.id.fragment, new FriendsRequestFragment())
+                        .commit();
                 break;
             case R.id.homebtnprofile:
-                LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view2=inflater.inflate(R.layout.profiledialog,null);
-                TextView name=(TextView) view2.findViewById(R.id.profiledialog_name);
-                TextView email=(TextView) view2.findViewById(R.id.profiledialog_email);
-                TextView phone=(TextView) view2.findViewById(R.id.profiledialog_phone);
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view2 = inflater.inflate(R.layout.profiledialog, null);
+                TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                 name.setText(ME.getName());
                 email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
                 phone.setText(ME.getPhone());
-                AlertDialog alertDialog=new AlertDialog.Builder(getActivity()).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
                 break;
             case R.id.homebtnlogout:
                 pcchatapp.unauth();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment,new LoginFragment())
+                        .replace(R.id.fragment, new LoginFragment())
                         .commit();
                 break;
         }
     }
 
-    private void setFriendSingleton(int i){
+    private void setFriendSingleton(int i) {
         DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
         friend.setUuidUserFriend(friendsID.get(i).toString());
         friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
