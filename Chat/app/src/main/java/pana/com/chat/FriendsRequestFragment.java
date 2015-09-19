@@ -57,23 +57,28 @@ public class FriendsRequestFragment extends Fragment {
                 friendsID.clear();
                 requestDate.clear();
                 listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
-                for(DataSnapshot d:dataSnapshot.getChildren()){
-                    friendsID.add(d.getKey().toString());
-                    requestDate.add(((HashMap<String,Object>)d.getValue()).get("RequestDate"));
-                    pcchatapp.child("users").child(d.getValue().toString()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            VEL2=this;
-                            DataModelUser dataModelUser=new DataModelUser();
-                            friendsData.add(dataModelUser);
-                            listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
-                        }
+                if (dataSnapshot.hasChildren()){
+                    for(DataSnapshot d:dataSnapshot.getChildren()){
+                        friendsID.add(d.getKey().toString());
+                        requestDate.add(((HashMap<String,Object>)d.getValue()).get("RequestDate"));
+                        pcchatapp.child("users").child(d.getKey().toString()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                VEL2=this;
+                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                                friendsData.add(dataModelUser);
+                                listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
+                            }
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+                }
+                else {
+                    Log.d("Requests","No requests");
                 }
             }
 
