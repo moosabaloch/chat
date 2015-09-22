@@ -242,7 +242,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     selectedImageUri = data.getData();
                     if(selectedImageUri != null){
                         try {
-                            selectedImagePath = getPath(selectedImageUri);
+                            //selectedImagePath = getPath(selectedImageUri);
                             performCrop();
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
@@ -259,6 +259,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     String path=saveImage(bitmap);
                     Log.d("PATH AFTER CROPPING",path);
                     if(path!=null){
+                        selectedImagePath=path;
                         decodeFile(path);
                     }
                 }
