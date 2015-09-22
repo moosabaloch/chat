@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
+    private static final int PICK_IMAGE = 1;
+    private static final int RESULT_CROP = 2;
     DataModelMeSingleton ME;
     Firebase pcchatapp;
     ArrayList friendsID, conversationID;
@@ -46,15 +48,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     TextView tv;
     String TAG = "HOME FRAGMENT.....";
     int count;
-    private static final int PICK_IMAGE = 1;
-    private static final int RESULT_CROP = 2;
     Uri selectedImageUri = null;
     String selectedImagePath;
-    private Bitmap bitmap;
     ImageView imageView;
+    private Bitmap bitmap;
 
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    private static String saveImage(Bitmap finalBitmap) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Chat/ProfileImages");
+
+        if (!myDir.exists())
+            myDir.mkdirs();
+
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image_" + n + ".jpg";
+        File file = new File(myDir, fname);
+
+        if (file.exists())
+            file.delete();
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return root + "/Chat/ProfileImages/" + fname;
     }
 
     @Override
@@ -102,7 +130,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 conversationID.clear();
                 count = 0;
                 tv.setText(count + " Conversations");
-                listView.setAdapter(new CustomFriendsListAdapter(getActivity(),friendsID,friendsData));
+                listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
@@ -182,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
                 TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
                 TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
-                imageView=(ImageView) view2.findViewById(R.id.profiledialog_imageview);
+                imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -222,12 +250,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .commit();
     }
 
-    private void performSelect(){
+    private void performSelect() {
+        Log.d("INVOKED", "Perform Select");
+
         try {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e(e.getClass().getName(), e.getMessage(), e);
@@ -237,13 +267,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String filePath = null;
         switch (requestCode) {
+
             case PICK_IMAGE:
+                Log.d("INVOKED", "onActivityResult case PICK IMAGE");
+
                 if (resultCode == Activity.RESULT_OK) {
+                    Log.d("INVOKED", "onActivityResult == OK");
+
                     selectedImageUri = data.getData();
-                    if(selectedImageUri != null){
+                    if (selectedImageUri != null) {
+                        Log.d("Image Selected", " URI" + selectedImageUri.toString());
+
                         try {
                             //selectedImagePath = getPath(selectedImageUri);
-                            performCrop();
+                            //   performCrop();
+                            imageView.setImageURI(selectedImageUri);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
                             Log.e(e.getClass().getName(), e.getMessage(), e);
@@ -253,13 +291,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case RESULT_CROP:
-                if(resultCode == Activity.RESULT_OK){
+                Log.d("INVOKED", "onActivityResult case CROP");
+
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("CASE CROP", " Result == OK");
+
                     Bundle extras = data.getExtras();
                     bitmap = extras.getParcelable("data");
-                    String path=saveImage(bitmap);
-                    Log.d("PATH AFTER CROPPING",path);
-                    if(path!=null){
-                        selectedImagePath=path;
+                    String path = saveImage(bitmap);
+                    Log.d("PATH AFTER CROPPING", path);
+                    if (path != null) {
+                        selectedImagePath = path;
                         decodeFile(path);
                     }
                 }
@@ -268,8 +310,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void performCrop() {
+        Log.d("INVOKED", "Performed Crop");
         try {
-            if(selectedImageUri!=null){
+            if (selectedImageUri != null) {
                 Intent cropIntent = new Intent("com.android.camera.action.CROP");
                 cropIntent.setDataAndType(selectedImageUri, "image/*");
                 cropIntent.putExtra("crop", "true");
@@ -280,14 +323,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 cropIntent.putExtra("return-data", true);
                 startActivityForResult(cropIntent, RESULT_CROP);
             }
-        }
-        catch (ActivityNotFoundException anfe) {
+        } catch (ActivityNotFoundException anfe) {
             String errorMessage = "your device doesn't support the crop action!";
             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void decodeFile(String filePath) {
+        Log.d("INVOKED", "Decode File");
 
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
@@ -315,6 +358,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         imageView.setImageBitmap(bitmap);
+                        Log.d("File PATH IS ", selectedImagePath + "");
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -324,39 +368,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }).show();
     }
 
-    private static String saveImage(Bitmap finalBitmap){
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Chat/ProfileImages");
-
-        if(!myDir.exists())
-            myDir.mkdirs();
-
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image_"+ n+".jpg";
-        File file = new File(myDir, fname);
-
-        if (file.exists ())
-            file.delete ();
-
-        try
-        {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.flush();
-            out.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return root + "/Chat/ProfileImages/"+fname;
-    }
-
     public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
         if (cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
