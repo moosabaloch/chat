@@ -1,12 +1,17 @@
 package pana.com.chat;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -44,6 +49,23 @@ public class FriendsRequestFragment extends Fragment {
         ME=DataModelMeSingleton.getInstance();
 
         listView=(ListView) view.findViewById(R.id.friendrequestlistView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view2 = inflater.inflate(R.layout.profiledialog, null);
+                TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
+                ImageView imageView=(ImageView) view2.findViewById(R.id.profiledialog_imageview);
+                name.setText(friendsData.get(i).getName());
+                email.setText(friendsData.get(i).getEmail_id());
+                phone.setText(friendsData.get(i).getPhone());
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setView(view2);
+                alertDialog.show();
+            }
+        });
         friendsData=new ArrayList<DataModelUser>();
         friendsID=new ArrayList();
         requestDate=new ArrayList();
@@ -65,7 +87,7 @@ public class FriendsRequestFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 VEL2=this;
-                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class    );
+                                DataModelUser dataModelUser=dataSnapshot.getValue(DataModelUser.class);
                                 friendsData.add(dataModelUser);
                                 listView.setAdapter(new CustomFriendRequestAdapter(friendsID,friendsData,requestDate,getActivity()));
                             }
