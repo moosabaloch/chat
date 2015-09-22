@@ -1,8 +1,16 @@
 package pana.com.chat;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,16 +18,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     DataModelMeSingleton ME;
@@ -31,6 +44,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     TextView tv;
     String TAG = "HOME FRAGMENT.....";
     int count;
+    private static final int PICK_IMAGE = 1;
+    private static final int RESULT_CROP = 2;
+    Uri selectedImageUri = null;
+    String selectedImagePath;
+    private Bitmap bitmap;
+    ImageView imageView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -161,6 +180,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
                 TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
                 TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
+                imageView=(ImageView) view2.findViewById(R.id.profiledialog_imageview);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        performSelect();
+                    }
+                });
                 name.setText(ME.getName());
                 email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
                 phone.setText(ME.getPhone());
@@ -192,5 +218,136 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .addToBackStack("")
                 .replace(R.id.fragment, new ChatFragment())
                 .commit();
+    }
+
+    private void performSelect(){
+        try {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE);
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String filePath = null;
+        switch (requestCode) {
+            case PICK_IMAGE:
+                if (resultCode == Activity.RESULT_OK) {
+                    selectedImageUri = data.getData();
+                    if(selectedImageUri != null){
+                        try {
+                            performCrop();
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
+                            Log.e(e.getClass().getName(), e.getMessage(), e);
+                        }
+                    }
+                }
+                break;
+
+            case RESULT_CROP:
+                if(resultCode == Activity.RESULT_OK){
+                    Bundle extras = data.getExtras();
+                    bitmap = extras.getParcelable("data");
+                    String path=saveImage(bitmap);
+                    Log.d("PATH AFTER CROPPING",path);
+                    if(path!=null){
+                        decodeFile(path);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void performCrop() {
+        try {
+            if(selectedImageUri!=null){
+                Intent cropIntent = new Intent("com.android.camera.action.CROP");
+                cropIntent.setDataAndType(selectedImageUri, "image/*");
+                cropIntent.putExtra("crop", "true");
+                cropIntent.putExtra("aspectX", 1);
+                cropIntent.putExtra("aspectY", 1);
+                cropIntent.putExtra("outputX", 280);
+                cropIntent.putExtra("outputY", 280);
+                cropIntent.putExtra("return-data", true);
+                startActivityForResult(cropIntent, RESULT_CROP);
+            }
+        }
+        catch (ActivityNotFoundException anfe) {
+            String errorMessage = "your device doesn't support the crop action!";
+            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void decodeFile(String filePath) {
+
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, o);
+
+        final int REQUIRED_SIZE = 1024;
+
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+
+        while (true) {
+            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        bitmap = BitmapFactory.decodeFile(filePath, o2);
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Upload Picture")
+                .setMessage("Are you sure you want to upload picture?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }).show();
+    }
+
+    private static String saveImage(Bitmap finalBitmap){
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Chat/ProfileImages");
+
+        if(!myDir.exists())
+            myDir.mkdirs();
+
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image_"+ n+".jpg";
+        File file = new File(myDir, fname);
+
+        if (file.exists ())
+            file.delete ();
+
+        try
+        {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return root + "/Chat/ProfileImages/"+fname;
     }
 }
