@@ -280,8 +280,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                         try {
                             //selectedImagePath = getPath(selectedImageUri);
-                            //   performCrop();
-                            imageView.setImageURI(selectedImageUri);
+                               performCrop();
+                            //imageView.setImageURI(selectedImageUri);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
                             Log.e(e.getClass().getName(), e.getMessage(), e);
