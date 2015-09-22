@@ -1,6 +1,7 @@
 package pana.com.chat;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -174,9 +177,20 @@ public class AddFriendFragment extends Fragment {
 
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("View Profile", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
+                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View view2 = inflater.inflate(R.layout.profiledialog, null);
+                            TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                            TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                            TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
+                            ImageView imageView=(ImageView) view2.findViewById(R.id.profiledialog_imageview);
+                            name.setText(allUsers.get(i).getName());
+                            email.setText(allUsers.get(i).getEmail_id());
+                            phone.setText(allUsers.get(i).getPhone());
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                            alertDialog.setView(view2);
+                            alertDialog.show();
                         }
                     }).show();
         }

@@ -6,11 +6,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -240,6 +242,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     selectedImageUri = data.getData();
                     if(selectedImageUri != null){
                         try {
+                            selectedImagePath = getPath(selectedImageUri);
                             performCrop();
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
@@ -349,5 +352,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
 
         return root + "/Chat/ProfileImages/"+fname;
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else {
+            return null;
+        }
     }
 }
