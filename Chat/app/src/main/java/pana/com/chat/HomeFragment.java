@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,13 +26,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -39,25 +44,27 @@ import java.util.Random;
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final int PICK_IMAGE = 1;
     private static final int RESULT_CROP = 2;
-    DataModelMeSingleton ME;
-    Firebase pcchatapp;
-    ArrayList friendsID, conversationID;
-    ArrayList<DataModelUser> friendsData;
-    ListView listView;
-    Button btn_profile, btn_groups, btn_friends, btn_requests, btn_logout;
-    TextView tv;
-    String TAG = "HOME FRAGMENT.....";
-    int count;
-    Uri selectedImageUri = null;
-    String selectedImagePath;
-    ImageView imageView;
+    private DataModelMeSingleton ME;
+    private Firebase pcchatapp;
+    private ArrayList friendsID, conversationID;
+    private ArrayList<DataModelUser> friendsData;
+    private ListView listView;
+    private Button btn_profile, btn_groups, btn_friends, btn_requests, btn_logout;
+    private TextView tv;
+    private String TAG = "HOME FRAGMENT.....";
+    private int count;
+    private Uri selectedImageUri = null;
+    private String selectedImagePath;
+    private ImageView imageView;
     private Bitmap bitmap;
+    private Cloudinary cloudinary;
+    private Picasso picasso;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    private static String saveImage(Bitmap finalBitmap) {
+    private String saveImage(Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/Chat/ProfileImages");
 
@@ -95,10 +102,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
+        picasso = Picasso.with(getActivity());
 
         friendsID = new ArrayList();
         conversationID = new ArrayList();
         friendsData = new ArrayList<DataModelUser>();
+        cloudinary = Utils.cloudinary();
 
         ME = DataModelMeSingleton.getInstance();
 
@@ -220,6 +229,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 name.setText(ME.getName());
                 email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
                 phone.setText(ME.getPhone());
+//                Picasso Implementation
+                picasso.load(ME.getImageUrl()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
@@ -280,7 +291,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                         try {
                             //selectedImagePath = getPath(selectedImageUri);
-                               performCrop();
+                            performCrop();
                             //imageView.setImageURI(selectedImageUri);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internal error", Toast.LENGTH_LONG).show();
@@ -359,6 +370,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     public void onClick(DialogInterface dialog, int which) {
                         imageView.setImageBitmap(bitmap);
                         Log.d("File PATH IS ", selectedImagePath + "");
+                        ////////////////////////////////UPLOADING CLOUDINARY////////////////////
+
+                        AsyncTask<String, Void, HashMap<String, Object>> upload = new AsyncTask<String, Void, HashMap<String, Object>>() {
+                            @Override
+                            protected HashMap<String, Object> doInBackground(String... params) {
+                                File file = new File(selectedImagePath);
+                                HashMap<String, Object> responseFromServer = null;
+                                try {
+                                    responseFromServer = (HashMap<String, Object>) cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+                                } catch (IOException e) {
+                                    Toast.makeText(getActivity(), "Cannot Upload Image Please Try Again", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+
+                                return responseFromServer;
+                            }
+
+                            @Override
+                            protected void onPostExecute(HashMap<String, Object> stringObjectHashMap) {
+                                String url = (String) stringObjectHashMap.get("url");
+                                pcchatapp.child("users").child(pcchatapp.getAuth().getUid()).child("image_url").setValue(url, new Firebase.CompletionListener() {
+                                    @Override
+                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                        if (firebaseError != null) {
+                                            Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(getActivity(), "Upload Completed", Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
+                            }
+                        };
+                        upload.execute(selectedImagePath);
+                        ////////////////////////////////UPLOADING COMPLETED////////////////////////////////////////
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

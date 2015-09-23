@@ -22,8 +22,8 @@
             android:textStyle="bold"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/imageView2"
-            android:layout_toEndOf="@+id/imageView2" />
+            android:layout_toRightOf="@+id/fragmentChatImageView"
+            android:layout_toEndOf="@+id/fragmentChatImageView" />
 
         <TextView
             android:id="@+id/chatFragmentTextViewFriendEmailView"
@@ -40,7 +40,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView2"
+            android:id="@+id/fragmentChatImageView"
             android:src="@drawable/friend"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"

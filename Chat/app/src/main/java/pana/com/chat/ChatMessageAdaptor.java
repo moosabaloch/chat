@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -20,12 +22,14 @@ import java.util.List;
  * TOTAL_HOURS_WASTED_HERE=1
  */
 public class ChatMessageAdaptor extends BaseAdapter {
-    private LayoutInflater inflater;
+
     private List<Messages> messagesList;
+    private Context context;
 
     public ChatMessageAdaptor(Context context, List<Messages> messagesList) {
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         this.messagesList = messagesList;
+        this.context = context;
     }
 
     @Override
@@ -46,6 +50,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.chatadaptor, parent, false);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.messageMe = (TextView) convertView.findViewById(R.id.chatAdaptorTextViewForMessageMe);
@@ -60,12 +65,17 @@ public class ChatMessageAdaptor extends BaseAdapter {
         }
         ViewHolder view = (ViewHolder) convertView.getTag();
         Messages msg = messagesList.get(position);
+        Picasso picasso = Picasso.with(context);
         if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
             view.profilePicMe.setVisibility(View.VISIBLE);
             view.messageMe.setVisibility(View.VISIBLE);
             view.nameMe.setVisibility(View.VISIBLE);
             view.timeStampMe.setVisibility(View.VISIBLE);
             view.messageMe.setText(msg.getMessage());
+            picasso.load(DataModelMeSingleton.getInstance().getImageUrl())
+                    .placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download)
+                    .into(view.profilePicMe);
+
             view.nameMe.setText(DataModelMeSingleton.getInstance().getName());
             view.timeStampMe.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             view.profilePicFriend.setVisibility(View.INVISIBLE);
@@ -80,6 +90,11 @@ public class ChatMessageAdaptor extends BaseAdapter {
             view.timeStampFriend.setVisibility(View.VISIBLE);
             view.messageFriend.setText(msg.getMessage());
             view.nameFriend.setText(DataModelFriendSingleTon.getInstance().getNameUserFriend());
+            picasso.load(DataModelFriendSingleTon.getInstance().getImageUrlUserFriend())
+                    .placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download)
+                    .into(view.profilePicFriend);
+
+
             view.timeStampFriend.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
             view.profilePicMe.setVisibility(View.INVISIBLE);
             view.messageMe.setVisibility(View.INVISIBLE);

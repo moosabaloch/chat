@@ -3,6 +3,9 @@ package pana.com.chat;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -19,6 +22,7 @@ public class Utils {
     public static int TYPEMYGROUPS = 321;
     public static ArrayList<String> myGroups = new ArrayList<>();
     public static ArrayList<String> myFrindsId = new ArrayList<>();
+    private static Cloudinary cloudinary;
 
     public static void ToastLong(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
@@ -44,6 +48,11 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static int getTimeDistanceInMinutes(long time) {
+        long timeDistance = System.currentTimeMillis() - time;
+        return Math.round((Math.abs(timeDistance) / 1000) / 60);
     }
 
 /*
@@ -96,8 +105,13 @@ public class Utils {
         return timeAgo + " " + ctx.getResources().getString(R.string.date_util_suffix);
     }*/
 
-    public static int getTimeDistanceInMinutes(long time) {
-        long timeDistance = System.currentTimeMillis() - time;
-        return Math.round((Math.abs(timeDistance) / 1000) / 60);
+    public static Cloudinary cloudinary() {
+        if (cloudinary == null) {
+            cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "moosabaloch",
+                    "api_key", "976698733356172",
+                    "api_secret", "2mpFCUAhsCzasvMQWbcUPG0waJM"));
+        }
+        return cloudinary;
     }
 }

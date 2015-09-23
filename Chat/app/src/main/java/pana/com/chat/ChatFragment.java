@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ import java.util.HashMap;
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment {
-    ArrayList<Messages> messagesArrayList;
+    private ArrayList<Messages> messagesArrayList;
     private Firebase firebaseURL;
     private ImageButton sendMessageButton;
     private EditText sendMessageText;
@@ -41,7 +43,9 @@ public class ChatFragment extends Fragment {
     private ChatMessageAdaptor chatMessageAdaptor;
     private String conversationId = null;
     private boolean onceSet = true;
-    private ValueEventListener VEL1,VEL2;
+    private ValueEventListener VEL1, VEL2;
+    private ImageView friendImageView;
+    private Picasso picasso;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -51,6 +55,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        friendImageView = (ImageView) view.findViewById(R.id.fragmentChatImageView);
 
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com/");
 
@@ -59,7 +64,7 @@ public class ChatFragment extends Fragment {
         ME = DataModelMeSingleton.getInstance();
 
         messagesArrayList = new ArrayList<>();
-
+        picasso = Picasso.with(getActivity());
         sendMessageButton = (ImageButton) view.findViewById(R.id.chatFragmentButtonSendMessage);
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
         friendName = (TextView) view.findViewById(R.id.chatFragmentTextViewFriendName);
@@ -85,13 +90,13 @@ public class ChatFragment extends Fragment {
     }
 
     private void setConversationID() {
-        if (friendData.getConversationID().toString().equals("null")){
+        if (friendData.getConversationID().toString().equals("null")) {
             firebaseURL.child("user_friend").child(ME.getId()).child(friendData.getUuidUserFriend()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    VEL1=this;
-                    for(DataSnapshot d:dataSnapshot.getChildren()){
-                        Log.d("ConversationID........",d.getValue().toString());
+                    VEL1 = this;
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        Log.d("ConversationID........", d.getValue().toString());
                         friendData.setConversationID(d.getValue().toString());
                         loadConversation();
                     }
@@ -108,17 +113,22 @@ public class ChatFragment extends Fragment {
     private void setFriendDetails() {
         friendEmail.setText(friendData.getEmailUserFriend());
         friendName.setText(friendData.getNameUserFriend());
+        picasso.load(friendData.getImageUrlUserFriend())
+                .placeholder(R.drawable.friend)
+                .error(android.R.drawable.stat_sys_download)
+                .into(friendImageView);
+
     }
 
     private void loadConversation() {
         if (isNewChat()) {
-            Toast.makeText(getActivity(),"No conversation Found",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No conversation Found", Toast.LENGTH_SHORT).show();
         } else {
             Log.d("StartChatAndSetMessage", "ChatIsRegistered");
             firebaseURL.child("conversation").child(friendData.getConversationID().toString()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    VEL2=this;
+                    VEL2 = this;
                     messagesArrayList.clear();
                     if (dataSnapshot.hasChildren()) {
                         for (DataSnapshot d : dataSnapshot.getChildren()) {
@@ -143,24 +153,23 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private boolean isNewChat(){
-        if (friendData.getConversationID().toString().equals("null")){
+    private boolean isNewChat() {
+        if (friendData.getConversationID().toString().equals("null")) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    private void sendMyMessage(){
+    private void sendMyMessage() {
 
-        if (isNewChat()){
-            Firebase newchatref=firebaseURL.child("conversation").push();
+        if (isNewChat()) {
+            Firebase newchatref = firebaseURL.child("conversation").push();
 
-            Log.d("New Convo Key..........",newchatref.getKey());
+            Log.d("New Convo Key..........", newchatref.getKey());
 
-            HashMap<String,Object> hashMap=new HashMap<String, Object>();
-            hashMap.put("ConversationID",newchatref.getKey());
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+            hashMap.put("ConversationID", newchatref.getKey());
 
             firebaseURL.child("user_friend").child(ME.getId()).child(friendData.getUuidUserFriend()).setValue(hashMap);
             firebaseURL.child("user_friend").child(friendData.getUuidUserFriend()).child(ME.getId()).setValue(hashMap);
@@ -171,24 +180,23 @@ public class ChatFragment extends Fragment {
             if (!sendMessageText.getText().toString().equals("")) {
                 long time = System.currentTimeMillis();
                 String timeInString = String.valueOf(time);
-                newchatref.push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME.getId()),new Firebase.CompletionListener() {
+                newchatref.push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME.getId()), new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        Toast.makeText(getActivity(),"Sent",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
                         loadConversation();
                     }
                 });
                 sendMessageText.setText("");
             }
-        }
-        else{
+        } else {
             if (!sendMessageText.getText().toString().equals("")) {
                 long time = System.currentTimeMillis();
                 String timeInString = String.valueOf(time);
-                firebaseURL.child("conversation").child(friendData.getConversationID()).push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME.getId()),new Firebase.CompletionListener() {
+                firebaseURL.child("conversation").child(friendData.getConversationID()).push().setValue(new Messages(timeInString, sendMessageText.getText().toString(), ME.getId()), new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        Toast.makeText(getActivity(),"Sent",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -211,9 +219,9 @@ public class ChatFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(VEL1!=null)
+        if (VEL1 != null)
             firebaseURL.child("user_friend").child(ME.getId()).child(friendData.getUuidUserFriend()).removeEventListener(VEL1);
-        if(VEL2!=null)
+        if (VEL2 != null)
             firebaseURL.child("conversation").child(friendData.getConversationID().toString()).removeEventListener(VEL2);
     }
 }
