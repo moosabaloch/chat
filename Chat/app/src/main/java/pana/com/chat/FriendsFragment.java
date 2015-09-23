@@ -49,7 +49,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
 
-        ME=DataModelMeSingleton.getInstance();
+        ME = DataModelMeSingleton.getInstance();
 
         listView = (ListView) view.findViewById(R.id.friend_listView);
         button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);

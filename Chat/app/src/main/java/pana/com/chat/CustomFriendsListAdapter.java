@@ -49,7 +49,7 @@ public class CustomFriendsListAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) v.findViewById(R.id.friends_iv_profileimg);
         TextView name = (TextView) v.findViewById(R.id.friends_tv_name);
         name.setText(allUsers.get(i).getName());
-        Picasso.with(context).load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
+        Picasso.with(context).load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
 
         return v;
     }
