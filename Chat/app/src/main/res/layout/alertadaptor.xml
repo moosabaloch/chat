@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="5dp"
     android:background="#ffc2c2c2">
 
@@ -11,14 +11,12 @@
         android:textColor="#FFFFFF"
         android:text="View Profile"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
         android:id="@+id/dialog_profilebtn"
         android:background="#ff00b2ff"
-        android:layout_alignLeft="@+id/dialog_convobtn"
-        android:layout_alignStart="@+id/dialog_convobtn"
-        android:layout_alignRight="@+id/dialog_convobtn"
-        android:layout_alignEnd="@+id/dialog_convobtn" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -30,7 +28,10 @@
         android:id="@+id/dialog_convobtn"
         android:background="#ff00b2ff"
         android:layout_below="@+id/dialog_profilebtn"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/dialog_profilebtn"
+        android:layout_alignEnd="@+id/dialog_profilebtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"

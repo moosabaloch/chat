@@ -31,6 +31,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private ArrayList friendsID, friendsData, conversationID;
     DataModelMeSingleton ME;
     Boolean check1=false,check2=false;
+    Button profile,delete,conversation;
 
     public FriendsFragment() {
 
@@ -120,9 +121,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 alertDialog.setView(v);
                 alertDialog.show();
 
-                ((Button) v.findViewById(R.id.dialog_profilebtn)).setOnClickListener(new View.OnClickListener() {
+                profile=(Button) v.findViewById(R.id.dialog_profilebtn);
+                profile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        profile.setEnabled(false);
+                        conversation.setEnabled(false);
+                        delete.setEnabled(false);
                         LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View view2=inflater.inflate(R.layout.profiledialog,null);
                         TextView name=(TextView) view2.findViewById(R.id.profiledialog_name);
@@ -138,9 +143,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                ((Button) v.findViewById(R.id.dialog_convobtn)).setOnClickListener(new View.OnClickListener() {
+                conversation=(Button) v.findViewById(R.id.dialog_convobtn);
+                conversation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        profile.setEnabled(false);
+                        conversation.setEnabled(false);
+                        delete.setEnabled(false);
                         getFragmentManager().beginTransaction()
                                 .addToBackStack("")
                                 .replace(R.id.fragment, new ChatFragment())
@@ -149,9 +158,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                ((Button) v.findViewById(R.id.dialog_deletebtn)).setOnClickListener(new View.OnClickListener() {
+                delete= (Button) v.findViewById(R.id.dialog_deletebtn);
+                delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        profile.setEnabled(false);
+                        conversation.setEnabled(false);
+                        delete.setEnabled(false);
                         pcchatapp.child("user_friend").child(ME.getId()).child(friend.getUuidUserFriend()).removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {

@@ -28,6 +28,8 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
     DataModelMeSingleton ME;
     Boolean check1 = false, check2 = false;
 
+    Button accept,cancel;
+
     public CustomFriendRequestAdapter(ArrayList friendsID, ArrayList friendsData, ArrayList requestDate, Context context) {
         this.friendsID = friendsID;
         this.requestDate = requestDate;
@@ -65,9 +67,14 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
         textView1.setText(friendsData.get(i).getName());
         textView2.setText(requestDate.get(i).toString());
 
-        ((Button) view1.findViewById(R.id.friendreq_btn_accept)).setOnClickListener(new View.OnClickListener() {
+        accept=((Button) view1.findViewById(R.id.friendreq_btn_accept));
+        cancel=((Button) view1.findViewById(R.id.friendreq_btn_cancel));
+
+        accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                accept.setEnabled(false);
+                cancel.setEnabled(false);
                 Log.d("Accept Button....", i + "");
                 final HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("ConversationID", "null");
@@ -98,9 +105,11 @@ public class CustomFriendRequestAdapter extends BaseAdapter {
             }
         });
 
-        ((Button) view1.findViewById(R.id.friendreq_btn_cancel)).setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                accept.setEnabled(false);
+                cancel.setEnabled(false);
                 Log.d("Cancel Button....", i + "");
                 pcchatapp.child("friend_requests").child(ME.getId()).child(friendsID.get(i).toString()).removeValue(new Firebase.CompletionListener() {
                     @Override
