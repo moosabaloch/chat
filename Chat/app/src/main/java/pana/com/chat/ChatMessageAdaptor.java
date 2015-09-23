@@ -73,7 +73,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
             view.timeStampMe.setVisibility(View.VISIBLE);
             view.messageMe.setText(msg.getMessage());
             picasso.load(DataModelMeSingleton.getInstance().getImageUrl())
-                    .placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download)
+                    .placeholder(R.drawable.friend).error(R.drawable.friend)
                     .into(view.profilePicMe);
 
             view.nameMe.setText(DataModelMeSingleton.getInstance().getName());
@@ -91,7 +91,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
             view.messageFriend.setText(msg.getMessage());
             view.nameFriend.setText(DataModelFriendSingleTon.getInstance().getNameUserFriend());
             picasso.load(DataModelFriendSingleTon.getInstance().getImageUrlUserFriend())
-                    .placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download)
+                    .placeholder(R.drawable.friend).error(R.drawable.friend)
                     .into(view.profilePicFriend);
 
 

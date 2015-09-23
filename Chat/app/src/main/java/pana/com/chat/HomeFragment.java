@@ -230,7 +230,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
                 phone.setText(ME.getPhone());
 //                Picasso Implementation
-                picasso.load(ME.getImageUrl()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
+                picasso.load(ME.getImageUrl()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();

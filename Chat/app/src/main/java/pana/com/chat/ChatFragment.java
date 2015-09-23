@@ -115,7 +115,7 @@ public class ChatFragment extends Fragment {
         friendName.setText(friendData.getNameUserFriend());
         picasso.load(friendData.getImageUrlUserFriend())
                 .placeholder(R.drawable.friend)
-                .error(android.R.drawable.stat_sys_download)
+                .error(R.drawable.friend)
                 .into(friendImageView);
 
     }
