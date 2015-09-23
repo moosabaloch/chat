@@ -187,7 +187,7 @@ public class AddFriendFragment extends Fragment {
                             TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
                             TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                             ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
-                            picasso.load(ME.getImageUrl()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
+                            picasso.load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
 
                             name.setText(allUsers.get(i).getName());
                             email.setText(allUsers.get(i).getEmail_id());

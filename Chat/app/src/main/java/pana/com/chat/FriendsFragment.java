@@ -24,13 +24,13 @@ import java.util.HashMap;
 
 public class FriendsFragment extends Fragment implements View.OnClickListener {
 
+    DataModelMeSingleton ME;
+    Boolean check1 = false, check2 = false;
     private ValueEventListener VEL;
     private ListView listView;
     private Button button1, button2;
     private Firebase pcchatapp;
     private ArrayList friendsID, friendsData, conversationID;
-    DataModelMeSingleton ME;
-    Boolean check1=false,check2=false;
 
     public FriendsFragment() {
 
@@ -48,7 +48,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
 
-        ME=DataModelMeSingleton.getInstance();
+        ME = DataModelMeSingleton.getInstance();
 
         listView = (ListView) view.findViewById(R.id.friend_listView);
         button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
@@ -67,7 +67,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 friendsData.clear();
                 friendsID.clear();
                 listView.setAdapter(new CustomFriendsListAdapter(getActivity(), friendsID, friendsData));
-                if (dataSnapshot.hasChildren()){
+                if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         friendsID.add(d.getKey().toString());
                         HashMap<String, Object> hashMap = (HashMap<String, Object>) d.getValue();
@@ -87,15 +87,14 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                     }
-                }
-                else{
-                    Log.d("Friend Fragment ","No friend");
+                } else {
+                    Log.d("Friend Fragment ", "No friend");
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Log.d("Friends Fragment",firebaseError.getMessage());
+                Log.d("Friends Fragment", firebaseError.getMessage());
             }
         });
 
@@ -114,24 +113,24 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 friend.setPhoneUserFriend(dataModelUser.getPhone());
                 friend.setConversationID(conversationID.get(position).toString());
 
-                final AlertDialog alertDialog=new AlertDialog.Builder(getActivity()).create();
-                LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v=inflater.inflate(R.layout.alertadaptor,null);
+                final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = inflater.inflate(R.layout.alertadaptor, null);
                 alertDialog.setView(v);
                 alertDialog.show();
 
                 ((Button) v.findViewById(R.id.dialog_profilebtn)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LayoutInflater inflater=(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view2=inflater.inflate(R.layout.profiledialog,null);
-                        TextView name=(TextView) view2.findViewById(R.id.profiledialog_name);
-                        TextView email=(TextView) view2.findViewById(R.id.profiledialog_email);
-                        TextView phone=(TextView) view2.findViewById(R.id.profiledialog_phone);
+                        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view2 = inflater.inflate(R.layout.profiledialog, null);
+                        TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                        TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                        TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                         name.setText(friend.getNameUserFriend());
                         email.setText(friend.getEmailUserFriend());
                         phone.setText(friend.getPhoneUserFriend());
-                        AlertDialog alertDialogg=new AlertDialog.Builder(getActivity()).create();
+                        AlertDialog alertDialogg = new AlertDialog.Builder(getActivity()).create();
                         alertDialogg.setView(view2);
                         alertDialogg.show();
                         alertDialog.dismiss();
@@ -155,13 +154,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         pcchatapp.child("user_friend").child(ME.getId()).child(friend.getUuidUserFriend()).removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                check1=true;
-                                if(check1){
+                                check1 = true;
+                                if (check1) {
                                     pcchatapp.child("user_friend").child(friend.getUuidUserFriend()).child(ME.getId()).removeValue(new Firebase.CompletionListener() {
                                         @Override
                                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                            check2=true;
-                                            if (check1&&check2){
+                                            check2 = true;
+                                            if (check1 && check2) {
                                                 Toast.makeText(getActivity(), "Friend Removed", Toast.LENGTH_SHORT).show();
                                                 alertDialog.dismiss();
                                             }
@@ -181,8 +180,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("FRIEND FRAGMENT", "OnDestroy");
-        if(VEL!=null)
-            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
+        if (VEL != null)
+            pcchatapp.child("user_friend").child(ME.getId()).removeEventListener(VEL);
     }
 
     @Override
