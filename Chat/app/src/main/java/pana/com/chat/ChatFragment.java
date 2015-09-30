@@ -1,6 +1,8 @@
 package pana.com.chat;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -56,6 +58,27 @@ public class ChatFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         friendImageView = (ImageView) view.findViewById(R.id.fragmentChatImageView);
+
+        friendImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view2 = inflater.inflate(R.layout.profiledialog, null);
+                TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
+                ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
+
+                name.setText(friendData.getNameUserFriend());
+                email.setText(firebaseURL.getAuth().getProviderData().get("email").toString());
+                phone.setText(friendData.getPhoneUserFriend());
+//                Picasso Implementation
+                picasso.load(friendData.getImageUrlUserFriend()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setView(view2);
+                alertDialog.show();
+            }
+        });
 
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com/");
 
