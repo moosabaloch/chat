@@ -30,8 +30,8 @@
         android:padding="3dp"
         android:text="@string/username"
         android:textColor="#000000"
-        android:textStyle="bold"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewForNameFriend"
@@ -41,11 +41,11 @@
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
         android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend"
-        android:textStyle="bold"
         android:padding="3dp"
         android:text="@string/username"
         android:textColor="#000000"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewForMessageMe"
@@ -55,7 +55,7 @@
         android:layout_alignStart="@+id/chatAdaptorTextViewForNameMe"
         android:layout_below="@+id/chatAdaptorTextViewForNameMe"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="1dp"
         android:text="@string/message" />
 
     <TextView
@@ -64,10 +64,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/chatAdaptorTextViewForNameFriend"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="1dp"
         android:layout_toLeftOf="@+id/chatAdaptorImageViewProfilePictureFriend"
         android:layout_toStartOf="@+id/chatAdaptorImageViewProfilePictureFriend"
-        android:text="@string/message"/>
+        android:text="@string/message" />
 
     <TextView
         android:id="@+id/chatAdaptorTextViewTimeMe"
@@ -76,6 +76,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:textSize="10sp"
+        android:layout_below="@id/chatAdaptorTextViewForMessageMe"
         android:text="time" />
 
     <TextView
@@ -83,7 +85,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:textSize="10sp"
+
         android:layout_alignParentLeft="true"
+        android:layout_below="@id/chatAdaptorTextViewForMessageFriend"
         android:text="time" />
 
 </RelativeLayout>

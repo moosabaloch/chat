@@ -60,50 +60,55 @@ public class AddFriendFragment extends Fragment {
         allUsers = new ArrayList<>();
 
         listView = (ListView) view.findViewById(R.id.addfriend_listview);
-
-        pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                VEL1 = this;
-                myFriends.clear();
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    myFriends.add(d.getKey());
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        pcchatapp.child("users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                VEL2 = this;
-                allUsers.clear();
-                ids.clear();
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    if (!d.getKey().toString().equals(pcchatapp.getAuth().getUid()) && !isFriend(d.getKey().toString())) {
-
-                        DataModelUser user = d.getValue(DataModelUser.class);
-
-                        ids.add(d.getKey().toString());
-                        allUsers.add(user);
-
-                        listView.setAdapter(new CustomFriendsListAdapter(getActivity(), ids, allUsers));
+        if (pcchatapp.getAuth() == null) {
+            pcchatapp.unauth();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, new LoginFragment())
+                    .commit();
+        } else {
+            pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    VEL1 = this;
+                    myFriends.clear();
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        myFriends.add(d.getKey());
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-            }
-        });
+                }
+            });
 
-        listView.setOnItemClickListener(new listview_OnItemClickListener());
+            pcchatapp.child("users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    VEL2 = this;
+                    allUsers.clear();
+                    ids.clear();
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        if (!d.getKey().toString().equals(pcchatapp.getAuth().getUid()) && !isFriend(d.getKey().toString())) {
 
+                            DataModelUser user = d.getValue(DataModelUser.class);
+
+                            ids.add(d.getKey().toString());
+                            allUsers.add(user);
+
+                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(), ids, allUsers));
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+
+            listView.setOnItemClickListener(new listview_OnItemClickListener());
+        }
         return view;
     }
 
@@ -111,7 +116,7 @@ public class AddFriendFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("ADD FRIEND FRAGMENT", "OnDestroy");
-        if (VEL1 != null)
+        if (VEL1 != null&&pcchatapp.getAuth()!=null)
             pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL1);
         if (VEL2 != null)
             pcchatapp.child("users").removeEventListener(VEL2);
