@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,10 +25,12 @@ import java.util.List;
 public class GroupChatAdaptor extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Messages> messagesList;
+    private Context context;
 
     public GroupChatAdaptor(Context context, List<Messages> messagesList) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messagesList = messagesList;
+        this.context = context;
     }
 
     @Override
@@ -61,6 +66,7 @@ public class GroupChatAdaptor extends BaseAdapter {
         ViewHolder view = (ViewHolder) convertView.getTag();
         Messages msg = messagesList.get(position);
         GroupUsersDetailsHashMap groupUsersDetailsHashMap = GroupUsersDetailsHashMap.getInstance();
+        Picasso picasso = Picasso.with(context);
         if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
             view.profilePicMe.setVisibility(View.VISIBLE);
             view.messageMe.setVisibility(View.VISIBLE);
@@ -68,7 +74,11 @@ public class GroupChatAdaptor extends BaseAdapter {
             view.timeStampMe.setVisibility(View.VISIBLE);
             view.messageMe.setText(msg.getMessage());
             view.nameMe.setText(DataModelMeSingleton.getInstance().getName());
-            view.timeStampMe.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            picasso.load(DataModelMeSingleton.getInstance()
+                    .getImageUrl())
+                    .placeholder(R.drawable.friend).error(R.drawable.friend)
+                    .into(view.profilePicMe);
+            view.timeStampMe.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
             view.profilePicFriend.setVisibility(View.INVISIBLE);
             view.messageFriend.setVisibility(View.INVISIBLE);
             view.nameFriend.setVisibility(View.INVISIBLE);
@@ -81,9 +91,13 @@ public class GroupChatAdaptor extends BaseAdapter {
             view.timeStampFriend.setVisibility(View.VISIBLE);
             ///////////////FRIENDS DATA//////////////////////
             view.messageFriend.setText(msg.getMessage());
-
+            picasso.load(groupUsersDetailsHashMap
+                    .get(msg.getUser()).getImage_url())
+                    .placeholder(R.drawable.friend)
+                    .error(R.drawable.friend)
+                    .into(view.profilePicFriend);
             view.nameFriend.setText(groupUsersDetailsHashMap.get(msg.getUser()).getName());
-            view.timeStampFriend.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            view.timeStampFriend.setText("" +  Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
             ///////////////////////////////////////////////
             view.profilePicMe.setVisibility(View.INVISIBLE);
             view.messageMe.setVisibility(View.INVISIBLE);

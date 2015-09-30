@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class ChatMessageAdaptor extends BaseAdapter {
                     .into(view.profilePicMe);
 
             view.nameMe.setText(DataModelMeSingleton.getInstance().getName());
-            view.timeStampMe.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            view.timeStampMe.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
             view.profilePicFriend.setVisibility(View.INVISIBLE);
             view.messageFriend.setVisibility(View.INVISIBLE);
             view.nameFriend.setVisibility(View.INVISIBLE);
@@ -95,7 +96,8 @@ public class ChatMessageAdaptor extends BaseAdapter {
                     .into(view.profilePicFriend);
 
 
-            view.timeStampFriend.setText("" + Utils.getTimeDistanceInMinutes(Long.parseLong(msg.getTimeStamp())));
+            view.timeStampFriend.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
+            //.getTimeDistanceInMinutes());
             view.profilePicMe.setVisibility(View.INVISIBLE);
             view.messageMe.setVisibility(View.INVISIBLE);
             view.nameMe.setVisibility(View.INVISIBLE);

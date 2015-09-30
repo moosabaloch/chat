@@ -7,6 +7,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Moosa on 9/12/2015.
@@ -52,19 +53,23 @@ public class Utils {
 
     public static int getTimeDistanceInMinutes(long time) {
         long timeDistance = System.currentTimeMillis() - time;
+        // DateUtils.formatElapsedTime(time);
+
+
         return Math.round((Math.abs(timeDistance) / 1000) / 60);
+
     }
 
-/*
+
     public static String getTimeAgo(Date date, Context ctx) {
 
-        if(date == null) {
+        if (date == null) {
             return null;
         }
 
         long time = date.getTime();
 
-        Date curDate = currentDate();
+        Date curDate = new Date();
         long now = curDate.getTime();
         if (time > now || time <= 0) {
             return null;
@@ -75,13 +80,13 @@ public class Utils {
         String timeAgo = null;
 
         if (dim == 0) {
-            timeAgo = ctx.getResources().getString(R.string.date_util_term_less) + " " +  ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_minute);
+            timeAgo = ctx.getResources().getString(R.string.date_util_term_less) + " " + ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_minute);
         } else if (dim == 1) {
             return "1 " + ctx.getResources().getString(R.string.date_util_unit_minute);
         } else if (dim >= 2 && dim <= 44) {
             timeAgo = dim + " " + ctx.getResources().getString(R.string.date_util_unit_minutes);
         } else if (dim >= 45 && dim <= 89) {
-            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " "+ctx.getResources().getString(R.string.date_util_term_an)+ " " + ctx.getResources().getString(R.string.date_util_unit_hour);
+            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " " + ctx.getResources().getString(R.string.date_util_term_an) + " " + ctx.getResources().getString(R.string.date_util_unit_hour);
         } else if (dim >= 90 && dim <= 1439) {
             timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " " + (Math.round(dim / 60)) + " " + ctx.getResources().getString(R.string.date_util_unit_hours);
         } else if (dim >= 1440 && dim <= 2519) {
@@ -89,13 +94,13 @@ public class Utils {
         } else if (dim >= 2520 && dim <= 43199) {
             timeAgo = (Math.round(dim / 1440)) + " " + ctx.getResources().getString(R.string.date_util_unit_days);
         } else if (dim >= 43200 && dim <= 86399) {
-            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " "+ctx.getResources().getString(R.string.date_util_term_a)+ " " + ctx.getResources().getString(R.string.date_util_unit_month);
+            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " " + ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_month);
         } else if (dim >= 86400 && dim <= 525599) {
             timeAgo = (Math.round(dim / 43200)) + " " + ctx.getResources().getString(R.string.date_util_unit_months);
         } else if (dim >= 525600 && dim <= 655199) {
-            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " "+ctx.getResources().getString(R.string.date_util_term_a)+ " " + ctx.getResources().getString(R.string.date_util_unit_year);
+            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_about) + " " + ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_year);
         } else if (dim >= 655200 && dim <= 914399) {
-            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_over) + " "+ctx.getResources().getString(R.string.date_util_term_a)+ " " + ctx.getResources().getString(R.string.date_util_unit_year);
+            timeAgo = ctx.getResources().getString(R.string.date_util_prefix_over) + " " + ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_year);
         } else if (dim >= 914400 && dim <= 1051199) {
             timeAgo = ctx.getResources().getString(R.string.date_util_prefix_almost) + " 2 " + ctx.getResources().getString(R.string.date_util_unit_years);
         } else {
@@ -103,7 +108,7 @@ public class Utils {
         }
 
         return timeAgo + " " + ctx.getResources().getString(R.string.date_util_suffix);
-    }*/
+    }
 
     public static Cloudinary cloudinary() {
         if (cloudinary == null) {
