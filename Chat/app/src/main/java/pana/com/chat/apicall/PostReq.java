@@ -31,13 +31,13 @@ public class PostReq {
         return myInstance;
     }
 
-    public void notifySingleUser(String userID, String msg, String notificationTitle) {
+    public void notifySingleUser(String toUser, String msg, String fromUserName,String fromUserPic) {
         Map<String, String> map = new HashMap<>();
-        map.put("user", userID);
-        map.put("notificationTitle", notificationTitle);
+        map.put("toUser", toUser);
+        map.put("fromUserPic",fromUserPic);
+        map.put("fromUserName",fromUserName);
         map.put("msg", msg);
         AppController.getInstance().addToRequestQueue(new MyRequest(map, Utils.SERVER_SEND_NOTIFICATION_URL));
-        Log.d("notifySingleUser()","Invoked:"+notificationTitle+" -> "+msg);
     }
 
 

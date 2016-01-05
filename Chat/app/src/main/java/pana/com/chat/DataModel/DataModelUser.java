@@ -4,7 +4,19 @@ package pana.com.chat.DataModel;
  * Created by Abdul Basit on 9/9/2015.
  */
 public class DataModelUser {
-    private String email_id, image_url, name, phone;
+    private String email_id;
+    private String image_url;
+    private String name;
+    private String phone;
+    private String gcm;
+
+    public String getGcm() {
+        return gcm;
+    }
+
+    public void setGcm(String gcm) {
+        this.gcm = gcm;
+    }
 
     public String getEmail_id() {
         return email_id;
@@ -37,6 +49,7 @@ public class DataModelUser {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 
     @Override
     public String toString() {

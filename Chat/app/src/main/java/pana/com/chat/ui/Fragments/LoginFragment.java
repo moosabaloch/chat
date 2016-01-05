@@ -24,11 +24,11 @@ import pana.com.chat.R;
  * A placeholder fragment containing a simple view.
  */
 public class LoginFragment extends Fragment {
+    Boolean alreadyLoggedIn = false;
+    Firebase.AuthStateListener ASL;
     private Button loginButton, createAccountButton;
     private EditText emailToLogin, passwordToLogin;
     private Firebase firebaseUrl;
-    Boolean alreadyLoggedIn=false;
-    Firebase.AuthStateListener ASL;
 
     public LoginFragment() {
     }
@@ -46,17 +46,22 @@ public class LoginFragment extends Fragment {
 
         firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
 
-        loginButton.setEnabled(false);
-        createAccountButton.setEnabled(false);
 
         firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
             @Override
             public void onAuthStateChanged(AuthData authData) {
-                ASL=this;
+                ASL = this;
                 authentication(authData);
             }
         });
+        loginButton.setEnabled(false);
+        createAccountButton.setEnabled(false);
 
+        clickListeners();
+        return view;
+    }
+
+    private void clickListeners() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,24 +75,22 @@ public class LoginFragment extends Fragment {
                 createAccount();
             }
         });
-
-        return view;
     }
 
-    private void authentication(AuthData authData){
+    private void authentication(AuthData authData) {
         if (authData != null) {
-            Log.d("Login Fragment......", "User Logged in with ID:"+authData.getUid());
-            alreadyLoggedIn=true;
+            Log.d("Login Fragment......", "User Logged in with ID:" + authData.getUid());
+            alreadyLoggedIn = true;
             getUserData(authData);
         } else {
             Log.d("Login Fragment......", "User Not Logged in...");
-            alreadyLoggedIn=false;
+            alreadyLoggedIn = false;
             loginButton.setEnabled(true);
             createAccountButton.setEnabled(true);
         }
     }
 
-    private void login(){
+    private void login() {
 
         Log.d("Login Fragment......", "Login Button Clicked");
 
@@ -114,13 +117,13 @@ public class LoginFragment extends Fragment {
                     emailToLogin.setEnabled(true);
                     passwordToLogin.setEnabled(true);
                     createAccountButton.setEnabled(true);
-                    Toast.makeText(getActivity(),firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
-    private void createAccount(){
+    private void createAccount() {
         getFragmentManager().beginTransaction()
                 .addToBackStack("")
                 .replace(R.id.fragment, new CreateAccountFragment())
@@ -129,7 +132,7 @@ public class LoginFragment extends Fragment {
 
     private void getUserData(final AuthData authData) {
 
-        Log.d("Login Fragment......", "Getting user Data of ID:"+authData.getUid());
+        Log.d("Login Fragment......", "Getting user Data of ID:" + authData.getUid());
 
         firebaseUrl.child("users").child(authData.getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -138,9 +141,9 @@ public class LoginFragment extends Fragment {
                 Log.d("Login Fragment......", "Getting user Data.... OnDataChanged");
 
                 DataModelUser dataModelUser;//=new DataModelUser();
-                dataModelUser=dataSnapshot.getValue(DataModelUser.class);
+                dataModelUser = dataSnapshot.getValue(DataModelUser.class);
 
-                Log.d("User Data",dataModelUser.toString());
+                Log.d("User Data", dataModelUser.toString());
 
                 DataModelMeSingleton.getInstance().setId(authData.getUid());
                 DataModelMeSingleton.getInstance().setImageUrl(dataModelUser.getImage_url());
@@ -153,7 +156,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(getActivity(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 firebaseUrl.unauth();
                 loginButton.setEnabled(true);
                 createAccountButton.setEnabled(true);
@@ -169,7 +172,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (ASL!=null){
+        if (ASL != null) {
             Log.d("Login Fragment......", "Removing Authentication State Listener");
             firebaseUrl.removeAuthStateListener(ASL);
         }

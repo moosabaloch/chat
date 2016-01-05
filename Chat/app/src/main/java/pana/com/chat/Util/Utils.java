@@ -25,7 +25,7 @@ public class Utils {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String SENDER_ID = "1049880136181";
     public static final String SERVER_KEY_FOR_THIS_PROJECT = "AIzaSyBtPwemSZxg9qIJeN85LHZisVxJpozX1Hg";
-    private static final String SERVER_CURRENT_IP = "http://192.168.0.102:3000";
+    private static final String SERVER_CURRENT_IP = "http://10.105.19.125:3000";
     public static final String SERVER_REGISTRATION_URL = SERVER_CURRENT_IP + "/gcm/register";
     public static final String SERVER_SEND_NOTIFICATION_URL = SERVER_CURRENT_IP + "/gcm/sendMessage";
     public static int TYPEGROUPSEARCH = 123;

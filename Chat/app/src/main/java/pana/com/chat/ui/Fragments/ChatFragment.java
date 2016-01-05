@@ -222,18 +222,18 @@ public class ChatFragment extends Fragment {
         } else {
             if (!sendMessageText.getText().toString().equals("")) {
                 long time = System.currentTimeMillis();
-                final String msg=sendMessageText.getText().toString();
+                final String msg = sendMessageText.getText().toString();
                 String timeInString = String.valueOf(time);
                 firebaseURL.child("conversation").child(friendData.getConversationID())
-                        .push().setValue(new Messages(timeInString,msg, ME.getId()),
+                        .push().setValue(new Messages(timeInString, msg, ME.getId()),
                         new Firebase.CompletionListener() {
-                    @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
-                        PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(),msg,ME.getName());
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
+                                PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
 
-                    }
-                });
+                            }
+                        });
                 sendMessageText.setText("");
             }
         }
