@@ -3,10 +3,26 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+    productFlavors {
+        //minSdkVersion 16
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion 21
+        }
+        prod {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 16
+        }
 
+
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId "pana.com.chat"
-        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -26,7 +42,7 @@ android {
 }
 
 dependencies {
-   // compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -35,5 +51,5 @@ dependencies {
     compile files('libs/cloudinary-android-1.2.2.jar')
     compile files('libs/cloudinary-core-1.2.2.jar')
     compile 'com.google.android.gms:play-services:8.4.0'
-
+    compile 'com.android.support:multidex:1.0.1'
 }

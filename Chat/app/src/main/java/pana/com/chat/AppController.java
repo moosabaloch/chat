@@ -1,6 +1,8 @@
 package pana.com.chat;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -8,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
+
+import pana.com.chat.apicall.LruBitmapCache;
 
 /**
  * Created by Moosa on 9/9/2015.
@@ -28,6 +32,12 @@ public class AppController extends Application {
 
     public static synchronized AppController getInstance() {
         return mInstance;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

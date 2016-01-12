@@ -236,7 +236,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     }
                 });
                 name.setText(ME.getName());
-                email.setText(pcchatapp.getAuth().getProviderData().get("email").toString());
+                email.setText(ME.getEmail());
                 phone.setText(ME.getPhone());
 //                Picasso Implementation
                 picasso.load(ME.getImageUrl()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);

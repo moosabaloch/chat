@@ -27,6 +27,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import pana.com.chat.AppController;
 import pana.com.chat.MainActivity;
 import pana.com.chat.R;
@@ -88,8 +93,8 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         //////////////////////////////////////////////////////////////////////
-        bitmap=BitmapFactory.decodeResource(getApplication().getResources(),R.drawable.friend);
-        AppController.getInstance().getImageLoader().get(picUrl, new ImageLoader.ImageListener() {
+        bitmap=getBitmapFromURL(picUrl);
+       /* AppController.getInstance().getImageLoader().get(picUrl, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                bitmap= response.getBitmap();
@@ -99,7 +104,7 @@ public class MyGcmListenerService extends GcmListenerService {
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
+        });*/
         ////////////////////////////////////////////////////////
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -109,11 +114,25 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setVibrate(new long[]{100,100,100,100})
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+    public Bitmap getBitmapFromURL(String strURL) {
+        try {
+            URL url = new URL(strURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

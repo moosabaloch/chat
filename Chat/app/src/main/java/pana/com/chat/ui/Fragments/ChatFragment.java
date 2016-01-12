@@ -230,7 +230,8 @@ public class ChatFragment extends Fragment {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
-                                PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
+                              /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
+                                PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
 
                             }
                         });
