@@ -121,6 +121,12 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+    }
+
     private void addGroup() {
         addNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override

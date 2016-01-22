@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:padding="20dp"
-    android:layout_height="wrap_content"
-    android:background="#ffdedede">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
         android:id="@+id/profiledialog_imageview"
-        android:layout_marginTop="10dp"
         android:src="@drawable/friend"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentStart="false"
+        android:layout_centerInParent="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,23 +21,45 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/profiledialog_name"
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/roundcorner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/profiledialog_phone"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="2dp"
+        android:paddingRight="6dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
+        android:background="@drawable/roundcorner"
+
         android:id="@+id/profiledialog_email"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentEnd="false"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="6dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
+        android:background="@drawable/roundcorner"
         android:id="@+id/profiledialog_phone"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"/>
-</LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/profiledialog_email"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentStart="true"
+        android:paddingRight="6dp"
+        android:paddingLeft="2dp" />
+</RelativeLayout>

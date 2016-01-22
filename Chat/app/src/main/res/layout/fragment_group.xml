@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.Fragments.GroupFragment">
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/linearLayoutSearchFragGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,12 +35,11 @@
             android:layout_alignBottom="@+id/textViewSearchFragGroup" />
 
     </RelativeLayout>
-
+-->
     <ListView
         android:id="@+id/myGroupFragmentListViewGroupsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutSearchFragGroup"
         android:padding="10dp" />
 
 </RelativeLayout>

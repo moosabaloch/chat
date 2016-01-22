@@ -25,16 +25,18 @@ import pana.com.chat.R;
  */
 public class LoginFragment extends Fragment {
     Boolean alreadyLoggedIn = false;
-    Firebase.AuthStateListener ASL;
+    private Firebase.AuthStateListener ASL;
     private Button loginButton, createAccountButton;
     private EditText emailToLogin, passwordToLogin;
-    private Firebase firebaseUrl;
+    private Firebase firebaseUrl= new Firebase("https://pcchatapp.firebaseio.com/");
 
     public LoginFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("LoginFrag","onCreateView");
+       // firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -44,9 +46,16 @@ public class LoginFragment extends Fragment {
         emailToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentEmailAddress);
         passwordToLogin = (EditText) view.findViewById(R.id.editTextLoginFragmentPassword);
 
-        firebaseUrl = new Firebase("https://pcchatapp.firebaseio.com/");
 
 
+        loginButton.setEnabled(false);
+        createAccountButton.setEnabled(false);
+
+        clickListeners();
+        return view;
+    }
+
+    private void addAuthStateListener() {
         firebaseUrl.addAuthStateListener(new Firebase.AuthStateListener() {
             @Override
             public void onAuthStateChanged(AuthData authData) {
@@ -54,11 +63,6 @@ public class LoginFragment extends Fragment {
                 authentication(authData);
             }
         });
-        loginButton.setEnabled(false);
-        createAccountButton.setEnabled(false);
-
-        clickListeners();
-        return view;
     }
 
     private void clickListeners() {
@@ -87,6 +91,7 @@ public class LoginFragment extends Fragment {
             alreadyLoggedIn = false;
             loginButton.setEnabled(true);
             createAccountButton.setEnabled(true);
+
         }
     }
 
@@ -166,15 +171,38 @@ public class LoginFragment extends Fragment {
 
     private void switchToHomeFrag() {
         Log.d("Login Fragment......", "Switching to Home Fragment");
-        getFragmentManager().beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
+        //  getFragmentManager().beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
+        FragmentInterActionListener fragmentInterActionListener = (FragmentInterActionListener) getActivity();
+        fragmentInterActionListener.switchToHome();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onResume() {
+        Log.d("LoginFrag","onResume-> Adding ASL");
+        super.onResume();
+        addAuthStateListener();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("LoginFrag","onPause-> Removing ASL");
+        super.onPause();
         if (ASL != null) {
             Log.d("Login Fragment......", "Removing Authentication State Listener");
             firebaseUrl.removeAuthStateListener(ASL);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d("LoginFrag","onDestroyView");
+
+        super.onDestroyView();
+
+    }
+
+    public interface FragmentInterActionListener {
+        void switchToHome();
+
     }
 }

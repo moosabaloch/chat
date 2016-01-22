@@ -3,6 +3,7 @@ package pana.com.chat.ui.Fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,16 +31,17 @@ import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.DataModelUser;
 import pana.com.chat.R;
 
-public class FriendsFragment extends Fragment implements View.OnClickListener {
+public class FriendsFragment extends Fragment {
 
     DataModelMeSingleton ME;
     Boolean check1 = false, check2 = false;
     Button profile, delete, conversation;
     private ValueEventListener VEL;
     private ListView listView;
-    private Button button1, button2;
+    // private Button button1, button2;
     private Firebase pcchatapp;
     private ArrayList friendsID, friendsData, conversationID;
+    private FloatingActionButton fab;
 
     public FriendsFragment() {
 
@@ -60,8 +62,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         ME = DataModelMeSingleton.getInstance();
 
         listView = (ListView) view.findViewById(R.id.friend_listView);
-        button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
-        button1.setOnClickListener(this);
+        //     button1 = (Button) view.findViewById(R.id.friend_btn_addfriend);
+        //   button1.setOnClickListener(this);
+
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
 
         friendsID = new ArrayList();
         friendsData = new ArrayList();
@@ -150,6 +154,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         AlertDialog alertDialogg = new AlertDialog.Builder(getActivity()).create();
                         alertDialogg.setView(view2);
                         alertDialogg.show();
+                        alertDialogg.getWindow().setLayout(600,600);
                         alertDialog.dismiss();
                     }
                 });
@@ -161,9 +166,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         profile.setEnabled(false);
                         conversation.setEnabled(false);
                         delete.setEnabled(false);
+                        fab.setVisibility(View.GONE);
                         getFragmentManager().beginTransaction()
                                 .addToBackStack("")
-                                .replace(R.id.fragment, new ChatFragment())
+                                .add(R.id.homeActivityContent, new ChatFragment())
                                 .commit();
                         alertDialog.dismiss();
                     }
@@ -207,18 +213,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         Log.d("FRIEND FRAGMENT", "OnDestroy");
         if (VEL != null && pcchatapp.getAuth() != null)
             pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.friend_btn_addfriend:
-                getFragmentManager().beginTransaction()
-                        .addToBackStack("")
-                        .replace(R.id.fragment, new AddFriendFragment())
-                        .commit();
-                break;
-        }
 
     }
+
+   /* private void addFriendFrag() {
+        fab.setVisibility(View.GONE);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .add(R.id.homeActivityContent, new AddFriendFragment())
+                .commit();
+
+    }
+*/
 }

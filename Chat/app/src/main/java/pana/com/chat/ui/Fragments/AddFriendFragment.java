@@ -3,7 +3,9 @@ package pana.com.chat.ui.Fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import pana.com.chat.Adaptor.CustomFriendsListAdapter;
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.DataModelUser;
+import pana.com.chat.MainActivity;
 import pana.com.chat.R;
 
 public class AddFriendFragment extends Fragment {
@@ -40,6 +43,7 @@ public class AddFriendFragment extends Fragment {
     private Firebase pcchatapp;
     private ValueEventListener VEL1, VEL2;
     private Picasso picasso;
+    private FloatingActionButton fab;
 
     public AddFriendFragment() {
 
@@ -55,7 +59,7 @@ public class AddFriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_friend, container, false);
         picasso = Picasso.with(getActivity());
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com");
-
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         ME = DataModelMeSingleton.getInstance();
 
         sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -67,9 +71,8 @@ public class AddFriendFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.addfriend_listview);
         if (pcchatapp.getAuth() == null) {
             pcchatapp.unauth();
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment, new LoginFragment())
-                    .commit();
+            logout();
+
         } else {
             pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -117,11 +120,18 @@ public class AddFriendFragment extends Fragment {
         return view;
     }
 
+    private void logout() {
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        fab.setVisibility(View.VISIBLE);
         Log.d("ADD FRIEND FRAGMENT", "OnDestroy");
-        if (VEL1 != null&&pcchatapp.getAuth()!=null)
+        if (VEL1 != null && pcchatapp.getAuth() != null)
             pcchatapp.child("user_friend").child(pcchatapp.getAuth().getUid()).removeEventListener(VEL1);
         if (VEL2 != null)
             pcchatapp.child("users").removeEventListener(VEL2);
@@ -197,7 +207,7 @@ public class AddFriendFragment extends Fragment {
                             TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
                             TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                             ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
-                            picasso.load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(android.R.drawable.stat_sys_download).into(imageView);
+                            picasso.load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
 
                             name.setText(allUsers.get(i).getName());
                             email.setText(allUsers.get(i).getEmail_id());
@@ -205,6 +215,8 @@ public class AddFriendFragment extends Fragment {
                             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                             alertDialog.setView(view2);
                             alertDialog.show();
+
+                            alertDialog.getWindow().setLayout(600,600);
                         }
                     }).show();
         }

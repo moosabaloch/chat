@@ -3,6 +3,7 @@ package pana.com.chat.ui.Fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -26,14 +28,15 @@ import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.DataModelUser;
 import pana.com.chat.R;
 
-public class FriendsRequestFragment extends Fragment {
+public class FriendsRequestFragment extends Fragment implements TabFragment.TabInterAction{
 
-    ListView listView;
-    ArrayList friendsID,requestDate;
-    ArrayList<DataModelUser> friendsData;
-    Firebase pcchatapp;
-    DataModelMeSingleton ME;
-    ValueEventListener VEL1,VEL2;
+   private ListView listView;
+   private ArrayList friendsID,requestDate;
+   private ArrayList<DataModelUser> friendsData;
+   private Firebase pcchatapp;
+   private DataModelMeSingleton ME;
+   private ValueEventListener VEL1,VEL2;
+     private boolean friendRequestAvailable=true;
 
     public FriendsRequestFragment() {
 
@@ -69,6 +72,8 @@ public class FriendsRequestFragment extends Fragment {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
+                alertDialog.getWindow().setLayout(600,600);
+
             }
         });
         friendsData=new ArrayList<DataModelUser>();
@@ -80,6 +85,8 @@ public class FriendsRequestFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Friend Request","On Data Changed Called");
                 VEL1=this;
+                friendRequestAvailable=true;
+
                 friendsData.clear();
                 friendsID.clear();
                 requestDate.clear();
@@ -106,6 +113,7 @@ public class FriendsRequestFragment extends Fragment {
                 }
                 else {
                     Log.d("Requests","No requests");
+                    friendRequestAvailable=false;
                 }
             }
 
@@ -116,5 +124,13 @@ public class FriendsRequestFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void friendRequestFragment() {
+        if (!friendRequestAvailable){
+            Snackbar.make(listView,"No Friend Request Available",Snackbar.LENGTH_LONG).show();
+
+        }
     }
 }

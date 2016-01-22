@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -20,20 +21,33 @@ import pana.com.chat.gcm.RegistrationIntentService;
 import pana.com.chat.ui.Fragments.HomeFragment;
 import pana.com.chat.ui.Fragments.LoginFragment;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInter{
+public class MainActivity extends AppCompatActivity implements LoginFragment.FragmentInterActionListener{
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private Firebase firebaseUrl= new Firebase("https://pcchatapp.firebaseio.com/");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new LoginFragment()).commit();
-        gcmImplementation();
+//        gcmImplementation();
     }
 
-    private void gcmImplementation() {
+    @Override
+    public void switchToHome() {
+        Intent i=new Intent(this,HomeActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("MainActivity","onRestart");
+    }
+    /*   private void gcmImplementation() {
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -49,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         };
 
     }
-
-    @Override
+*/
+  /*  @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this)
@@ -62,13 +76,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
-
+*/
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
      */
-    private boolean checkPlayServices() {
+  /*  private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -87,15 +101,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @Override
     public void registerGCMService() {
         Log.d("Interface HomeFrag","registerGCMService Method Invoked");
-        /**
+        *//**
          Functionality of Broadcast Receiver is When the Service get the token
          it updates the UI and save the data in SharedPreferences
          if Google service is installed then continue to start service code
-         */
+         *//*
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-    }
+    }*/
 }

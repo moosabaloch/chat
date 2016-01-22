@@ -2,6 +2,7 @@ package pana.com.chat.ui.Fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class GroupChatFragment extends Fragment {
     private GroupChatAdaptor groupChatAdaptor;
     private ArrayList<Messages> messagesArrayList;
     private DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
-
+private FloatingActionButton fab;
     public GroupChatFragment() {
         // Required empty public constructor
     }
@@ -55,6 +56,7 @@ public class GroupChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        fab= (FloatingActionButton) getActivity().findViewById(R.id.fab);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com/");
         sendMessageButton = (ImageButton) view.findViewById(R.id.chatFragmentButtonSendMessage);
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
@@ -185,6 +187,12 @@ public class GroupChatFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fab.setVisibility(View.GONE);
     }
 
     private void setDetails() {

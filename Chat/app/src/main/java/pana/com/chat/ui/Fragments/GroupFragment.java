@@ -2,6 +2,7 @@ package pana.com.chat.ui.Fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +31,12 @@ import pana.com.chat.Util.Utils;
  * A simple {@link Fragment} subclass.
  */
 public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAdaptorAddEvent {
-    private ImageButton addNewSearchGroupFragmentButton;
+  //  private ImageButton addNewSearchGroupFragmentButton;
     private ListView myGroupsListView;
     private Firebase firebaseURL;
     private GroupsViewAdaptor groupsViewAdaptor;
     private ArrayList<Groups> myJoinedGroups;
-
+private FloatingActionButton fab;
     public GroupFragment() {
         // Required empty public constructor
     }
@@ -46,21 +47,20 @@ public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAd
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
+        fab= (FloatingActionButton) getActivity().findViewById(R.id.fab);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com");
-        addNewSearchGroupFragmentButton = (ImageButton) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
+      /*  addNewSearchGroupFragmentButton = (ImageButton) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
         addNewSearchGroupFragmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment, new SearchGroupFragment()).commit();
             }
         });
-        myJoinedGroups = new ArrayList<>();
+      */  myJoinedGroups = new ArrayList<>();
         myGroupsListView = (ListView) view.findViewById(R.id.myGroupFragmentListViewGroupsView);
         checkMyGroups();
 
         return view;
     }
-
     private void checkMyGroups() {
         Log.d("CHECK MY GROUPS", "Invoked");
         firebaseURL.child("mygroups").child(DataModelMeSingleton.getInstance().getId())
@@ -118,7 +118,8 @@ public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAd
                 groupChatDetail.setGroupDescription(myJoinedGroups.get(position).getGroupDescription());
                 groupChatDetail.setGroupName(myJoinedGroups.get(position).getGroupName());
                 groupChatDetail.setImageUrl(myJoinedGroups.get(position).getGroupImage());
-                getFragmentManager().beginTransaction().addToBackStack("").replace(R.id.fragment, new GroupChatFragment()).commit();
+                fab.setVisibility(View.GONE);
+                getFragmentManager().beginTransaction().addToBackStack("").add(R.id.homeActivityContent, new GroupChatFragment()).commit();
 
             }
         });

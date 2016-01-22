@@ -103,10 +103,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        homeFragInter = (HomeFragInter) getActivity();
+        Log.d("HomeFrag","onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("HomeFrag","onCreateView");
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         pcchatapp = new Firebase("https://pcchatapp.firebaseio.com/");
@@ -121,6 +124,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         tv = (TextView) view.findViewById(R.id.hometxtconvo);
 
+/*
         btn_profile = (Button) view.findViewById(R.id.homebtnprofile);
         btn_groups = (Button) view.findViewById(R.id.homebtngroups);
         btn_friends = (Button) view.findViewById(R.id.homebtnfriend);
@@ -133,6 +137,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btn_logout.setOnClickListener(this);
         btn_profile.setOnClickListener(this);
         btn_profile.setText(ME.getName());
+*/
 
         listView = (ListView) view.findViewById(R.id.home_lv_chats);
 //
@@ -198,13 +203,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
+        Log.d("HomeFrag", "onDestroyView");
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.homebtngroups:
+      /*      case R.id.homebtngroups:
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
                         .replace(R.id.fragment, new GroupFragment())
@@ -250,7 +258,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         .replace(R.id.fragment, new LoginFragment())
                         .commit();
                 break;
-        }
+      */  }
     }
 
     private void setFriendSingleton(int i) {
@@ -266,7 +274,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void goToChatFragment() {
         getFragmentManager().beginTransaction()
                 .addToBackStack("")
-                .replace(R.id.fragment, new ChatFragment())
+                .add(R.id.homeActivityContent, new ChatFragment())
+
+//                .replace(R.id.homeActivityContent, new ChatFragment())
                 .commit();
     }
 

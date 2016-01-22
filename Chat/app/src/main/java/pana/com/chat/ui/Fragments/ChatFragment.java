@@ -77,13 +77,15 @@ public class ChatFragment extends Fragment {
                 ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
 
                 name.setText(friendData.getNameUserFriend());
-                email.setText(firebaseURL.getAuth().getProviderData().get("email").toString());
+                email.setText(friendData.getEmailUserFriend());
                 phone.setText(friendData.getPhoneUserFriend());
 //                Picasso Implementation
                 picasso.load(friendData.getImageUrlUserFriend()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
+                alertDialog.getWindow().setLayout(600,600);
+
             }
         });
 
