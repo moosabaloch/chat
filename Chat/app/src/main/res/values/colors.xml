@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+   <!-- <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorMaterialGray">#fafafa</color>
-    <color name="aquaBlue">#ff00b2ff</color>
+    <color name="aquaBlue">#ff00b2ff</color>-->
+    <!--<color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorPrimaryLight">#B2DFDB</color>
+    <color name="colorAccent">#536DFE</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorDivider">#B6B6B6</color>
+-->
+
+ <color name="colorMaterialGray">#fafafa</color>
+ <!--<color name="colorPrimary">#FFC107</color>
+ <color name="colorPrimaryDark">#FFA000</color>
+ <color name="colorPrimaryLight">#FFECB3</color>
+ <color name="colorAccent">#03A9F4</color>
+ <color name="colorPrimaryText">#212121</color>
+ <color name="colorSecondaryText">#727272</color>
+ <color name="colorIcons">#212121</color>
+ <color name="colorDivider">#B6B6B6</color>
+-->
+
+<!--
+ <color name="colorPrimary">#8BC34A</color>
+ <color name="colorPrimaryDark">#689F38</color>
+ <color name="colorPrimaryLight">#DCEDC8</color>
+ <color name="colorAccent">#03A9F4</color>
+ <color name="colorPrimaryText">#212121</color>
+ <color name="colorSecondaryText">#727272</color>
+ <color name="colorIcons">#212121</color>
+ <color name="colorDivider">#B6B6B6</color>
+
+-->
+
+ <color name="colorPrimary">#CDDC39</color>
+ <color name="colorPrimaryDark">#AFB42B</color>
+ <color name="colorPrimaryLight">#f6f7ef</color>
+ <color name="colorAccent">#FF9800</color>
+ <color name="colorPrimaryText">#212121</color>
+ <color name="colorSecondaryText">#727272</color>
+ <color name="colorIcons">#212121</color>
+ <color name="colorDivider">#B6B6B6</color>
 </resources>

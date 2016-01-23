@@ -85,16 +85,16 @@ public class TabFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-       /* View view1 = inflater.inflate(R.layout.tab_first, null);
+        View view1 = inflater.inflate(R.layout.tab_first, null);
         View view2 = inflater.inflate(R.layout.tab_second, null);
         View view3 = inflater.inflate(R.layout.tab_third, null);
         View view4 = inflater.inflate(R.layout.tab_forth, null);
-*/
+
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        tabLayout.addTab(tabLayout.newTab().setText("First"));//CustomView(view1));
-        tabLayout.addTab(tabLayout.newTab().setText("Second"));//CustomView(view2));
-        tabLayout.addTab(tabLayout.newTab().setText("Third"));//CustomView(view3));
-        tabLayout.addTab(tabLayout.newTab().setText("Forth"));//CustomView(view4));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view4));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         fragments.add(0, new HomeFragment());
         fragments.add(1, new GroupFragment());

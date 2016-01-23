@@ -79,11 +79,21 @@ private FloatingActionButton fab;
                 firebaseURL.child("conversation")
                         .child(DataModelCurrentGroupChat.getInstance()
                                 .getGroupIDKEY()).push()
-                        .setValue(new Messages(String.valueOf(System.currentTimeMillis()), sendMessageText.getText().toString(), DataModelMeSingleton.getInstance().getId()));
+                        .setValue(new Messages(String.valueOf(System.currentTimeMillis()), sendMessageText.getText().toString(), DataModelMeSingleton.getInstance().getId()), new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                sendNotification();
+                            }
+                        });
+
                 sendMessageText.setText("");
                 refreshListView();
             }
         });
+    }
+
+    private void sendNotification() {
+        /////////////////PENDING//////////////////
     }
 
     private void refreshListView() {

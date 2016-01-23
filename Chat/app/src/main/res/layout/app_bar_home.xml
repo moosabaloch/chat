@@ -14,11 +14,12 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            app:title="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:background="@color/colorPrimaryDark"
+            android:elevation="0dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/app_name" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -32,6 +33,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:background="@color/colorAccent"
         android:src="@android:drawable/ic_dialog_email"
-        app:rippleColor="@color/colorAccent" />
+        app:backgroundTint="@color/colorAccent"
+        app:rippleColor="@color/colorPrimaryDark" />
 
 </android.support.design.widget.CoordinatorLayout>

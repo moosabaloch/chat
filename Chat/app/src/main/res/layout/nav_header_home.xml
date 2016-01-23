@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:id="@+id/mainHeaderBackground"
     android:background="@drawable/side_nav_bar"
-    android:gravity="bottom|center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <ImageView
+        android:id="@+id/mainHeaderBackgroundImageView"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/changeProfilePicture"
+        android:layout_width="40dp"
+        android:background="@drawable/editprofilebuttonbg"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 <!--
     <ImageView
         android:id="@+id/imageView"
@@ -32,4 +39,4 @@
         android:layout_height="wrap_content"
         android:text="android.studio@android.com" />-->
 
-</LinearLayout>
+</RelativeLayout>

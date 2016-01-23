@@ -49,4 +49,9 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="conversation">Conversation</string>
+    <string name="delete">Delete</string>
+    <string name="groups">Groups</string>
+    <string name="friends">Friends</string>
+    <string name="fr_request">Friend Request</string>
 </resources>

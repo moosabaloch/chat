@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e9e8e8"
+    android:background="@color/colorPrimaryLight"
+    android:layout_margin="10dp"
     android:padding="5dp">
 
     <ImageView
         android:id="@+id/groupAdaptorImageViewGroupImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:padding="5dp"
         android:layout_marginLeft="10dp"
-        android:src="@android:drawable/ic_dialog_dialer" />
+        android:src="@drawable/groups" />
 
     <TextView
         android:id="@+id/groupAdaptorTextViewGroupName"

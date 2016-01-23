@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+
     tools:context=".ui.Fragments.GroupFragment">
 
     <!--<RelativeLayout
@@ -37,6 +39,9 @@
     </RelativeLayout>
 -->
     <ListView
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1dp"
+        android:background="@color/colorPrimaryLight"
         android:id="@+id/myGroupFragmentListViewGroupsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

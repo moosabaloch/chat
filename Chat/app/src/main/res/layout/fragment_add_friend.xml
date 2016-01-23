@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="#ff00b2ff"
+        android:background="@color/colorPrimary"
         android:id="@+id/linearLayoutSearchFragGroup"
         android:gravity="right|center"
 

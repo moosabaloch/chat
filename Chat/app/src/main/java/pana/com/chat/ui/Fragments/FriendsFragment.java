@@ -35,7 +35,6 @@ public class FriendsFragment extends Fragment {
 
     DataModelMeSingleton ME;
     Boolean check1 = false, check2 = false;
-    Button profile, delete, conversation;
     private ValueEventListener VEL;
     private ListView listView;
     // private Button button1, button2;
@@ -126,62 +125,41 @@ public class FriendsFragment extends Fragment {
                 friend.setPhoneUserFriend(dataModelUser.getPhone());
                 friend.setConversationID(conversationID.get(position).toString());
 
-                final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v = inflater.inflate(R.layout.alertadaptor, null);
-                alertDialog.setView(v);
-                alertDialog.show();
+                View view2 = inflater.inflate(R.layout.profiledialog, null);
+                TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
+                TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
+                TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
+                ImageView profilePic = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
+                final Button buttonConversation = (Button) view2.findViewById(R.id.conversationForProfileDialog);
+                final Button deleteFriend = (Button) view2.findViewById(R.id.deleteForProfileDialog);
 
-                profile = (Button) v.findViewById(R.id.dialog_profilebtn);
-                profile.setOnClickListener(new View.OnClickListener() {
+                name.setText(friend.getNameUserFriend());
+                email.setText(friend.getEmailUserFriend());
+                phone.setText(friend.getPhoneUserFriend());
+                Picasso.with(getActivity()).load(friend.getImageUrlUserFriend()).placeholder(R.drawable.friend).error(R.drawable.friend).into(profilePic);
+
+
+                final AlertDialog alertDialogg = new AlertDialog.Builder(getActivity()).create();
+                alertDialogg.setView(view2);
+                buttonConversation.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        profile.setEnabled(false);
-                        conversation.setEnabled(false);
-                        delete.setEnabled(false);
-                        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view2 = inflater.inflate(R.layout.profiledialog, null);
-                        TextView name = (TextView) view2.findViewById(R.id.profiledialog_name);
-                        TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
-                        TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
-                        ImageView profilePic = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
-                        name.setText(friend.getNameUserFriend());
-                        email.setText(friend.getEmailUserFriend());
-                        phone.setText(friend.getPhoneUserFriend());
-                        Picasso.with(getActivity()).load(friend.getImageUrlUserFriend()).placeholder(R.drawable.friend).error(R.drawable.friend).into(profilePic);
-
-
-                        AlertDialog alertDialogg = new AlertDialog.Builder(getActivity()).create();
-                        alertDialogg.setView(view2);
-                        alertDialogg.show();
-                        alertDialogg.getWindow().setLayout(600,600);
-                        alertDialog.dismiss();
-                    }
-                });
-
-                conversation = (Button) v.findViewById(R.id.dialog_convobtn);
-                conversation.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        profile.setEnabled(false);
-                        conversation.setEnabled(false);
-                        delete.setEnabled(false);
+                    public void onClick(View v) {
+                        buttonConversation.setEnabled(false);
+                        deleteFriend.setEnabled(false);
                         fab.setVisibility(View.GONE);
                         getFragmentManager().beginTransaction()
                                 .addToBackStack("")
                                 .add(R.id.homeActivityContent, new ChatFragment())
                                 .commit();
-                        alertDialog.dismiss();
+                        alertDialogg.dismiss();
                     }
                 });
-
-                delete = (Button) v.findViewById(R.id.dialog_deletebtn);
-                delete.setOnClickListener(new View.OnClickListener() {
+                deleteFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        profile.setEnabled(false);
-                        conversation.setEnabled(false);
-                        delete.setEnabled(false);
+                    public void onClick(View v) {
+                        deleteFriend.setEnabled(false);
+                        buttonConversation.setEnabled(false);
                         pcchatapp.child("user_friend").child(ME.getId()).child(friend.getUuidUserFriend()).removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -193,15 +171,18 @@ public class FriendsFragment extends Fragment {
                                             check2 = true;
                                             if (check1 && check2) {
                                                 Toast.makeText(getActivity(), "Friend Removed", Toast.LENGTH_SHORT).show();
-                                                alertDialog.dismiss();
+                                                alertDialogg.dismiss();
                                             }
                                         }
                                     });
                                 }
                             }
                         });
+
                     }
                 });
+                alertDialogg.show();
+                alertDialogg.getWindow().setLayout(600, 600);
             }
         });
         return view;

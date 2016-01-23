@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +76,13 @@ public class ChatFragment extends Fragment {
                 TextView email = (TextView) view2.findViewById(R.id.profiledialog_email);
                 TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                 ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
-
+                Button a, b;
+                a = (Button) view2.findViewById(R.id.deleteForProfileDialog);
+                b = (Button) view2.findViewById(R.id.conversationForProfileDialog);
+                a.setVisibility(View.INVISIBLE);
+                b.setVisibility(View.INVISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) email.getLayoutParams();
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 name.setText(friendData.getNameUserFriend());
                 email.setText(friendData.getEmailUserFriend());
                 phone.setText(friendData.getPhoneUserFriend());
@@ -84,7 +91,7 @@ public class ChatFragment extends Fragment {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
-                alertDialog.getWindow().setLayout(600,600);
+                alertDialog.getWindow().setLayout(600, 600);
 
             }
         });
@@ -232,8 +239,8 @@ public class ChatFragment extends Fragment {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
-                              /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
-                                PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
+                                PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
+                              /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
 
                             }
                         });

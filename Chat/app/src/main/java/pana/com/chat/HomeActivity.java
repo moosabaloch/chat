@@ -1,15 +1,23 @@
 package pana.com.chat;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,13 +30,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Random;
 
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.Util.FirebaseHandler;
@@ -41,10 +60,17 @@ public class HomeActivity extends AppCompatActivity
         implements HomeFragment.HomeFragInter, TabFragment.OnFragmentInteractionListener, View.OnClickListener {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
+    private static final int PICK_IMAGE = 1;
+    private static final int RESULT_CROP = 2;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private DataModelMeSingleton ME;
     private NavigationView navigationView;
-    private LinearLayout layout;
+    private RelativeLayout layout;
+    private Bitmap bitmap;
+    private Cloudinary cloudinary;
+    private Uri selectedImageUri = null;
+    private String selectedImagePath;
+    private ImageView imageViewProfileForDrawer;
     private Firebase firebase;
 
     @Override
@@ -55,11 +81,13 @@ public class HomeActivity extends AppCompatActivity
         if (firebase.getAuth() == null) {
             logout();
         }
+        cloudinary = Utils.cloudinary();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setCollapsible(true);
         toolbar.setElevation(0);
 
-                setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         // toolbar.setLogo(R.drawable.friend);
         ME = DataModelMeSingleton.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -72,7 +100,9 @@ public class HomeActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        layout = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.mainHeaderBackground);
+        layout = (RelativeLayout) navigationView.getHeaderView(0).findViewById(R.id.mainHeaderBackground);
+        imageViewProfileForDrawer = (ImageView) layout.findViewById(R.id.mainHeaderBackgroundImageView);
+
         setNavViewDetails();
         gcmImplementation();
         getSupportFragmentManager().beginTransaction().replace(R.id.homeActivityContent, new TabFragment()).commit();
@@ -82,8 +112,7 @@ public class HomeActivity extends AppCompatActivity
         AppController.getInstance().getImageLoader().get(ME.getImageUrl(), new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Drawable drawable = new BitmapDrawable(getResources(), response.getBitmap());
-                layout.setBackground(drawable);
+                imageViewProfileForDrawer.setImageBitmap(response.getBitmap());
 
             }
 
@@ -92,6 +121,8 @@ public class HomeActivity extends AppCompatActivity
 
             }
         });
+        Button buttonChangePic = (Button) layout.findViewById(R.id.changeProfilePicture);
+        buttonChangePic.setOnClickListener(this);
         Button button = (Button) navigationView.findViewById(R.id.logoutButtonNav);
         button.setOnClickListener(this);
 //        navigationView.setNavigationItemSelectedListener();
@@ -246,6 +277,207 @@ public class HomeActivity extends AppCompatActivity
             case (R.id.logoutButtonNav):
                 logout();
                 break;
+            case (R.id.changeProfilePicture):
+                Toast.makeText(this, "Hello", Toast.LENGTH_LONG).show();
+                performSelect();
+                break;
+
         }
     }
+
+    ////////////////PICTURE UPLOAD////////////////////
+    private void performSelect() {
+        Log.d("INVOKED", "Perform Select");
+
+        try {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String filePath = null;
+        switch (requestCode) {
+
+            case PICK_IMAGE:
+                Log.d("INVOKED", "onActivityResult case PICK IMAGE");
+
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("INVOKED", "onActivityResult == OK");
+
+                    selectedImageUri = data.getData();
+                    if (selectedImageUri != null) {
+                        Log.d("Image Selected", " URI" + selectedImageUri.toString());
+
+                        try {
+                            //selectedImagePath = getPath(selectedImageUri);
+                            performCrop();
+                            //imageView.setImageURI(selectedImageUri);
+                        } catch (Exception e) {
+                            Toast.makeText(HomeActivity.this, "Internal error", Toast.LENGTH_LONG).show();
+                            Log.e(e.getClass().getName(), e.getMessage(), e);
+                        }
+                    }
+                }
+                break;
+
+            case RESULT_CROP:
+                Log.d("INVOKED", "onActivityResult case CROP");
+
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("CASE CROP", " Result == OK");
+
+                    Bundle extras = data.getExtras();
+                    bitmap = extras.getParcelable("data");
+                    String path = saveImage(bitmap);
+                    Log.d("PATH AFTER CROPPING", path);
+                    if (path != null) {
+                        selectedImagePath = path;
+                        decodeFile(path);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void performCrop() {
+        Log.d("INVOKED", "Performed Crop");
+        try {
+            if (selectedImageUri != null) {
+                Intent cropIntent = new Intent("com.android.camera.action.CROP");
+                cropIntent.setDataAndType(selectedImageUri, "image/*");
+                cropIntent.putExtra("crop", "true");
+                cropIntent.putExtra("aspectX", 1);
+                cropIntent.putExtra("aspectY", 1);
+                cropIntent.putExtra("outputX", 280);
+                cropIntent.putExtra("outputY", 280);
+                cropIntent.putExtra("return-data", true);
+                startActivityForResult(cropIntent, RESULT_CROP);
+            }
+        } catch (ActivityNotFoundException anfe) {
+            String errorMessage = "your device doesn't support the crop action!";
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void decodeFile(final String filePath) {
+        Log.d("INVOKED", "Decode File");
+
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, o);
+
+        final int REQUIRED_SIZE = 1024;
+
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+
+        while (true) {
+            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        bitmap = BitmapFactory.decodeFile(filePath, o2);
+        new AlertDialog.Builder(this)
+                .setTitle("Upload Picture")
+                .setMessage("Are you sure you want to upload picture?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        imageViewProfileForDrawer.setImageBitmap(bitmap);
+                        Log.d("File PATH IS ", selectedImagePath + "");
+                        ////////////////////////////////UPLOADING CLOUDINARY////////////////////
+
+                        AsyncTask<String, Void, HashMap<String, Object>> upload = new AsyncTask<String, Void, HashMap<String, Object>>() {
+                            @Override
+                            protected HashMap<String, Object> doInBackground(String... params) {
+                                File file = new File(selectedImagePath);
+                                HashMap<String, Object> responseFromServer = null;
+                                try {
+                                    responseFromServer = (HashMap<String, Object>) cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+                                } catch (IOException e) {
+                                    Toast.makeText(HomeActivity.this, "Cannot Upload Image Please Try Again", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+
+                                return responseFromServer;
+                            }
+
+                            @Override
+                            protected void onPostExecute(HashMap<String, Object> stringObjectHashMap) {
+                                String url = (String) stringObjectHashMap.get("url");
+                                firebase.child("users").child(ME.getId()).child("image_url").setValue(url, new Firebase.CompletionListener() {
+                                    @Override
+                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                        if (firebaseError != null) {
+                                            Toast.makeText(HomeActivity.this, firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(HomeActivity.this, "Upload Completed", Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
+                            }
+                        };
+                        upload.execute(selectedImagePath);
+                        ////////////////////////////////UPLOADING COMPLETED////////////////////////////////////////
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }).show();
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = this.managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else {
+            return null;
+        }
+    }
+
+    private String saveImage(Bitmap finalBitmap) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Chat/ProfileImages");
+
+        if (!myDir.exists())
+            myDir.mkdirs();
+
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image_" + n + ".jpg";
+        File file = new File(myDir, fname);
+
+        if (file.exists())
+            file.delete();
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return root + "/Chat/ProfileImages/" + fname;
+    }
+
+
 }

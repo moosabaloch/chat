@@ -2,64 +2,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
         android:id="@+id/profiledialog_imageview"
-        android:src="@drawable/friend"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentStart="false"
-        android:layout_centerInParent="true" />
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:src="@drawable/friend" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/profiledialog_name"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/roundcorner"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/profiledialog_phone"
-        android:layout_alignParentStart="true"
+        android:background="@drawable/roundcorner"
         android:paddingLeft="2dp"
         android:paddingRight="6dp"
-        />
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:background="@drawable/roundcorner"
-
         android:id="@+id/profiledialog_email"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentEnd="false"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="6dp" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+
+        android:layout_above="@+id/deleteForProfileDialog"
         android:background="@drawable/roundcorner"
-        android:id="@+id/profiledialog_phone"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/profiledialog_email"
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentStart="true"
+        android:paddingLeft="2dp"
         android:paddingRight="6dp"
-        android:paddingLeft="2dp" />
+
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/profiledialog_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/profiledialog_email"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/roundcorner"
+        android:paddingLeft="2dp"
+        android:paddingRight="6dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/conversationForProfileDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/conversation" />
+
+    <Button
+        android:id="@+id/deleteForProfileDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/delete" />
 </RelativeLayout>
