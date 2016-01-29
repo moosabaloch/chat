@@ -30,11 +30,13 @@ public class GroupsViewAdaptor extends BaseAdapter {
     private Object ref;
     private ArrayList<String> groupKeys;
     private int TYPE;
+    private String title;
 
-    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref, ArrayList<String> groupKeys, int TYPE) {
+    public GroupsViewAdaptor(Context context, ArrayList<Groups> groups, Object ref, ArrayList<String> groupKeys, int TYPE, String title) {
         this.groups = groups;
         this.TYPE = TYPE;
         this.ref = ref;
+        this.title = title;
         this.groupKeys = groupKeys;
         this.context = context;
     }
@@ -69,9 +71,16 @@ public class GroupsViewAdaptor extends BaseAdapter {
         }
 
         ViewHolder view = (ViewHolder) convertView.getTag();
-        Groups grp = groups.get(position);
-        view.groupName.setText(grp.getGroupName());
 
+        Groups grp = groups.get(position);
+        if (grp.getGroupName().equals(title)) {
+            view.groupName.setText(grp.getGroupName()+" - New Message");
+            view.groupName.setTextColor(context.getResources().getColor(R.color.colorAccent));
+        } else {
+            view.groupName.setText(grp.getGroupName());
+            view.groupName.setTextColor(context.getResources().getColor(R.color.colorPrimaryText));
+
+        }
         view.groupDescription.setText(grp.getGroupDescription());
         if (TYPE == Utils.TYPEMYGROUPS) {
             view.joinThisGroupButton.setVisibility(View.INVISIBLE);
@@ -86,7 +95,8 @@ public class GroupsViewAdaptor extends BaseAdapter {
         return convertView;
     }
 
-   public interface GroupAdaptorAddEvent {//Refactor Change Conflict
+    public interface GroupAdaptorAddEvent {//Refactor Change Conflict
+
         void addMeToThisGroup(String key, int position);
     }
 

@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewFriendRequest"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -24,8 +24,8 @@
         android:textColor="#000000"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView" />
+        android:layout_toRightOf="@+id/imageViewFriendRequest"
+        android:layout_toEndOf="@+id/imageViewFriendRequest" />
 
     <Button
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
         android:text="Cancel"
         android:id="@+id/friendreq_btn_cancel"
         android:layout_marginBottom="5dp"
-        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignBottom="@+id/imageViewFriendRequest"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="#ff00b2ff"

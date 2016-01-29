@@ -31,22 +31,31 @@ public class PostReq {
         return myInstance;
     }
 
-    public void notifySingleUser(String toUser, String msg, String fromUserName,String fromUserPic) {
+    public void notifySingleUser(String toUser, String msg, String fromUserName, String fromUserPic, String fragment) {
         Map<String, String> map = new HashMap<>();
         map.put("toUser", toUser);
-        map.put("fromUserPic",fromUserPic);
-        map.put("fromUserName",fromUserName);
+        map.put("fromUserPic", fromUserPic);
+        map.put("fromUserName", fromUserName);
         map.put("msg", msg);
+        map.put("frag", fragment);
         AppController.getInstance().addToRequestQueue(new MyRequest(map, Utils.SERVER_SEND_NOTIFICATION_URL));
     }
 
+    public void sendRequest(String toUser, String fromUserName,String myPicURL) {
+        Map<String, String> map = new HashMap<>();
+        map.put("toUser", toUser);
+        map.put("fromUserPic", myPicURL);
+        map.put("fromUserName", fromUserName);
+        map.put("msg", "Sent you a Friend Request");
+        map.put("frag", "request");
+        AppController.getInstance().addToRequestQueue(new MyRequest(map, Utils.SEND_FRIEND_REQUEST));
+    }
 
     public void registerID(String token) {
         //Single Registration Data POST
         Map<String, String> map = new HashMap<>();
         map.put("registrationId", token);
         AppController.getInstance().addToRequestQueue(new MyRequest(map, Utils.SERVER_REGISTRATION_URL));
-
     }
 
     private class MyRequest extends StringRequest {
@@ -69,7 +78,7 @@ public class PostReq {
 
         @Override
         protected Map<String, String> getParams() {
-            Log.i("Map Post data",""+postData.toString());
+            Log.i("Map Post data", "" + postData.toString());
             return postData;
         }
     }

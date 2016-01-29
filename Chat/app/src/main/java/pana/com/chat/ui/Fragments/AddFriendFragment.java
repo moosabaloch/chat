@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -32,6 +34,8 @@ import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.DataModelUser;
 import pana.com.chat.MainActivity;
 import pana.com.chat.R;
+import pana.com.chat.Util.Utils;
+import pana.com.chat.apicall.PostReq;
 
 public class AddFriendFragment extends Fragment {
 
@@ -104,7 +108,7 @@ public class AddFriendFragment extends Fragment {
                             ids.add(d.getKey().toString());
                             allUsers.add(user);
 
-                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(), ids, allUsers));
+                            listView.setAdapter(new CustomFriendsListAdapter(getActivity(), ids, allUsers,"#"));
                         }
                     }
                 }
@@ -122,6 +126,7 @@ public class AddFriendFragment extends Fragment {
 
     private void logout() {
         Intent i = new Intent(getActivity(), MainActivity.class);
+        getActivity().finish();
         startActivity(i);
     }
 
@@ -175,6 +180,9 @@ public class AddFriendFragment extends Fragment {
                                 @Override
                                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                     Log.d("message", "Request Sent");
+                                    PostReq.getMyInstance().sendRequest(ids.get(i).toString(),ME.getName(),ME.getImageUrl());
+
+
                                 }
                             });
 
@@ -208,6 +216,13 @@ public class AddFriendFragment extends Fragment {
                             TextView phone = (TextView) view2.findViewById(R.id.profiledialog_phone);
                             ImageView imageView = (ImageView) view2.findViewById(R.id.profiledialog_imageview);
                             picasso.load(allUsers.get(i).getImage_url()).placeholder(R.drawable.friend).error(R.drawable.friend).into(imageView);
+                            Button a, b;
+                            a = (Button) view2.findViewById(R.id.deleteForProfileDialog);
+                            b = (Button) view2.findViewById(R.id.conversationForProfileDialog);
+                            a.setVisibility(View.INVISIBLE);
+                            b.setVisibility(View.INVISIBLE);
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) email.getLayoutParams();
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
                             name.setText(allUsers.get(i).getName());
                             email.setText(allUsers.get(i).getEmail_id());
@@ -216,7 +231,7 @@ public class AddFriendFragment extends Fragment {
                             alertDialog.setView(view2);
                             alertDialog.show();
 
-                            alertDialog.getWindow().setLayout(600,600);
+                            alertDialog.getWindow().setLayout(Utils.dialogHW, Utils.dialogHW);
                         }
                     }).show();
         }

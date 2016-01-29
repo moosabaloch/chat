@@ -16,6 +16,7 @@ import java.util.List;
 import pana.com.chat.DataModel.DataModelFriendSingleTon;
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.Messages;
+import pana.com.chat.HomeActivity;
 import pana.com.chat.R;
 import pana.com.chat.Util.Utils;
 
@@ -73,44 +74,50 @@ public class ChatMessageAdaptor extends BaseAdapter {
         ViewHolder view = (ViewHolder) convertView.getTag();
         Messages msg = messagesList.get(position);
         Picasso picasso = Picasso.with(context);
-        if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
-            view.profilePicFriend.setVisibility(View.VISIBLE);
-            view.messageFriend.setVisibility(View.VISIBLE);
-            view.nameFriend.setVisibility(View.VISIBLE);
-            view.timeStampFriend.setVisibility(View.VISIBLE);
-            view.messageFriend.setText(msg.getMessage());
-            picasso.load(DataModelMeSingleton.getInstance().getImageUrl())
-                    .placeholder(R.drawable.friend).error(R.drawable.friend)
-                    .into(view.profilePicFriend);
-
-            view.nameFriend.setText(DataModelMeSingleton.getInstance().getName());
-            view.timeStampFriend.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
-            view.profilePicMe.setVisibility(View.INVISIBLE);
-            view.messageMe.setVisibility(View.INVISIBLE);
-            view.nameMe.setVisibility(View.INVISIBLE);
-            view.timeStampMe.setVisibility(View.INVISIBLE);
-
-        } else {
-            view.profilePicMe.setVisibility(View.VISIBLE);
-            view.messageMe.setVisibility(View.VISIBLE);
-            view.nameMe.setVisibility(View.VISIBLE);
-            view.timeStampMe.setVisibility(View.VISIBLE);
-            view.messageMe.setText(msg.getMessage());
-            view.nameMe.setText(DataModelFriendSingleTon.getInstance().getNameUserFriend());
-            picasso.load(DataModelFriendSingleTon.getInstance().getImageUrlUserFriend())
-                    .placeholder(R.drawable.friend).error(R.drawable.friend)
-                    .into(view.profilePicMe);
+        try {
 
 
-            view.timeStampMe.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
-            //.getTimeDistanceInMinutes());
-            view.profilePicFriend.setVisibility(View.INVISIBLE);
-            view.messageFriend.setVisibility(View.INVISIBLE);
-            view.nameFriend.setVisibility(View.INVISIBLE);
-            view.timeStampFriend.setVisibility(View.INVISIBLE);
+            if (msg.getUser().equals(DataModelMeSingleton.getInstance().getId())) {
+                view.profilePicFriend.setVisibility(View.VISIBLE);
+                view.messageFriend.setVisibility(View.VISIBLE);
+                view.nameFriend.setVisibility(View.VISIBLE);
+                view.timeStampFriend.setVisibility(View.VISIBLE);
+                view.messageFriend.setText(msg.getMessage());
+                picasso.load(DataModelMeSingleton.getInstance().getImageUrl())
+                        .placeholder(R.drawable.friend).error(R.drawable.friend)
+                        .into(view.profilePicFriend);
 
+                view.nameFriend.setText(DataModelMeSingleton.getInstance().getName());
+                view.timeStampFriend.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
+                view.profilePicMe.setVisibility(View.INVISIBLE);
+                view.messageMe.setVisibility(View.INVISIBLE);
+                view.nameMe.setVisibility(View.INVISIBLE);
+                view.timeStampMe.setVisibility(View.INVISIBLE);
+
+            } else {
+                view.profilePicMe.setVisibility(View.VISIBLE);
+                view.messageMe.setVisibility(View.VISIBLE);
+                view.nameMe.setVisibility(View.VISIBLE);
+                view.timeStampMe.setVisibility(View.VISIBLE);
+                view.messageMe.setText(msg.getMessage());
+                view.nameMe.setText(DataModelFriendSingleTon.getInstance().getNameUserFriend());
+                picasso.load(DataModelFriendSingleTon.getInstance().getImageUrlUserFriend())
+                        .placeholder(R.drawable.friend).error(R.drawable.friend)
+                        .into(view.profilePicMe);
+
+
+                view.timeStampMe.setText("" + Utils.getTimeAgo(new Date(Long.parseLong(msg.getTimeStamp())), context));
+                //.getTimeDistanceInMinutes());
+                view.profilePicFriend.setVisibility(View.INVISIBLE);
+                view.messageFriend.setVisibility(View.INVISIBLE);
+                view.nameFriend.setVisibility(View.INVISIBLE);
+                view.timeStampFriend.setVisibility(View.INVISIBLE);
+
+            }
+        }catch (Exception ex){
+            Utils.ToastLong(context, "Sorry we are facing a problem due to slow internet please try again later");
+ex.printStackTrace();
         }
-
         return convertView;
     }
 
@@ -126,3 +133,4 @@ public class ChatMessageAdaptor extends BaseAdapter {
 
     }
 }
+

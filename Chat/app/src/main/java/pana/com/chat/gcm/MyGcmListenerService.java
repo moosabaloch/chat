@@ -15,6 +15,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
@@ -23,22 +24,22 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
-import pana.com.chat.AppController;
+import pana.com.chat.HomeActivity;
 import pana.com.chat.MainActivity;
 import pana.com.chat.R;
+import pana.com.chat.Util.Utils;
 
 public class MyGcmListenerService extends GcmListenerService {
-    private Bitmap bitmap;
     private static final String TAG = "MyGcmListenerService";
+    private Bitmap bitmap;
 
     /**
      * Called when message is received.
@@ -54,10 +55,22 @@ public class MyGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         String picture = data.getString("pic");
         String title = data.getString("title");
+        String fragment = data.getString("frag");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
         Log.d(TAG, "Picture: " + picture);
         Log.d(TAG, "Title: " + title);
+        Log.d(TAG, "Fragment:" + fragment);
+
+        SharedPreferences prefs = getSharedPreferences(HomeActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        int notificationNumber = prefs.getInt(title, 0);
+        if (notificationNumber == 0) {
+            SharedPreferences.Editor editor = prefs.edit();
+            notificationNumber = generateRandom();
+            editor.putInt(title, notificationNumber);
+            editor.commit();
+        }
+
 
         //    if (from.startsWith("/topics/")) {
         // message received from some topic.
@@ -77,8 +90,9 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message,picture,title);
-        // [END_EXCLUDE]
+        if (!prefs.getBoolean(Utils.MY_APP_IS_RUNNING, false)) {
+            sendNotification(message, picture, title, fragment, notificationNumber);
+        }// [END_EXCLUDE]
     }
     // [END receive_message]
 
@@ -87,13 +101,15 @@ public class MyGcmListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message,String picUrl,String title) {
+    private void sendNotification(String message, String picUrl, String title, String frag, int notifyID) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("frag", frag);
+        intent.putExtra("sender", title);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         //////////////////////////////////////////////////////////////////////
-        bitmap=getBitmapFromURL(picUrl);
+        bitmap = getBitmapFromURL(picUrl);
        /* AppController.getInstance().getImageLoader().get(picUrl, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -114,14 +130,16 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setVibrate(new long[]{100,100,100,100})
+                .setPriority(2)
+                .setVibrate(new long[]{100, 100, 100, 100, 100, 100})
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(notifyID, notificationBuilder.build());
     }
+
     public Bitmap getBitmapFromURL(String strURL) {
         try {
             URL url = new URL(strURL);
@@ -134,5 +152,10 @@ public class MyGcmListenerService extends GcmListenerService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public int generateRandom() {
+        Random random = new Random();
+        return random.nextInt(9999 - 1000) + 1000;
     }
 }

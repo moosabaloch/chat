@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pana.com.chat.Adaptor.PagerAdaptor;
@@ -26,7 +27,7 @@ import pana.com.chat.R;
  * Use the {@link TabFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabFragment extends Fragment {
+public class TabFragment extends Fragment implements Serializable {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -40,6 +41,8 @@ public class TabFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private String openFrag;
+    private String title;
 
     public TabFragment() {
         // Required empty public constructor
@@ -69,6 +72,8 @@ public class TabFragment extends Fragment {
         Log.d("TABFRAG", "onCreate");
 
         if (getArguments() != null) {
+            openFrag = getArguments().getString("frag");
+            title = getArguments().getString("sender");
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -78,7 +83,6 @@ public class TabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("TABFRAG", "onCreateView");
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab, container, false);
         fragments = new ArrayList<>(4);
@@ -96,13 +100,40 @@ public class TabFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
         tabLayout.addTab(tabLayout.newTab().setCustomView(view4));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        ////////////////JUST FOR OBSERVER PATTERN///////////////
+
         fragments.add(0, new HomeFragment());
         fragments.add(1, new GroupFragment());
         fragments.add(2, new FriendsFragment());
         fragments.add(3, new FriendsRequestFragment());
         viewPager.setAdapter(new PagerAdaptor(getActivity().getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(0);
+
+        if (openFrag != null) {
+            if (openFrag.contains("chat")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("sender", title);
+                fragments.get(2).setArguments(bundle);
+                fabActions(View.VISIBLE, R.drawable.addfriend, new AddFriendFragment());
+
+                viewPager.setCurrentItem(2);
+
+            } else if (openFrag.contains("request")) {
+                viewPager.setCurrentItem(3);
+
+            } else if (openFrag.contains("group")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("sender", title);
+                fragments.get(1).setArguments(bundle);
+                fabActions(View.VISIBLE, R.drawable.add, new SearchGroupFragment());
+
+
+                viewPager.setCurrentItem(1);
+
+            }
+        }
+
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -116,11 +147,11 @@ public class TabFragment extends Fragment {
                         fab.setVisibility(View.GONE);
                         break;
                     case 1:
-                        fabActions(View.VISIBLE,R.drawable.add,new SearchGroupFragment());
+                        fabActions(View.VISIBLE, R.drawable.add, new SearchGroupFragment());
 
                         break;
                     case 2:
-                        fabActions(View.VISIBLE,R.drawable.addfriend,new AddFriendFragment());
+                        fabActions(View.VISIBLE, R.drawable.addfriend, new AddFriendFragment());
                         break;
                     case 3:
                         fab.setVisibility(View.GONE);

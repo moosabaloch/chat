@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:padding="5dp">
+    <RelativeLayout
+android:background="@drawable/arrowmessgefriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:id="@+id/chatAdaptorImageViewProfilePictureMe"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_menu_myplaces" />
+
+    </RelativeLayout>
+
+
+
+<RelativeLayout
+    android:background="@drawable/messagedabba"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/relativeLayout"
+    android:layout_alignBottom="@+id/relativeLayout"
+    android:layout_alignParentEnd="true"
+    android:layout_toEndOf="@+id/relativeLayout"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:padding="3dp"
+        android:text="@string/username"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+
+    <TextView
+        android:id="@+id/chatAdaptorTextViewForMessageMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_alignStart="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_below="@+id/chatAdaptorTextViewForNameMe"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="1dp"
+        android:text="@string/message" />
+
+
+</RelativeLayout>
+    <TextView
+        android:id="@+id/chatAdaptorTextViewTimeMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:text="time"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

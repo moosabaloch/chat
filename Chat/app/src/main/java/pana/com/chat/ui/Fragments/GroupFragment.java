@@ -2,6 +2,7 @@ package pana.com.chat.ui.Fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.firebase.client.DataSnapshot;
@@ -19,10 +19,10 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
+import pana.com.chat.Adaptor.GroupsViewAdaptor;
 import pana.com.chat.DataModel.DataModelCurrentGroupChat;
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.Groups;
-import pana.com.chat.Adaptor.GroupsViewAdaptor;
 import pana.com.chat.R;
 import pana.com.chat.Util.Utils;
 
@@ -31,12 +31,14 @@ import pana.com.chat.Util.Utils;
  * A simple {@link Fragment} subclass.
  */
 public class GroupFragment extends Fragment implements GroupsViewAdaptor.GroupAdaptorAddEvent {
-  //  private ImageButton addNewSearchGroupFragmentButton;
+    //  private ImageButton addNewSearchGroupFragmentButton;
     private ListView myGroupsListView;
     private Firebase firebaseURL;
     private GroupsViewAdaptor groupsViewAdaptor;
     private ArrayList<Groups> myJoinedGroups;
-private FloatingActionButton fab;
+    private FloatingActionButton fab;
+    private String sender = "#";
+
     public GroupFragment() {
         // Required empty public constructor
     }
@@ -47,7 +49,10 @@ private FloatingActionButton fab;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
-        fab= (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if (getArguments() != null) {
+            sender = getArguments().getString("sender") != null ? getArguments().getString("sender") : "#";
+        }
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com");
       /*  addNewSearchGroupFragmentButton = (ImageButton) view.findViewById(R.id.groupFragmentButtonAddNewGroup);
         addNewSearchGroupFragmentButton.setOnClickListener(new View.OnClickListener() {
@@ -55,12 +60,14 @@ private FloatingActionButton fab;
             public void onClick(View v) {
             }
         });
-      */  myJoinedGroups = new ArrayList<>();
+      */
+        myJoinedGroups = new ArrayList<>();
         myGroupsListView = (ListView) view.findViewById(R.id.myGroupFragmentListViewGroupsView);
         checkMyGroups();
 
         return view;
     }
+
     private void checkMyGroups() {
         Log.d("CHECK MY GROUPS", "Invoked");
         firebaseURL.child("mygroups").child(DataModelMeSingleton.getInstance().getId())
@@ -108,11 +115,14 @@ private FloatingActionButton fab;
     private void refreshAdaptor() {
         Log.d("Refresh Adaptor", "Invoked");
 
-        myGroupsListView.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), myJoinedGroups, this, Utils.myGroups, Utils.TYPEMYGROUPS));
+        myGroupsListView.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), myJoinedGroups, this, Utils.myGroups, Utils.TYPEMYGROUPS, sender));
         Log.d("Finish", "Groups Added " + myJoinedGroups.size());
         myGroupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                sender = "#";
+                myGroupsListView.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), myJoinedGroups, this, Utils.myGroups, Utils.TYPEMYGROUPS, sender));
+
                 DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
                 groupChatDetail.setGroupIDKEY(Utils.myGroups.get(position));
                 groupChatDetail.setGroupDescription(myJoinedGroups.get(position).getGroupDescription());
@@ -126,9 +136,9 @@ private FloatingActionButton fab;
 
     }
 
-
     @Override
     public void addMeToThisGroup(String key, int position) {
 
     }
+
 }

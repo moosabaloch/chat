@@ -22,14 +22,15 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
+import pana.com.chat.Adaptor.GroupChatAdaptor;
 import pana.com.chat.DataModel.DataModelCurrentGroupChat;
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.DataModelUser;
-import pana.com.chat.Adaptor.GroupChatAdaptor;
 import pana.com.chat.DataModel.GroupUsersDetailsHashMap;
 import pana.com.chat.DataModel.Messages;
 import pana.com.chat.R;
 import pana.com.chat.Util.Utils;
+import pana.com.chat.apicall.PostReq;
 
 
 /**
@@ -45,7 +46,8 @@ public class GroupChatFragment extends Fragment {
     private GroupChatAdaptor groupChatAdaptor;
     private ArrayList<Messages> messagesArrayList;
     private DataModelCurrentGroupChat groupChatDetail = DataModelCurrentGroupChat.getInstance();
-private FloatingActionButton fab;
+    private FloatingActionButton fab;
+
     public GroupChatFragment() {
         // Required empty public constructor
     }
@@ -56,7 +58,7 @@ private FloatingActionButton fab;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-        fab= (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         firebaseURL = new Firebase("https://pcchatapp.firebaseio.com/");
         sendMessageButton = (ImageButton) view.findViewById(R.id.chatFragmentButtonSendMessage);
         sendMessageText = (EditText) view.findViewById(R.id.chatFragmentEditTextWriteMessageHere);
@@ -76,13 +78,14 @@ private FloatingActionButton fab;
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String msg = sendMessageText.getText().toString();
                 firebaseURL.child("conversation")
                         .child(DataModelCurrentGroupChat.getInstance()
                                 .getGroupIDKEY()).push()
-                        .setValue(new Messages(String.valueOf(System.currentTimeMillis()), sendMessageText.getText().toString(), DataModelMeSingleton.getInstance().getId()), new Firebase.CompletionListener() {
+                        .setValue(new Messages(String.valueOf(System.currentTimeMillis()), msg, DataModelMeSingleton.getInstance().getId()), new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                sendNotification();
+                                sendNotification(msg);
                             }
                         });
 
@@ -92,8 +95,27 @@ private FloatingActionButton fab;
         });
     }
 
-    private void sendNotification() {
+    private void sendNotification(String msg) {
         /////////////////PENDING//////////////////
+     try {
+
+
+         for (String sendTo : Utils.myFrindsId) {
+             if (!sendTo.equals(DataModelMeSingleton.getInstance().getId())) {
+
+                 PostReq.getMyInstance().notifySingleUser(sendTo,
+                         DataModelMeSingleton.getInstance().getName() + ": " + msg,
+                         groupChatDetail.getGroupName(),
+                         DataModelMeSingleton.getInstance().getImageUrl(),
+                         "group");
+             }
+         }
+     }catch (Exception ex){
+         Utils.ToastLong(getActivity(), "Sorry we are facing a problem due to slow internet please try again later");
+         getActivity().getSupportFragmentManager().popBackStackImmediate();
+
+     }
+
     }
 
     private void refreshListView() {
@@ -102,43 +124,49 @@ private FloatingActionButton fab;
     }
 
     private void loadGroupMembersData() {
-        firebaseURL.child("groupusers").child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Utils.myFrindsId.clear();
-                GroupUsersDetailsHashMap.getInstance().clear();
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    final String UserID = data.getValue().toString();
-                    if (!Utils.friendIdAddedToMap(UserID)) {
-                        Utils.myFrindsId.add(UserID);
-                        Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
-                        firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshotForUser) {
-                                GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
-                                Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
+        try {
+            firebaseURL.child("groupusers").child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Utils.myFrindsId.clear();
+                    GroupUsersDetailsHashMap.getInstance().clear();
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        final String UserID = data.getValue().toString();
+                        if (!Utils.friendIdAddedToMap(UserID)) {
+                            Utils.myFrindsId.add(UserID);
+                            Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
+                            firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshotForUser) {
+                                    GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
+                                    Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
 
-                            }
+                                }
 
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-                                Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+                                    Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
+                    // loadAllMessages();
+                    loadChatAdaptor();
+
                 }
-                // loadAllMessages();
-                loadChatAdaptor();
 
-            }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
-
-            }
-        });
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Utils.ToastLong(getActivity(), "Sorry we are facing a problem due to slow internet please try again later");
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 /*
 
@@ -201,8 +229,9 @@ private FloatingActionButton fab;
 
     @Override
     public void onDestroyView() {
+        fab.setVisibility(View.VISIBLE);
+
         super.onDestroyView();
-        fab.setVisibility(View.GONE);
     }
 
     private void setDetails() {

@@ -25,14 +25,20 @@ public class Utils {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String SENDER_ID = "1049880136181";
     public static final String SERVER_KEY_FOR_THIS_PROJECT = "AIzaSyBtPwemSZxg9qIJeN85LHZisVxJpozX1Hg";
-    private static final String SERVER_CURRENT_IP ="https://safe-crag-3193.herokuapp.com"; //"http://10.105.19.124:3000";//"http://192.168.1.142:3000";
+    private static final String SERVER_CURRENT_IP = "https://safe-crag-3193.herokuapp.com";//"http://192.168.0.109:3000";
+    //"https://safe-crag-3193.herokuapp.com"; //"http://10.105.19.124:3000";//"http://192.168.1.142:3000";
     public static final String SERVER_REGISTRATION_URL = SERVER_CURRENT_IP + "/gcm/register";
     public static final String SERVER_SEND_NOTIFICATION_URL = SERVER_CURRENT_IP + "/gcm/sendMessage";
+    public static final String SEND_FRIEND_REQUEST = SERVER_CURRENT_IP + "/gcm/sendrequest";
     public static int TYPEGROUPSEARCH = 123;
     public static int TYPEMYGROUPS = 321;
     public static ArrayList<String> myGroups = new ArrayList<>();
     public static ArrayList<String> myFrindsId = new ArrayList<>();
+    public static int dialogHW = 600;
+    public static String MY_TAB_FRAG_OBJ = "tabfrag";
     private static Cloudinary cloudinary;
+    public static String MY_APP_SHARED="com.pana.chat";
+    public static String MY_APP_IS_RUNNING="myappboolean";
 
     public static void ToastLong(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
@@ -88,7 +94,7 @@ public class Utils {
 
         String timeAgo = null;
 
-        if (dim == 0) {
+        if (dim == 0 || dim < 0) {
             timeAgo = ctx.getResources().getString(R.string.date_util_term_less) + " " + ctx.getResources().getString(R.string.date_util_term_a) + " " + ctx.getResources().getString(R.string.date_util_unit_minute);
         } else if (dim == 1) {
             return "1 " + ctx.getResources().getString(R.string.date_util_unit_minute);

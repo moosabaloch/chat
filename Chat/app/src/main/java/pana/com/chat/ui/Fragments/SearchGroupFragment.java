@@ -112,7 +112,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
 
     private void loadGroupAdaptor() {
         try {
-            groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys, Utils.TYPEGROUPSEARCH));
+            groupsList.setAdapter(groupsViewAdaptor = new GroupsViewAdaptor(getActivity(), groupsArrayList, this, arrayListForGroupKeys, Utils.TYPEGROUPSEARCH,"#"));
 
         } catch (Exception ex) {
             Log.d("Exception ", "" + ex.getMessage());
@@ -125,6 +125,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
     public void onDestroyView() {
         super.onDestroyView();
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+
     }
 
     private void addGroup() {
@@ -143,7 +144,7 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
                         String myID = DataModelMeSingleton.getInstance().getId();
                         HashMap<String, String> admin = new HashMap<>();
                         admin.put("id", myID);
-                        String groupName = name.getText().toString();
+                        final String groupName = name.getText().toString();
                         String groupDescription = description.getText().toString();
                         Firebase groupID = firebaseURL.child("groups").push();
                         String groupKey = groupID.getKey();
@@ -154,8 +155,13 @@ public class SearchGroupFragment extends Fragment implements GroupsViewAdaptor.G
                         //Create Group in the node group...
                         groupID.setValue(new Groups(groupName, "N/A", groupDescription, admin));
                         //Add group id to conversation node
-                        firebaseURL.child("conversation").child(groupKey).push().setValue(new Messages(String.valueOf(System.currentTimeMillis()), "Group Created By " + DataModelMeSingleton.getInstance().getName(), DataModelMeSingleton.getInstance().getId()));
-                        Toast.makeText(getActivity(), groupName + " created successfully as group.", Toast.LENGTH_LONG).show();
+                        firebaseURL.child("conversation").child(groupKey).push().setValue(new Messages(String.valueOf(System.currentTimeMillis()), "Group Created By " + DataModelMeSingleton.getInstance().getName(), DataModelMeSingleton.getInstance().getId()), new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                Toast.makeText(getActivity(), groupName + " created successfully as group.", Toast.LENGTH_LONG).show();
+                                                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            }
+                        });
                     }
                 });
                 builder.show();

@@ -26,10 +26,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Fra
     private static final String TAG = "MainActivity";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private Firebase firebaseUrl= new Firebase("https://pcchatapp.firebaseio.com/");
+    String frag;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        frag=getIntent().getStringExtra("frag");
+        title =getIntent().getStringExtra("sender");
         setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new LoginFragment()).commit();
 //        gcmImplementation();
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Fra
     @Override
     public void switchToHome() {
         Intent i=new Intent(this,HomeActivity.class);
+        if (frag!=null){
+            i.putExtra("frag",frag);
+            i.putExtra("sender",title);        }
         startActivity(i);
         finish();
     }

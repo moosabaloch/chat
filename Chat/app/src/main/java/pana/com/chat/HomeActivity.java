@@ -72,10 +72,15 @@ public class HomeActivity extends AppCompatActivity
     private String selectedImagePath;
     private ImageView imageViewProfileForDrawer;
     private Firebase firebase;
+    private String frag;
+    private String title;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        frag = getIntent().getStringExtra("frag");
+        title = getIntent().getStringExtra("sender");
         setContentView(R.layout.activity_home);
         firebase = FirebaseHandler.getInstance().getFirebaseBaseURL();
         if (firebase.getAuth() == null) {
@@ -85,7 +90,6 @@ public class HomeActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setCollapsible(true);
-        toolbar.setElevation(0);
 
         setSupportActionBar(toolbar);
         // toolbar.setLogo(R.drawable.friend);
@@ -105,32 +109,42 @@ public class HomeActivity extends AppCompatActivity
 
         setNavViewDetails();
         gcmImplementation();
-        getSupportFragmentManager().beginTransaction().replace(R.id.homeActivityContent, new TabFragment()).commit();
+        TabFragment tabFragment = new TabFragment();
+        if (frag != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("frag", frag);
+            bundle.putString("sender", title);
+            tabFragment.setArguments(bundle);
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.homeActivityContent, tabFragment).commit();
     }
 
     private void setNavViewDetails() {
-        AppController.getInstance().getImageLoader().get(ME.getImageUrl(), new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                imageViewProfileForDrawer.setImageBitmap(response.getBitmap());
+        try {
+            AppController.getInstance().getImageLoader().get(ME.getImageUrl(), new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    imageViewProfileForDrawer.setImageBitmap(response.getBitmap());
 
-            }
+                }
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-            }
-        });
-        Button buttonChangePic = (Button) layout.findViewById(R.id.changeProfilePicture);
-        buttonChangePic.setOnClickListener(this);
-        Button button = (Button) navigationView.findViewById(R.id.logoutButtonNav);
-        button.setOnClickListener(this);
+                }
+            });
+            Button buttonChangePic = (Button) layout.findViewById(R.id.changeProfilePicture);
+            buttonChangePic.setOnClickListener(this);
+            Button button = (Button) navigationView.findViewById(R.id.logoutButtonNav);
+            button.setOnClickListener(this);
 //        navigationView.setNavigationItemSelectedListener();
-        Menu menu = navigationView.getMenu();
-        menu.getItem(0).setTitle(ME.getName());
-        menu.getItem(1).setTitle(ME.getEmail());
-        menu.getItem(2).setTitle(ME.getPhone());
-
+            Menu menu = navigationView.getMenu();
+            menu.getItem(0).setTitle(ME.getName());
+            menu.getItem(1).setTitle(ME.getEmail());
+            menu.getItem(2).setTitle(ME.getPhone());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void gcmImplementation() {
@@ -155,10 +169,14 @@ public class HomeActivity extends AppCompatActivity
         super.onResume();
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Utils.REGISTRATION_COMPLETE));
+        SharedPreferences prefs = this.getSharedPreferences(HomeActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING,true).apply();
     }
 
     @Override
     protected void onPause() {
+        SharedPreferences prefs = this.getSharedPreferences(HomeActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING,false).apply();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
@@ -260,11 +278,29 @@ public class HomeActivity extends AppCompatActivity
 
 */
     private void logout() {
-        firebase.unauth();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        DataModelMeSingleton userData = DataModelMeSingleton.getInstance();
+        Log.d("Logout()", "User Data:" + userData.toString());
 
+        if (!(userData.getId().length() < 10)) {
+            HashMap<String, String> userDetails = new HashMap<>();
+            userDetails.put("email_id", userData.getEmail());
+            userDetails.put("image_url", userData.getImageUrl());
+            userDetails.put("name", userData.getName());
+            userDetails.put("phone", userData.getPhone());
+            userDetails.put("gcm", "0000");
+            FirebaseHandler.getInstance().getFirebaseUsersURL().child(userData.getId()).setValue(userDetails, new Firebase.CompletionListener() {
+                @Override
+                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                    Log.d("User Token Removed", "User Logout");
+                    firebase.unauth();
+                    startActivity(new Intent(HomeActivity.this, MainActivity.class));
+                    finish();
+
+                }
+            });
+        }
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

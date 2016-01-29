@@ -16,7 +16,7 @@ import java.util.List;
  * Please increment the following counter as the warning to the next Guy.
  * TOTAL_HOURS_WASTED_HERE=1
  */
-public class PagerAdaptor extends FragmentPagerAdapter {
+public class PagerAdaptor extends FragmentStatePagerAdapter {
     private List<Fragment> fragments;
     public PagerAdaptor(FragmentManager fm, List<Fragment> fragments) {
         super(fm);

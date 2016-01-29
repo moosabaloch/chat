@@ -32,6 +32,7 @@ import pana.com.chat.DataModel.DataModelFriendSingleTon;
 import pana.com.chat.DataModel.DataModelMeSingleton;
 import pana.com.chat.DataModel.Messages;
 import pana.com.chat.R;
+import pana.com.chat.Util.Utils;
 import pana.com.chat.apicall.PostReq;
 
 
@@ -91,7 +92,7 @@ public class ChatFragment extends Fragment {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setView(view2);
                 alertDialog.show();
-                alertDialog.getWindow().setLayout(600, 600);
+                alertDialog.getWindow().setLayout(Utils.dialogHW, Utils.dialogHW);
 
             }
         });
@@ -112,9 +113,7 @@ public class ChatFragment extends Fragment {
         chatListView = (ListView) view.findViewById(R.id.chatFragmentListViewChatMessages);
 
         setConversationID();
-
         setFriendDetails();
-
         loadConversation();
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -123,13 +122,11 @@ public class ChatFragment extends Fragment {
                 sendMyMessage();
             }
         });
-
         return view;
-
     }
 
     private void setConversationID() {
-        if (friendData.getConversationID().toString().equals("null")) {
+        if (friendData.getConversationID().equals("null")) {
             firebaseURL.child("user_friend").child(ME.getId()).child(friendData.getUuidUserFriend()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -161,10 +158,10 @@ public class ChatFragment extends Fragment {
 
     private void loadConversation() {
         if (isNewChat()) {
-            Toast.makeText(getActivity(), "No conversation Found", Toast.LENGTH_SHORT).show();
+            setMyChatDetails();
         } else {
             Log.d("StartChatAndSetMessage", "ChatIsRegistered");
-            firebaseURL.child("conversation").child(friendData.getConversationID().toString()).addValueEventListener(new ValueEventListener() {
+            firebaseURL.child("conversation").child(friendData.getConversationID()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     VEL2 = this;
@@ -192,16 +189,7 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private boolean isNewChat() {
-        if (friendData.getConversationID().toString().equals("null")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void sendMyMessage() {
-
+    private void setMyChatDetails() {
         if (isNewChat()) {
             Firebase newchatref = firebaseURL.child("conversation").push();
 
@@ -211,11 +199,19 @@ public class ChatFragment extends Fragment {
             hashMap.put("ConversationID", newchatref.getKey());
 
             firebaseURL.child("user_friend").child(ME.getId()).child(friendData.getUuidUserFriend()).setValue(hashMap);
-            firebaseURL.child("user_friend").child(friendData.getUuidUserFriend()).child(ME.getId()).setValue(hashMap);
+            firebaseURL.child("user_friend").child(friendData.getUuidUserFriend()).child(ME.getId()).setValue(hashMap, new Firebase.CompletionListener() {
+                @Override
+                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                    setConversationID();
+                    setFriendDetails();
+                    loadConversation();
+                }
+            });
 
             //friendData.setConversationID(hashMap.get("ConversationID").toString());
             //Log.d("Setting Conversation Key........",hashMap.get("ConversationID").toString());
 
+/*
             if (!sendMessageText.getText().toString().equals("")) {
                 long time = System.currentTimeMillis();
                 String timeInString = String.valueOf(time);
@@ -227,25 +223,36 @@ public class ChatFragment extends Fragment {
                     }
                 });
                 sendMessageText.setText("");
-            }
+*/
         } else {
-            if (!sendMessageText.getText().toString().equals("")) {
-                long time = System.currentTimeMillis();
-                final String msg = sendMessageText.getText().toString();
-                String timeInString = String.valueOf(time);
-                firebaseURL.child("conversation").child(friendData.getConversationID())
-                        .push().setValue(new Messages(timeInString, msg, ME.getId()),
-                        new Firebase.CompletionListener() {
-                            @Override
-                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
-                                PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl());
-                              /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
+            Toast.makeText(getActivity(), "Loading Messages", Toast.LENGTH_SHORT).show();
 
-                            }
-                        });
-                sendMessageText.setText("");
-            }
+
+        }
+    }
+
+    private boolean isNewChat() {
+        return friendData.getConversationID().equals("null");
+    }
+
+    private void sendMyMessage() {
+        if (!sendMessageText.getText().toString().equals("")) {
+            long time = System.currentTimeMillis();
+            final String msg = sendMessageText.getText().toString();
+            String timeInString = String.valueOf(time);
+            firebaseURL.child("conversation").child(friendData.getConversationID())
+                    .push().setValue(new Messages(timeInString, msg, ME.getId()),
+                    new Firebase.CompletionListener() {
+                        @Override
+                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl(), "chat");
+                              /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
+                            Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+            sendMessageText.setText("");
+
         }
     }
 
