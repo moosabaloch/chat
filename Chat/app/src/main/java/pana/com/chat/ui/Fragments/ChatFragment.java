@@ -236,36 +236,50 @@ public class ChatFragment extends Fragment {
     }
 
     private void sendMyMessage() {
-        if (!sendMessageText.getText().toString().equals("")) {
-            long time = System.currentTimeMillis();
-            final String msg = sendMessageText.getText().toString();
-            String timeInString = String.valueOf(time);
-            firebaseURL.child("conversation").child(friendData.getConversationID())
-                    .push().setValue(new Messages(timeInString, msg, ME.getId()),
-                    new Firebase.CompletionListener() {
-                        @Override
-                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl(), "chat");
+        try {
+            if (!sendMessageText.getText().toString().equals("")) {
+                long time = System.currentTimeMillis();
+                final String msg = sendMessageText.getText().toString();
+                String timeInString = String.valueOf(time);
+                firebaseURL.child("conversation").child(friendData.getConversationID())
+                        .push().setValue(new Messages(timeInString, msg, ME.getId()),
+                        new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+
+                                PostReq.getMyInstance().notifySingleUser(friendData.getUuidUserFriend(), msg, ME.getName(), ME.getImageUrl(), "chat");
                               /*TEST*/ //   PostReq.getMyInstance().notifySingleUser(ME.getId(), msg, friendData.getNameUserFriend(), friendData.getImageUrlUserFriend());
-                            Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Sent", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
-            sendMessageText.setText("");
+                            }
+                        });
+                sendMessageText.setText("");
 
+            }
+        }catch (Exception ex){
+            Utils.ToastLong(getActivity(),"Sorry we are facing a problem due to slow internet connection...");
         }
     }
 
     private void refreshAdaptor() {
-        chatMessageAdaptor.notifyDataSetChanged();
-        chatListView.setSelection(messagesArrayList.size());
-    }
+        try {
+            chatMessageAdaptor.notifyDataSetChanged();
+            chatListView.setSelection(messagesArrayList.size());
+        }catch (Exception ex){
+            Utils.ToastLong(getActivity(),"Sorry we are facing a problem due to slow internet connection...");
+        }
+        }
 
     private void setAdaptor() {
-        chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
-        chatListView.setAdapter(chatMessageAdaptor);
-        chatListView.setSelection(messagesArrayList.size() - 1);
-    }
+        try {
+            chatMessageAdaptor = new ChatMessageAdaptor(getActivity(), messagesArrayList);
+            chatListView.setAdapter(chatMessageAdaptor);
+            chatListView.setSelection(messagesArrayList.size() - 1);
+        }catch (Exception ex){
+            Utils.ToastLong(getActivity(),"Sorry we are facing a problem due to slow internet connection...");
+
+        }
+        }
 
     @Override
     public void onDestroyView() {

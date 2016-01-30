@@ -128,32 +128,44 @@ public class GroupChatFragment extends Fragment {
             firebaseURL.child("groupusers").child(DataModelCurrentGroupChat.getInstance().getGroupIDKEY()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Utils.myFrindsId.clear();
-                    GroupUsersDetailsHashMap.getInstance().clear();
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        final String UserID = data.getValue().toString();
-                        if (!Utils.friendIdAddedToMap(UserID)) {
-                            Utils.myFrindsId.add(UserID);
-                            Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
-                            firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshotForUser) {
-                                    GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
-                                    Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
+                    try {
+                        Utils.myFrindsId.clear();
+                        GroupUsersDetailsHashMap.getInstance().clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            final String UserID = data.getValue().toString();
+                            if (!Utils.friendIdAddedToMap(UserID)) {
+                                Utils.myFrindsId.add(UserID);
+                                Log.d(DataModelCurrentGroupChat.getInstance().getGroupName(), "Users=" + UserID);
+                                firebaseURL.child("users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshotForUser) {
+                                        try {
 
-                                }
 
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
-                                    Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
+                                            GroupUsersDetailsHashMap.getInstance().put(UserID, dataSnapshotForUser.getValue(DataModelUser.class));
+                                            Log.d("User Added " + UserID, dataSnapshotForUser.getValue().toString());
+                                        }catch (Exception ex){
+                                            ex.printStackTrace();
+                                            Utils.ToastLong(getActivity(), "Sorry we are facing a problem due to slow internet please try again later");
 
-                                }
-                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+                                        Utils.ToastLong(getActivity(), "Error Loading Group Members : " + firebaseError.getMessage());
+
+                                    }
+                                });
+                            }
                         }
-                    }
-                    // loadAllMessages();
-                    loadChatAdaptor();
+                        // loadAllMessages();
+                        loadChatAdaptor();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                        Utils.ToastLong(getActivity(), "Sorry we are facing a problem due to slow internet please try again later");
 
+                    }
                 }
 
                 @Override

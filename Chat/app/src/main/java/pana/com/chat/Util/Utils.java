@@ -36,12 +36,16 @@ public class Utils {
     public static ArrayList<String> myFrindsId = new ArrayList<>();
     public static int dialogHW = 600;
     public static String MY_TAB_FRAG_OBJ = "tabfrag";
+    public static String MY_APP_SHARED = "com.pana.chat";
+    public static String MY_APP_IS_RUNNING = "myappboolean";
     private static Cloudinary cloudinary;
-    public static String MY_APP_SHARED="com.pana.chat";
-    public static String MY_APP_IS_RUNNING="myappboolean";
 
     public static void ToastLong(Context context, String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        try {
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void ToastShort(Context context, String msg) {
