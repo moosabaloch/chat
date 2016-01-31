@@ -3,7 +3,7 @@ package pana.com.chat.Util;
 import com.firebase.client.Firebase;
 
 /**
- * Created by Moosa on 1/5/2016.
+ * Created by Moosa
  * Dear Maintainer
  * When i wrote this code Only i and God knew What it was.
  * Now only God Knows..!

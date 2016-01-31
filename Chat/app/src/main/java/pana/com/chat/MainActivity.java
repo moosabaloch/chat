@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Fra
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         frag=getIntent().getStringExtra("frag");
         title =getIntent().getStringExtra("sender");
         setContentView(R.layout.activity_main);

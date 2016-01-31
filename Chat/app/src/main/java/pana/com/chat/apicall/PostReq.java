@@ -13,7 +13,7 @@ import pana.com.chat.AppController;
 import pana.com.chat.Util.Utils;
 
 /**
- * Created by Moosa on 1/1/2016.
+ * Created by Moosa
  * Dear Maintainer
  * When i wrote this code Only i and God knew What it was.
  * Now only God Knows....!

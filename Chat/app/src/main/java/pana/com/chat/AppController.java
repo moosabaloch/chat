@@ -14,7 +14,7 @@ import com.firebase.client.Firebase;
 import pana.com.chat.apicall.LruBitmapCache;
 
 /**
- * Created by Moosa on 9/9/2015.
+ * Created by Moosa
  * Dear Maintainer
  * When i wrote this code Only i and God knew What it was.
  * Now only God Knows..!

@@ -3,7 +3,7 @@ package pana.com.chat.DataModel;
 import java.util.HashMap;
 
 /**
- * Created by Moosa on 9/16/2015.
+ * Created by Moosa
  * Dear Maintainer
  * When i wrote this code Only i and God knew What it was.
  * Now only God Knows..!

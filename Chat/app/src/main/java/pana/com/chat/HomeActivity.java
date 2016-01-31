@@ -341,50 +341,53 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String filePath = null;
-        switch (requestCode) {
+        try {
+            String filePath = null;
+            switch (requestCode) {
 
-            case PICK_IMAGE:
-                Log.d("INVOKED", "onActivityResult case PICK IMAGE");
+                case PICK_IMAGE:
+                    Log.d("INVOKED", "onActivityResult case PICK IMAGE");
 
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.d("INVOKED", "onActivityResult == OK");
+                    if (resultCode == Activity.RESULT_OK) {
+                        Log.d("INVOKED", "onActivityResult == OK");
 
-                    selectedImageUri = data.getData();
-                    if (selectedImageUri != null) {
-                        Log.d("Image Selected", " URI" + selectedImageUri.toString());
+                        selectedImageUri = data.getData();
+                        if (selectedImageUri != null) {
+                            Log.d("Image Selected", " URI" + selectedImageUri.toString());
 
-                        try {
-                            //selectedImagePath = getPath(selectedImageUri);
-                            performCrop();
-                            //imageView.setImageURI(selectedImageUri);
-                        } catch (Exception e) {
-                            Toast.makeText(HomeActivity.this, "Internal error", Toast.LENGTH_LONG).show();
-                            Log.e(e.getClass().getName(), e.getMessage(), e);
+                            try {
+                                //selectedImagePath = getPath(selectedImageUri);
+                                performCrop();
+                                //imageView.setImageURI(selectedImageUri);
+                            } catch (Exception e) {
+                                Toast.makeText(HomeActivity.this, "Internal error", Toast.LENGTH_LONG).show();
+                                Log.e(e.getClass().getName(), e.getMessage(), e);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
 
-            case RESULT_CROP:
-                Log.d("INVOKED", "onActivityResult case CROP");
+                case RESULT_CROP:
+                    Log.d("INVOKED", "onActivityResult case CROP");
 
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.d("CASE CROP", " Result == OK");
+                    if (resultCode == Activity.RESULT_OK) {
+                        Log.d("CASE CROP", " Result == OK");
 
-                    Bundle extras = data.getExtras();
-                    bitmap = extras.getParcelable("data");
-                    String path = saveImage(bitmap);
-                    Log.d("PATH AFTER CROPPING", path);
-                    if (path != null) {
-                        selectedImagePath = path;
-                        decodeFile(path);
+                        Bundle extras = data.getExtras();
+                        bitmap = extras.getParcelable("data");
+                        String path = saveImage(bitmap);
+                        Log.d("PATH AFTER CROPPING", path);
+                        if (path != null) {
+                            selectedImagePath = path;
+                            decodeFile(path);
+                        }
                     }
-                }
-                break;
+                    break;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
-
     private void performCrop() {
         Log.d("INVOKED", "Performed Crop");
         try {
@@ -407,77 +410,81 @@ public class HomeActivity extends AppCompatActivity
 
     private void decodeFile(final String filePath) {
         Log.d("INVOKED", "Decode File");
+try {
+    BitmapFactory.Options o = new BitmapFactory.Options();
+    o.inJustDecodeBounds = true;
+    BitmapFactory.decodeFile(filePath, o);
 
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, o);
+    final int REQUIRED_SIZE = 1024;
 
-        final int REQUIRED_SIZE = 1024;
+    int width_tmp = o.outWidth, height_tmp = o.outHeight;
+    int scale = 1;
 
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-
-        while (true) {
-            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
-                break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        bitmap = BitmapFactory.decodeFile(filePath, o2);
-        new AlertDialog.Builder(this)
-                .setTitle("Upload Picture")
-                .setMessage("Are you sure you want to upload picture?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        imageViewProfileForDrawer.setImageBitmap(bitmap);
-                        Log.d("File PATH IS ", selectedImagePath + "");
-                        ////////////////////////////////UPLOADING CLOUDINARY////////////////////
-
-                        AsyncTask<String, Void, HashMap<String, Object>> upload = new AsyncTask<String, Void, HashMap<String, Object>>() {
-                            @Override
-                            protected HashMap<String, Object> doInBackground(String... params) {
-                                File file = new File(selectedImagePath);
-                                HashMap<String, Object> responseFromServer = null;
-                                try {
-                                    responseFromServer = (HashMap<String, Object>) cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-                                } catch (IOException e) {
-                                    Toast.makeText(HomeActivity.this, "Cannot Upload Image Please Try Again", Toast.LENGTH_LONG).show();
-                                    e.printStackTrace();
-                                }
-
-                                return responseFromServer;
-                            }
-
-                            @Override
-                            protected void onPostExecute(HashMap<String, Object> stringObjectHashMap) {
-                                String url = (String) stringObjectHashMap.get("url");
-                                firebase.child("users").child(ME.getId()).child("image_url").setValue(url, new Firebase.CompletionListener() {
-                                    @Override
-                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                        if (firebaseError != null) {
-                                            Toast.makeText(HomeActivity.this, firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Toast.makeText(HomeActivity.this, "Upload Completed", Toast.LENGTH_LONG).show();
-
-                                        }
-                                    }
-                                });
-                            }
-                        };
-                        upload.execute(selectedImagePath);
-                        ////////////////////////////////UPLOADING COMPLETED////////////////////////////////////////
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                }).show();
+    while (true) {
+        if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+            break;
+        width_tmp /= 2;
+        height_tmp /= 2;
+        scale *= 2;
     }
+
+    BitmapFactory.Options o2 = new BitmapFactory.Options();
+    o2.inSampleSize = scale;
+    bitmap = BitmapFactory.decodeFile(filePath, o2);
+    new AlertDialog.Builder(this)
+            .setTitle("Upload Picture")
+            .setMessage("Are you sure you want to upload picture?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    imageViewProfileForDrawer.setImageBitmap(bitmap);
+                    Log.d("File PATH IS ", selectedImagePath + "");
+                    ////////////////////////////////UPLOADING CLOUDINARY////////////////////
+
+                    AsyncTask<String, Void, HashMap<String, Object>> upload = new AsyncTask<String, Void, HashMap<String, Object>>() {
+                        @Override
+                        protected HashMap<String, Object> doInBackground(String... params) {
+                            File file = new File(selectedImagePath);
+                            HashMap<String, Object> responseFromServer = null;
+                            try {
+                                responseFromServer = (HashMap<String, Object>) cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+                            } catch (IOException e) {
+                                Toast.makeText(HomeActivity.this, "Cannot Upload Image Please Try Again", Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+                            }
+
+                            return responseFromServer;
+                        }
+
+                        @Override
+                        protected void onPostExecute(HashMap<String, Object> stringObjectHashMap) {
+                            String url = (String) stringObjectHashMap.get("url");
+                            firebase.child("users").child(ME.getId()).child("image_url").setValue(url, new Firebase.CompletionListener() {
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                    if (firebaseError != null) {
+                                        Toast.makeText(HomeActivity.this, firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(HomeActivity.this, "Upload Completed", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    upload.execute(selectedImagePath);
+                    ////////////////////////////////UPLOADING COMPLETED////////////////////////////////////////
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing
+                }
+            }).show();
+}catch (Exception ex){
+
+
+}
+}
 
     public String getPath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};

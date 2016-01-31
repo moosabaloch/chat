@@ -1,7 +1,7 @@
 package pana.com.chat.DataModel;
 
 /**
- * Created by Abdul Basit on 9/9/2015.
+ *
  */
 public class DataModelUser {
     private String email_id;

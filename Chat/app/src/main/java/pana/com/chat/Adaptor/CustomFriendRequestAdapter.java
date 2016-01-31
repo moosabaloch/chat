@@ -23,7 +23,6 @@ import pana.com.chat.DataModel.DataModelUser;
 import pana.com.chat.R;
 
 /*
- * Created by Abdul Basit on 9/15/2015.
  */
 public class CustomFriendRequestAdapter extends BaseAdapter {
 

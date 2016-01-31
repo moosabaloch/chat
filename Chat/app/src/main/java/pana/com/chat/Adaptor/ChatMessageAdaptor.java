@@ -21,7 +21,7 @@ import pana.com.chat.R;
 import pana.com.chat.Util.Utils;
 
 /**
- * Created by Moosa on 9/12/2015.
+ * Created by Moosa
  * Dear Maintainer
  * When i wrote this code Only i and God knew What it was.
  * Now only God Knows..!
