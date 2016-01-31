@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -54,10 +53,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         try {
             homeFragInter = (HomeFragInter) getActivity();
             Log.d("HomeFrag", "onCreate");
-        }catch (Exception ex){
-            Utils.ToastLong(getActivity(),"Sorry we are facing a problem please try again later");
+        } catch (Exception ex) {
+            Utils.ToastLong(getActivity(), "Sorry we are facing a problem please try again later");
         }
-        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,8 +144,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    setFriendSingleton(i);
-                    goToChatFragment();
+                    try {
+                        setFriendSingleton(i);
+                        goToChatFragment();
+                    } catch (Exception ex) {
+                        Utils.ToastLong(getActivity(), "Sorry you have Slow internet connection");
+                    }
                 }
             });
         } catch (Exception ex) {
@@ -219,13 +222,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setFriendSingleton(int i) {
-        DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
-        friend.setUuidUserFriend(friendsID.get(i).toString());
-        friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
-        friend.setImageUrlUserFriend(friendsData.get(i).getImage_url());
-        friend.setNameUserFriend(friendsData.get(i).getName());
-        friend.setPhoneUserFriend(friendsData.get(i).getPhone());
-        friend.setConversationID(conversationID.get(i).toString());
+        try {
+            DataModelFriendSingleTon friend = DataModelFriendSingleTon.getInstance();
+            friend.setUuidUserFriend(friendsID.get(i).toString());
+            friend.setEmailUserFriend(friendsData.get(i).getEmail_id());
+            friend.setImageUrlUserFriend(friendsData.get(i).getImage_url());
+            friend.setNameUserFriend(friendsData.get(i).getName());
+            friend.setPhoneUserFriend(friendsData.get(i).getPhone());
+            friend.setConversationID(conversationID.get(i).toString());
+        } catch (Exception ex) {
+            Utils.ToastLong(getActivity(), "Sorry you have Slow internet connection");
+
+        }
     }
 
     private void goToChatFragment() {
@@ -236,7 +244,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                .replace(R.id.homeActivityContent, new ChatFragment())
                 .commit();
     }
-
 
 
     public interface HomeFragInter {

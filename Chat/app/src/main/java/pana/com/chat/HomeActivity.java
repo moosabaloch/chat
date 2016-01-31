@@ -170,13 +170,13 @@ public class HomeActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(Utils.REGISTRATION_COMPLETE));
         SharedPreferences prefs = this.getSharedPreferences(HomeActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING,true).apply();
+        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING, true).apply();
     }
 
     @Override
     protected void onPause() {
         SharedPreferences prefs = this.getSharedPreferences(HomeActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING,false).apply();
+        prefs.edit().putBoolean(Utils.MY_APP_IS_RUNNING, false).apply();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
@@ -280,24 +280,28 @@ public class HomeActivity extends AppCompatActivity
     private void logout() {
         DataModelMeSingleton userData = DataModelMeSingleton.getInstance();
         Log.d("Logout()", "User Data:" + userData.toString());
+        try {
+            if (!(userData.getId().length() < 10)) {
+                HashMap<String, String> userDetails = new HashMap<>();
+                userDetails.put("email_id", userData.getEmail());
+                userDetails.put("image_url", userData.getImageUrl());
+                userDetails.put("name", userData.getName());
+                userDetails.put("phone", userData.getPhone());
+                userDetails.put("gcm", "0000");
+                FirebaseHandler.getInstance().getFirebaseUsersURL().child(userData.getId()).setValue(userDetails, new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        Log.d("User Token Removed", "User Logout");
+                        firebase.unauth();
+                        startActivity(new Intent(HomeActivity.this, MainActivity.class));
+                        finish();
 
-        if (!(userData.getId().length() < 10)) {
-            HashMap<String, String> userDetails = new HashMap<>();
-            userDetails.put("email_id", userData.getEmail());
-            userDetails.put("image_url", userData.getImageUrl());
-            userDetails.put("name", userData.getName());
-            userDetails.put("phone", userData.getPhone());
-            userDetails.put("gcm", "0000");
-            FirebaseHandler.getInstance().getFirebaseUsersURL().child(userData.getId()).setValue(userDetails, new Firebase.CompletionListener() {
-                @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    Log.d("User Token Removed", "User Logout");
-                    firebase.unauth();
-                    startActivity(new Intent(HomeActivity.this, MainActivity.class));
-                    finish();
+                    }
+                });
+            }
+        } catch (Exception x) {
+            Utils.ToastLong(this, "Sorry you have Slow internet connection");
 
-                }
-            });
         }
     }
 
